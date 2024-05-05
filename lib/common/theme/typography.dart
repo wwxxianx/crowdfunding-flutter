@@ -1,0 +1,52 @@
+import 'package:crowdfunding_flutter/common/theme/color.dart';
+import 'package:flutter/material.dart';
+
+class CustomFonts {
+  static const fontFamily = "Satoshi";
+
+  // Label
+  static const labelMedium = TextStyle(
+    fontSize: 16.0,
+    fontWeight: FontWeight.w500,
+    fontFamily: fontFamily,
+    color: CustomColors.fontBlack,
+  );
+  static const labelSmall = TextStyle(
+    fontSize: 14.0,
+    fontWeight: FontWeight.w500,
+    fontFamily: fontFamily,
+    color: CustomColors.fontBlack,
+  );
+  static const labelExtraSmall = TextStyle(
+    fontSize: 12.0,
+    fontWeight: FontWeight.w500,
+    fontFamily: fontFamily,
+    color: CustomColors.fontBlack,
+  );
+
+  // Title
+  static const titleExtraSmall = TextStyle(
+    fontSize: 12.0,
+    fontWeight: FontWeight.bold,
+    fontFamily: fontFamily,
+    color: CustomColors.fontBlack,
+  );
+  static const titleSmall = TextStyle(
+    fontSize: 14.0,
+    fontWeight: FontWeight.bold,
+    fontFamily: fontFamily,
+    color: CustomColors.fontBlack,
+  );
+  static const titleMedium = TextStyle(
+    fontSize: 16.0,
+    fontWeight: FontWeight.bold,
+    fontFamily: fontFamily,
+    color: CustomColors.fontBlack,
+  );
+  static const titleLarge = TextStyle(
+    fontSize: 24.0,
+    fontWeight: FontWeight.bold,
+    fontFamily: fontFamily,
+    color: CustomColors.fontBlack,
+  );
+}
