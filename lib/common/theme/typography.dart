@@ -4,6 +4,14 @@ import 'package:flutter/material.dart';
 class CustomFonts {
   static const fontFamily = "Satoshi";
 
+  //Body
+  static const bodySmall = TextStyle(
+    fontSize: 14.0,
+    fontWeight: FontWeight.normal,
+    fontFamily: fontFamily,
+    color: CustomColors.fontBlack,
+  );
+
   // Label
   static const labelMedium = TextStyle(
     fontSize: 16.0,

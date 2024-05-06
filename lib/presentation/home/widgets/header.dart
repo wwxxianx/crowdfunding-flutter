@@ -1,30 +1,38 @@
 import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
+import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/avatar/avatar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class HomePageHeader extends StatelessWidget {
-  const HomePageHeader({super.key});
+  final String title;
+  final Widget action;
+  final EdgeInsetsGeometry padding;
+  const HomePageHeader({
+    super.key,
+    required this.title,
+    required this.action,
+    this.padding = const EdgeInsets.only(
+      left: Dimensions.screenHorizontalPadding,
+      right: Dimensions.screenHorizontalPadding,
+      top: 20.0,
+    ),
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-        left: Dimensions.screenHorizontalPadding,
-        right: Dimensions.screenHorizontalPadding,
-        top: 20.0,
-      ),
+      padding: padding,
       child: Row(
         children: [
           Avatar(imageUrl: ""),
-          const SizedBox(width: 8.0),
+          8.kW,
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Welcome back!",
+                title,
                 style: CustomFonts.titleSmall,
               ),
               Text(
@@ -35,33 +43,7 @@ class HomePageHeader extends StatelessWidget {
             ],
           ),
           const Spacer(),
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 6,
-              vertical: 4,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(100.0),
-              border: Border.all(color: Colors.black, width: 1.0),
-            ),
-            child: Row(
-              children: [
-                SvgPicture.asset(
-                  "assets/icons/coin.svg",
-                  height: 24.0,
-                  width: 24.0,
-                ),
-                const SizedBox(
-                  width: 2.0,
-                ),
-                Text(
-                  "28",
-                  style: CustomFonts.labelSmall,
-                )
-              ],
-            ),
-          ),
+          action,
         ],
       ),
     );

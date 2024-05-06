@@ -1,5 +1,6 @@
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
+import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/presentation/login/widgets/login_form.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +23,7 @@ class LoginScreen extends StatelessWidget {
                 "Login",
                 style: CustomFonts.titleLarge,
               ),
-              const SizedBox(height: 24.0),
+              24.kH,
               LoginForm(),
             ],
           ),

@@ -1,4 +1,5 @@
 import 'package:crowdfunding_flutter/common/theme/color.dart';
+import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/utils/input_validator.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/input/outlined_text_field.dart';
@@ -40,9 +41,7 @@ class _LoginFormState extends State<LoginForm> {
             ),
             textInputAction: TextInputAction.next,
           ),
-          const SizedBox(
-            height: 16.0,
-          ),
+          16.kH,
           CustomOutlinedTextfield(
             label: "Password",
             hintText: "********",
@@ -56,9 +55,7 @@ class _LoginFormState extends State<LoginForm> {
               _handleLoginSubmit();
             },
           ),
-          const SizedBox(
-            height: 20.0,
-          ),
+          20.kH,
           SizedBox(
             width: double.infinity,
             child: CustomButton(
@@ -67,9 +64,7 @@ class _LoginFormState extends State<LoginForm> {
               child: const Text("Login"),
             ),
           ),
-          const SizedBox(
-            height: 24.0,
-          ),
+          24.kH,
           const Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -100,9 +95,7 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ],
           ),
-          const SizedBox(
-            height: 24.0,
-          ),
+          24.kH,
           SizedBox(
             width: double.maxFinite,
             child: CustomButton(
@@ -117,9 +110,7 @@ class _LoginFormState extends State<LoginForm> {
                     width: 20.0,
                     fit: BoxFit.cover,
                   ),
-                  const SizedBox(
-                    width: 10.0,
-                  ),
+                  10.kW,
                   Text("Continue with Google")
                 ],
               ),

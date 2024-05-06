@@ -23,19 +23,19 @@ class CustomButton extends StatelessWidget {
 
   const CustomButton({
     Key? key,
-    this.onPressed,
-    this.child,
+    required this.onPressed,
+    required this.child,
     this.color,
     this.height = 50.0,
     this.elevation = 2.0,
     this.borderRadius = const BorderRadius.all(Radius.circular(8.0)),
     this.padding = const EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
-    this.textStyle = CustomFonts.labelMedium,
+    this.textStyle = CustomFonts.titleMedium,
     this.style = CustomButtonStyle.gradientGreen,
     this.isLoading = false,
   }) : super(key: key);
 
-  Color _getBackgroundColor() {
+  Color? _getBackgroundColor() {
     switch (style) {
       case CustomButtonStyle.flatGreen:
         return CustomColors.primaryGreen;
@@ -44,6 +44,7 @@ class CustomButton extends StatelessWidget {
       case CustomButtonStyle.black:
         return Colors.black;
       case CustomButtonStyle.gradientGreen:
+        return null;
       default:
         return Colors.transparent;
     }

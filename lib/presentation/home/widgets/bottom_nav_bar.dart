@@ -7,17 +7,25 @@ import 'package:flutter_svg/flutter_svg.dart';
 class HomeBottomNavigationBar extends StatelessWidget {
   const HomeBottomNavigationBar({super.key});
 
+  int _getCurrentIndex(NavigationState state) {
+    switch (state) {
+      case NavigationState.home:
+        return 0;
+      case NavigationState.explore:
+        return 1;
+      case NavigationState.notification:
+        return 2;
+      case NavigationState.manage:
+        return 3;
+      case NavigationState.account:
+        return 4;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<NavigationCubit, NavigationState>(
       builder: (context, state) {
-        final currentIndex = state == NavigationState.home
-            ? 0
-            : state == NavigationState.notification
-                ? 1
-                : state == NavigationState.manage
-                    ? 2
-                    : 3;
         return BottomNavigationBar(
           backgroundColor: Colors.white,
           type: BottomNavigationBarType.fixed,
@@ -32,6 +40,11 @@ class HomeBottomNavigationBar extends StatelessWidget {
               icon: SvgPicture.asset("assets/icons/home.svg"),
               activeIcon: SvgPicture.asset("assets/icons/home-active.svg"),
               label: "Home",
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset("assets/icons/globe.svg"),
+              activeIcon: SvgPicture.asset("assets/icons/globe-active.svg"),
+              label: "Explore",
             ),
             BottomNavigationBarItem(
               icon: SvgPicture.asset("assets/icons/bell.svg"),
@@ -51,7 +64,7 @@ class HomeBottomNavigationBar extends StatelessWidget {
               label: "Account",
             ),
           ],
-          currentIndex: currentIndex,
+          currentIndex: _getCurrentIndex(state),
           onTap: (index) {
             switch (index) {
               case 0:
@@ -62,14 +75,19 @@ class HomeBottomNavigationBar extends StatelessWidget {
               case 1:
                 context
                     .read<NavigationCubit>()
-                    .onNavigateTo(NavigationState.notification);
+                    .onNavigateTo(NavigationState.explore);
                 break;
               case 2:
                 context
                     .read<NavigationCubit>()
-                    .onNavigateTo(NavigationState.manage);
+                    .onNavigateTo(NavigationState.notification);
                 break;
               case 3:
+                context
+                    .read<NavigationCubit>()
+                    .onNavigateTo(NavigationState.manage);
+                break;
+              case 4:
                 context
                     .read<NavigationCubit>()
                     .onNavigateTo(NavigationState.account);

@@ -1,11 +1,12 @@
 import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
+import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:crowdfunding_flutter/common/widgets/input/decorated_input_border.dart';
 
 class CustomOutlinedTextfield extends StatefulWidget {
   final FocusNode? focusNode;
-  final String label;
+  final String? label;
   final String? hintText;
   final TextEditingController controller;
   final bool isObscureText;
@@ -18,7 +19,7 @@ class CustomOutlinedTextfield extends StatefulWidget {
   const CustomOutlinedTextfield({
     super.key,
     this.focusNode,
-    required this.label,
+    this.label,
     this.hintText,
     required this.controller,
     this.isObscureText = false,
@@ -50,13 +51,12 @@ class _CustomOutlinedTextfieldState extends State<CustomOutlinedTextfield> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.label,
-          style: CustomFonts.labelSmall,
-        ),
-        const SizedBox(height: 4.0),
+        if (widget.label != null)
+          Text(widget.label!, style: CustomFonts.labelSmall),
+        4.kH,
         TextFormField(
           onFieldSubmitted: widget.onFieldSubmitted,
           controller: widget.controller,

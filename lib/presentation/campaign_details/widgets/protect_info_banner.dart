@@ -1,5 +1,6 @@
 import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
+import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
@@ -23,9 +24,7 @@ class ProtectInfoBanner extends StatelessWidget {
                 size: 20.0,
                 color: CustomColors.accentBlue,
               ),
-              const SizedBox(
-                width: 4.0,
-              ),
+              4.kW,
               Text(
                 "Protected Fundraiser",
                 style: CustomFonts.labelMedium.copyWith(
@@ -35,9 +34,7 @@ class ProtectInfoBanner extends StatelessWidget {
               )
             ],
           ),
-          const SizedBox(
-            height: 2.0,
-          ),
+          2.kH,
           Text(
             "We guarantee a full refund of your donation in case of fraud.",
             style: TextStyle(

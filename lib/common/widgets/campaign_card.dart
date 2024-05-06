@@ -1,6 +1,7 @@
 import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
+import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/tag/custom_tag.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
@@ -9,7 +10,11 @@ import 'package:transparent_image/transparent_image.dart';
 import 'package:intl/intl.dart';
 
 class CampaignCard extends StatelessWidget {
-  const CampaignCard({super.key});
+  final bool isSmall;
+  const CampaignCard({
+    super.key,
+    this.isSmall = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +24,8 @@ class CampaignCard extends StatelessWidget {
         : deviceWidth - (Dimensions.screenHorizontalPadding * 2);
 
     return Container(
-      width: cardWidth,
-      height: 395.0,
+      width: isSmall ? null : cardWidth,
+      height: isSmall ? null : 400.0,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(6.0),
@@ -42,83 +47,93 @@ class CampaignCard extends StatelessWidget {
                   placeholder: kTransparentImage,
                   image:
                       "https://i.ibb.co/Ss74GM1/joel-muniz-A4-Ax1-Apccf-A-unsplash.jpg",
-                  height: 246.0,
+                  height: isSmall ? null : 246.0,
                   fit: BoxFit.cover,
                 ),
               ),
-              Positioned(
-                top: 8.0,
-                left: 12.0,
-                child: CustomTag(
-                  prefixIcon: HeroIcon(
-                    HeroIcons.mapPin,
-                    size: 16.0,
-                    color: Color(0xFF2F2F2F),
+              if (!isSmall)
+                Positioned(
+                  top: 8.0,
+                  left: 12.0,
+                  child: CustomTag(
+                    prefixIcon: HeroIcon(
+                      HeroIcons.mapPin,
+                      size: 16.0,
+                      color: Color(0xFF2F2F2F),
+                    ),
+                    label: "Kuala Lumpur",
                   ),
-                  label: "Kuala Lumpur",
                 ),
-              ),
             ],
           ),
-          const SizedBox(
-            height: 8.0,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "2023/09/27 (2 months ago)",
-                          style: CustomFonts.labelExtraSmall
-                              .copyWith(color: CustomColors.textGrey),
-                        ),
-                        const SizedBox(
-                          height: 8.0,
-                        ),
-                        Row(
-                          children: [
-                            CampaignCategoryTag(
-                              isSmall: true,
+          8.kH,
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: isSmall ? 8 : 12,
+                right: isSmall ? 8 : 12,
+                bottom: isSmall ? 8 : 12,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (!isSmall)
+                            Text(
+                              "2023/09/27 (2 months ago)",
+                              style: CustomFonts.labelExtraSmall
+                                  .copyWith(color: CustomColors.textGrey),
                             ),
-                            CustomTag(
-                              label: "65% Raised",
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      onPressed: () {},
-                      icon: HeroIcon(
-                        HeroIcons.heart,
-                        size: 24.0,
+                          if (!isSmall) 8.kH,
+                          Row(
+                            children: [
+                              CampaignCategoryTag(
+                                isSmall: true,
+                              ),
+                              if (!isSmall)
+                                CustomTag(
+                                  label: "65% Raised",
+                                ),
+                            ],
+                          )
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 6.0,
-                ),
-                Text(
-                  "Campaign Title",
-                  style: CustomFonts.titleMedium,
-                ),
-                const SizedBox(
-                  height: 16.0,
-                ),
-                DonationProgressBar(
-                  total: 10.0,
-                  current: 7.5,
-                )
-              ],
+                      const Spacer(),
+                      if (!isSmall)
+                        IconButton(
+                          onPressed: () {},
+                          icon: HeroIcon(
+                            HeroIcons.heart,
+                            size: 24.0,
+                          ),
+                        ),
+                    ],
+                  ),
+                  6.kH,
+                  Text(
+                    "Campaign Title",
+                    style: isSmall ? null : CustomFonts.titleMedium,
+                  ),
+                  16.kH,
+                  const Spacer(),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      DonationProgressBar(
+                        total: 10.0,
+                        current: 7.5,
+                        height: isSmall ? 8 : 10,
+                        showDonationStatusText: !isSmall,
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ],
@@ -152,13 +167,14 @@ class CampaignCategoryTag extends StatelessWidget {
           color: Color(0xFFFFF1F2),
         ),
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               Symbols.ecg_heart,
               size: isSmall ? 16.0 : 20.0,
               color: Color(0xFF9F1239),
             ),
-            const SizedBox(width: 4.0),
+            4.kW,
             Text(
               "Medical",
               style: textStyle.copyWith(
@@ -176,11 +192,13 @@ class DonationProgressBar extends StatelessWidget {
   final double total;
   final double current;
   final double height;
+  final bool showDonationStatusText;
   const DonationProgressBar({
     super.key,
     required this.current,
     required this.total,
     this.height = 10.0,
+    this.showDonationStatusText = true,
   });
 
   @override
@@ -190,25 +208,26 @@ class DonationProgressBar extends StatelessWidget {
     String formattedCurrent = NumberFormat('#,###').format(current);
 
     return Column(
+      // mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 4.0),
           child: Row(
+            // mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 "RM ${formattedCurrent} / RM ${formattedTotal}",
                 style: CustomFonts.labelExtraSmall,
               ),
-              Text(
-                " (800 donations)",
-                style: CustomFonts.titleExtraSmall,
-              ),
+              if (showDonationStatusText)
+                Text(
+                  " (800 donations)",
+                  style: CustomFonts.titleExtraSmall,
+                ),
             ],
           ),
         ),
-        const SizedBox(
-          height: 2.0,
-        ),
+        2.kH,
         Stack(
           children: [
             Container(

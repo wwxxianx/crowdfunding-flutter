@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
+import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/text/gradient_text.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +66,7 @@ class SloganBanner extends StatelessWidget {
                             fontWeight: FontWeight.bold, fontSize: 16.0),
                       ),
                     ),
-                    const SizedBox(height: 12.0),
+                    12.kH,
                     CustomButton(
                       style: CustomButtonStyle.black,
                       borderRadius: BorderRadius.circular(6.0),
