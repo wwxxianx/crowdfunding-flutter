@@ -3,6 +3,7 @@ import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_icon_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/campaign_card.dart';
+import 'package:crowdfunding_flutter/common/widgets/scaffold_mask.dart';
 import 'package:crowdfunding_flutter/common/widgets/tab/custom_tab_button.dart';
 import 'package:crowdfunding_flutter/presentation/explore/widgets/animated_search_bar.dart';
 import 'package:crowdfunding_flutter/presentation/home/widgets/header.dart';
@@ -22,11 +23,24 @@ class ExploreScreen extends StatefulWidget {
 
 class _ExploreScreenState extends State<ExploreScreen> {
   final _searchTextController = TextEditingController();
+  bool isShowingMask = false;
   bool isGridView = true;
 
   void _handleViewChange(bool value) {
     setState(() {
       isGridView = value;
+    });
+  }
+
+  void _handleShowMask() {
+    setState(() {
+      isShowingMask = true;
+    });
+  }
+
+  void _handleHideMask() {
+    setState(() {
+      isShowingMask = false;
     });
   }
 
@@ -52,7 +66,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
         padding: const EdgeInsets.symmetric(
           horizontal: Dimensions.screenHorizontalPadding,
         ),
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemCount: 10,
         itemBuilder: (context, index) {
@@ -102,91 +116,73 @@ class _ExploreScreenState extends State<ExploreScreen> {
                         textController: _searchTextController,
                         width: MediaQuery.of(context).size.width -
                             Dimensions.screenHorizontalPadding,
-                        onSubmitted: (string) {},
-                        onSuffixTap: () {},
-                        searchBarOpen: (integer) {},
+                        onSubmitted: (string) {
+                          _handleHideMask();
+                        },
+                        onSuffixTap: () {
+                          _handleHideMask();
+                        },
+                        searchBarOpen: (integer) {
+                          _handleShowMask();
+                        },
                       ),
                     ],
                   ),
                 ],
               ),
-              // child: Row(
-              //   mainAxisAlignment: MainAxisAlignment.end,
-              //   children: [
-              //     // CustomIconButton(
-              //     //   style: IconButtonStyle.white,
-              //     //   icon: HeroIcon(
-              //     //     HeroIcons.magnifyingGlass,
-              //     //     size: 30.0,
-              //     //     color: CustomColors.accentGreen,
-              //     //   ),
-              //     //   onPressed: () {},
-              //     // ),
-              //     // 8.kW,
-              //     AnimatedSearchBar(
-              //       width: 500,
-              //       searchBarOpen: (p0) {},
-              //       textController: _searchTextController,
-              //       onSuffixTap: () {},
-              //       onSubmitted: (string) {},
-              //     ),
-              //     CustomIconButton(
-              //       onPressed: () {},
-              //       icon: HeroIcon(
-              //         HeroIcons.adjustmentsHorizontal,
-              //         size: 35.0,
-              //       ),
-              //     ),
-              //   ],
-              // ),
             ),
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  //Header
-                  HomePageHeader(
-                    padding: const EdgeInsets.only(
-                      top: 20.0,
-                      left: 15,
-                      right: 15,
-                    ),
-                    title: "Let's help someone!",
-                    action: CustomTab(
-                      onTabItemChange: (tabIndex) {
-                        switch (tabIndex) {
-                          case 0:
-                            _handleViewChange(true);
-                            break;
-                          case 1:
-                            _handleViewChange(false);
-                            break;
-                        }
-                      },
-                      tabs: [
-                        TabItem(
-                          title: 'Grid',
-                          prefixIcon: Icon(
-                            Symbols.grid_view_rounded,
-                            size: 16,
-                            color: CustomColors.fontBlack,
-                            weight: 500,
-                          ),
+            body: Stack(
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      //Header
+                      HomePageHeader(
+                        padding: const EdgeInsets.only(
+                          top: 20.0,
+                          left: 15,
+                          right: 15,
                         ),
-                        TabItem(
-                          title: 'List',
-                          prefixIcon: HeroIcon(
-                            HeroIcons.listBullet,
-                            size: 16,
-                            color: CustomColors.fontBlack,
-                          ),
+                        title: "Let's help someone!",
+                        action: CustomTab(
+                          onTabItemChange: (tabIndex) {
+                            switch (tabIndex) {
+                              case 0:
+                                _handleViewChange(true);
+                                break;
+                              case 1:
+                                _handleViewChange(false);
+                                break;
+                            }
+                          },
+                          tabs: [
+                            TabItem(
+                              title: 'Grid',
+                              prefixIcon: Icon(
+                                Symbols.grid_view_rounded,
+                                size: 16,
+                                color: CustomColors.fontBlack,
+                                weight: 500,
+                              ),
+                            ),
+                            TabItem(
+                              title: 'List',
+                              prefixIcon: HeroIcon(
+                                HeroIcons.listBullet,
+                                size: 16,
+                                color: CustomColors.fontBlack,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      20.kH,
+                      _buildCampaignsContentLayout(),
+                    ],
                   ),
-                  20.kH,
-                  _buildCampaignsContentLayout(),
-                ],
-              ),
+                ),
+                if (isShowingMask) const ScaffoldMask()
+              ],
             ),
           );
         },
