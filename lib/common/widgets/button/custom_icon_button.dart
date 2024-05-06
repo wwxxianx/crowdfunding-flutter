@@ -10,6 +10,7 @@ class CustomIconButton extends StatelessWidget {
   final Widget icon;
   final VoidCallback onPressed;
   final IconButtonStyle style;
+
   const CustomIconButton({
     super.key,
     required this.icon,

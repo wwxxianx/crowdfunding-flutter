@@ -4,6 +4,7 @@ import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension
 import 'package:crowdfunding_flutter/common/widgets/button/custom_icon_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/campaign_card.dart';
 import 'package:crowdfunding_flutter/common/widgets/tab/custom_tab_button.dart';
+import 'package:crowdfunding_flutter/presentation/explore/widgets/animated_search_bar.dart';
 import 'package:crowdfunding_flutter/presentation/home/widgets/header.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_state.dart';
@@ -20,6 +21,7 @@ class ExploreScreen extends StatefulWidget {
 }
 
 class _ExploreScreenState extends State<ExploreScreen> {
+  final _searchTextController = TextEditingController();
   bool isGridView = true;
 
   void _handleViewChange(bool value) {
@@ -79,27 +81,64 @@ class _ExploreScreenState extends State<ExploreScreen> {
               margin: const EdgeInsets.only(bottom: 8.0, right: 10.0),
               color: Colors.transparent,
               child: Row(
+                mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  CustomIconButton(
-                    style: IconButtonStyle.white,
-                    icon: HeroIcon(
-                      HeroIcons.magnifyingGlass,
-                      size: 30.0,
-                      color: CustomColors.accentGreen,
-                    ),
-                    onPressed: () {},
-                  ),
-                  8.kW,
-                  CustomIconButton(
-                    onPressed: () {},
-                    icon: HeroIcon(
-                      HeroIcons.adjustmentsHorizontal,
-                      size: 35.0,
-                    ),
+                  Stack(
+                    alignment: Alignment.bottomRight,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 68),
+                        child: CustomIconButton(
+                          onPressed: () {},
+                          icon: HeroIcon(
+                            HeroIcons.adjustmentsHorizontal,
+                            size: 35.0,
+                          ),
+                        ),
+                      ),
+                      AnimatedSearchBar(
+                        autoFocus: true,
+                        textController: _searchTextController,
+                        width: MediaQuery.of(context).size.width -
+                            Dimensions.screenHorizontalPadding,
+                        onSubmitted: (string) {},
+                        onSuffixTap: () {},
+                        searchBarOpen: (integer) {},
+                      ),
+                    ],
                   ),
                 ],
               ),
+              // child: Row(
+              //   mainAxisAlignment: MainAxisAlignment.end,
+              //   children: [
+              //     // CustomIconButton(
+              //     //   style: IconButtonStyle.white,
+              //     //   icon: HeroIcon(
+              //     //     HeroIcons.magnifyingGlass,
+              //     //     size: 30.0,
+              //     //     color: CustomColors.accentGreen,
+              //     //   ),
+              //     //   onPressed: () {},
+              //     // ),
+              //     // 8.kW,
+              //     AnimatedSearchBar(
+              //       width: 500,
+              //       searchBarOpen: (p0) {},
+              //       textController: _searchTextController,
+              //       onSuffixTap: () {},
+              //       onSubmitted: (string) {},
+              //     ),
+              //     CustomIconButton(
+              //       onPressed: () {},
+              //       icon: HeroIcon(
+              //         HeroIcons.adjustmentsHorizontal,
+              //         size: 35.0,
+              //       ),
+              //     ),
+              //   ],
+              // ),
             ),
             body: SingleChildScrollView(
               child: Column(
