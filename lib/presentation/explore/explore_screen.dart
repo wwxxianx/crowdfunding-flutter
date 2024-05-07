@@ -47,11 +47,11 @@ class _ExploreScreenState extends State<ExploreScreen> {
   }
 
   Widget _buildCampaignsContentLayout() {
-    final key = Key(Uuid().toString());
     if (isGridView) {
       return AnimationLimiter(
-        key: key,
+        key: ValueKey<bool>(isGridView),
         child: GridView.count(
+          key: ValueKey<bool>(isGridView),
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           physics: const NeverScrollableScrollPhysics(),
           childAspectRatio: 0.70,
@@ -63,12 +63,16 @@ class _ExploreScreenState extends State<ExploreScreen> {
             20,
             (int index) {
               return AnimationConfiguration.staggeredGrid(
+                key: ValueKey<bool>(isGridView),
                 position: index,
                 duration: const Duration(milliseconds: 375),
                 columnCount: 2,
                 child: ScaleAnimation(
+                  key: ValueKey<bool>(isGridView),
                   child: FadeInAnimation(
-                    child: const CampaignCard(
+                    key: ValueKey<bool>(isGridView),
+                    child: CampaignCard(
+                      key: ValueKey<bool>(isGridView),
                       isSmall: true,
                     ),
                   ),
@@ -80,8 +84,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
       );
     } else {
       return AnimationLimiter(
-        key: key,
+        key: ValueKey<bool>(isGridView),
         child: ListView.builder(
+          key: ValueKey<bool>(isGridView),
           padding: const EdgeInsets.symmetric(
             horizontal: Dimensions.screenHorizontalPadding,
           ),
@@ -90,13 +95,17 @@ class _ExploreScreenState extends State<ExploreScreen> {
           itemCount: 20,
           itemBuilder: (BuildContext context, int index) {
             return AnimationConfiguration.staggeredList(
+              key: ValueKey<bool>(isGridView),
               position: index,
               duration: const Duration(milliseconds: 375),
               delay: const Duration(milliseconds: 200),
               child: SlideAnimation(
+                key: ValueKey<bool>(isGridView),
                 verticalOffset: 50.0,
                 child: FadeInAnimation(
+                  key: ValueKey<bool>(isGridView),
                   child: Padding(
+                    key: ValueKey<bool>(isGridView),
                     padding: const EdgeInsets.only(bottom: 12.0),
                     child: const CampaignCard(),
                   ),
@@ -174,9 +183,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
                         padding: const EdgeInsets.only(
                           top: 20.0,
                           left: 15,
-                          right: 15,
+                          right: 10,
                         ),
-                        title: "Let's help someone!",
+                        title: "Let's help!",
                         action: CustomTab(
                           onTabItemChange: (tabIndex) {
                             switch (tabIndex) {
