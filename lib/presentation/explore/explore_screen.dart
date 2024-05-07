@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:uuid/uuid.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
@@ -45,36 +47,64 @@ class _ExploreScreenState extends State<ExploreScreen> {
   }
 
   Widget _buildCampaignsContentLayout() {
+    final key = Key(Uuid().toString());
     if (isGridView) {
-      return GridView.count(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        physics: const NeverScrollableScrollPhysics(),
-        childAspectRatio: 0.70,
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
-        shrinkWrap: true,
-        crossAxisCount: 2,
-        children: List.generate(
-          20,
-          (index) => const CampaignCard(
-            isSmall: true,
+      return AnimationLimiter(
+        key: key,
+        child: GridView.count(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          physics: const NeverScrollableScrollPhysics(),
+          childAspectRatio: 0.70,
+          mainAxisSpacing: 12,
+          crossAxisSpacing: 12,
+          shrinkWrap: true,
+          crossAxisCount: 2,
+          children: List.generate(
+            20,
+            (int index) {
+              return AnimationConfiguration.staggeredGrid(
+                position: index,
+                duration: const Duration(milliseconds: 375),
+                columnCount: 2,
+                child: ScaleAnimation(
+                  child: FadeInAnimation(
+                    child: const CampaignCard(
+                      isSmall: true,
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
         ),
       );
     } else {
-      return ListView.builder(
-        padding: const EdgeInsets.symmetric(
-          horizontal: Dimensions.screenHorizontalPadding,
+      return AnimationLimiter(
+        key: key,
+        child: ListView.builder(
+          padding: const EdgeInsets.symmetric(
+            horizontal: Dimensions.screenHorizontalPadding,
+          ),
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: 20,
+          itemBuilder: (BuildContext context, int index) {
+            return AnimationConfiguration.staggeredList(
+              position: index,
+              duration: const Duration(milliseconds: 375),
+              delay: const Duration(milliseconds: 200),
+              child: SlideAnimation(
+                verticalOffset: 50.0,
+                child: FadeInAnimation(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 12.0),
+                    child: const CampaignCard(),
+                  ),
+                ),
+              ),
+            );
+          },
         ),
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 12.0),
-            child: const CampaignCard(),
-          );
-        },
       );
     }
   }

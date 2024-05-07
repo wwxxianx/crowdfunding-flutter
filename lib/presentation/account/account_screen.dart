@@ -3,6 +3,8 @@ import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/avatar/avatar.dart';
+import 'package:crowdfunding_flutter/common/widgets/button/custom_list_tile.dart';
+import 'package:crowdfunding_flutter/common/widgets/container/custom_card.dart';
 import 'package:crowdfunding_flutter/common/widgets/text/text_bg_gradient_shape.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -202,86 +204,6 @@ class AccountScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class CustomListTile extends StatelessWidget {
-  final Widget? title;
-  final Widget? leading;
-  final Widget? trailing;
-  final VoidCallback onTap;
-  final EdgeInsetsGeometry padding;
-
-  const CustomListTile({
-    super.key,
-    required this.title,
-    required this.leading,
-    required this.trailing,
-    required this.onTap,
-    this.padding = const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Ink(
-        child: Container(
-          padding: padding,
-          child: Row(
-            children: [
-              if (leading != null) leading!,
-              if (leading != null) 8.kW,
-              if (title != null) title!,
-              const Spacer(),
-              if (trailing != null) trailing!,
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class CustomCard extends StatelessWidget {
-  final Widget child;
-  final EdgeInsetsGeometry padding;
-  const CustomCard({
-    super.key,
-    required this.child,
-    this.padding = const EdgeInsets.only(
-      left: 16.0,
-      right: 12.0,
-      top: 18.0,
-      bottom: 12.0,
-    ),
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: padding,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(6.0),
-          color: Colors.white,
-          border: Border.all(
-            color: Color(0xFFF5F5F5),
-            width: 1.0,
-          ),
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 8.0,
-              offset: Offset(0, 1),
-              color: Colors.black.withOpacity(0.08),
-            ),
-            BoxShadow(
-              blurRadius: 2.0,
-              offset: Offset(0, 1),
-              color: Colors.black.withOpacity(0.12),
-            ),
-          ]),
-      child: child,
     );
   }
 }
