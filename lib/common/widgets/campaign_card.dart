@@ -4,10 +4,98 @@ import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/tag/custom_tag.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:intl/intl.dart';
+
+class MatchOfferContent extends StatefulWidget {
+  const MatchOfferContent({super.key});
+
+  @override
+  State<MatchOfferContent> createState() => _MatchOfferContentState();
+}
+
+class _MatchOfferContentState extends State<MatchOfferContent>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation _startColorAnimation;
+  late Animation _endColorAnimation;
+
+  final startColor = Color(0xFFF1FAEA);
+  final endColor = Color(0xFFB7FF87);
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    );
+
+    _startColorAnimation = ColorTween(
+      begin: startColor,
+      end: endColor,
+    ).animate(_controller);
+    _endColorAnimation = ColorTween(
+      begin: endColor,
+      end: startColor,
+    ).animate(_controller);
+    _controller.repeat(reverse: true);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) => Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(6),
+            bottomRight: Radius.circular(6),
+          ),
+          gradient: LinearGradient(
+            colors: [
+              _startColorAnimation.value,
+              _endColorAnimation.value,
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                SvgPicture.asset(
+                  "assets/icons/offer-fire.svg",
+                  width: 18,
+                  height: 18,
+                ),
+                4.kW,
+                Text(
+                  "Match Offer!",
+                  style: CustomFonts.titleSmall.copyWith(
+                    color: Color(0xFF335B17),
+                  ),
+                )
+              ],
+            ),
+            4.kH,
+            Text(
+              "Your donation to this campaign, our community will donate RM1 more!",
+              style: CustomFonts.labelExtraSmall.copyWith(
+                color: Color(0xFF1A3E01),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class CampaignCard extends StatelessWidget {
   final bool isSmall;
@@ -23,120 +111,139 @@ class CampaignCard extends StatelessWidget {
         ? 343
         : deviceWidth - (Dimensions.screenHorizontalPadding * 2);
 
-    return Container(
-      width: isSmall ? null : cardWidth,
-      height: isSmall ? null : 400.0,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(6.0),
-        border: Border.all(
-          color: Colors.black,
-          width: 1.0,
+    return IntrinsicHeight(
+      child: Container(
+        width: isSmall ? null : cardWidth,
+        // height: isSmall ? null : 400.0,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(6.0),
+          border: Border.all(
+            color: Colors.black,
+            width: 1.0,
+          ),
         ),
-      ),
-      child: Column(
-        children: [
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(5.0),
-                  topRight: Radius.circular(5.0),
-                ),
-                child: FadeInImage.memoryNetwork(
-                  placeholder: kTransparentImage,
-                  image:
-                      "https://i.ibb.co/Ss74GM1/joel-muniz-A4-Ax1-Apccf-A-unsplash.jpg",
-                  height: isSmall ? null : 246.0,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              if (!isSmall)
-                Positioned(
-                  top: 8.0,
-                  left: 12.0,
-                  child: CustomTag(
-                    prefixIcon: HeroIcon(
-                      HeroIcons.mapPin,
-                      size: 16.0,
-                      color: Color(0xFF2F2F2F),
-                    ),
-                    label: "Kuala Lumpur",
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(5.0),
+                    topRight: Radius.circular(5.0),
+                  ),
+                  child: FadeInImage.memoryNetwork(
+                    placeholder: kTransparentImage,
+                    image:
+                        "https://i.ibb.co/Ss74GM1/joel-muniz-A4-Ax1-Apccf-A-unsplash.jpg",
+                    height: isSmall ? null : 246.0,
+                    fit: BoxFit.cover,
                   ),
                 ),
-            ],
-          ),
-          8.kH,
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: isSmall ? 8 : 12,
-                right: isSmall ? 8 : 12,
-                bottom: isSmall ? 8 : 12,
-              ),
+                if (!isSmall)
+                  Positioned(
+                    top: 8.0,
+                    left: 12.0,
+                    child: CustomTag(
+                      prefixIcon: HeroIcon(
+                        HeroIcons.mapPin,
+                        size: 16.0,
+                        color: Color(0xFF2F2F2F),
+                      ),
+                      label: "Kuala Lumpur",
+                    ),
+                  ),
+              ],
+            ),
+            8.kH,
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (!isSmall)
-                            Text(
-                              "2023/09/27 (2 months ago)",
-                              style: CustomFonts.labelExtraSmall
-                                  .copyWith(color: CustomColors.textGrey),
-                            ),
-                          if (!isSmall) 8.kH,
-                          Row(
-                            children: [
-                              CampaignCategoryTag(
-                                isSmall: true,
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: isSmall ? 8.0 : 12.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (!isSmall)
+                              Text(
+                                "2023/09/27 (2 months ago)",
+                                style: CustomFonts.labelExtraSmall
+                                    .copyWith(color: CustomColors.textGrey),
                               ),
-                              if (!isSmall)
-                                CustomTag(
-                                  label: "65% Raised",
+                            if (!isSmall) 8.kH,
+                            Row(
+                              children: [
+                                CampaignCategoryTag(
+                                  isSmall: true,
                                 ),
-                            ],
-                          )
-                        ],
-                      ),
-                      const Spacer(),
-                      if (!isSmall)
-                        IconButton(
-                          onPressed: () {},
-                          icon: HeroIcon(
-                            HeroIcons.heart,
-                            size: 24.0,
-                          ),
+                                if (!isSmall)
+                                  CustomTag(
+                                    label: "65% Raised",
+                                  ),
+                              ],
+                            )
+                          ],
                         ),
-                    ],
+                        const Spacer(),
+                        if (!isSmall)
+                          IconButton(
+                            onPressed: () {},
+                            icon: HeroIcon(
+                              HeroIcons.heart,
+                              size: 24.0,
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                   6.kH,
-                  Text(
-                    "Campaign Title",
-                    style: isSmall ? null : CustomFonts.titleMedium,
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: isSmall ? 8.0 : 12.0),
+                    child: Text(
+                      "Campaign Title",
+                      style: isSmall ? null : CustomFonts.titleMedium,
+                    ),
                   ),
                   16.kH,
                   const Spacer(),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      DonationProgressBar(
-                        total: 10.0,
-                        current: 7.5,
-                        height: isSmall ? 8 : 10,
-                        showDonationStatusText: !isSmall,
-                      ),
-                    ],
-                  )
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: isSmall ? 8.0 : 12.0,
+                      right: isSmall ? 8.0 : 12.0,
+                      bottom: isSmall ? 8.0 : 0.0,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        DonationProgressBar(
+                          total: 10.0,
+                          current: 7.5,
+                          height: isSmall ? 8 : 10,
+                          showDonationStatusText: !isSmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (!isSmall) 12.kH,
+                  // Top border for Match Offer container
+                  if (!isSmall)
+                    Container(
+                      width: double.maxFinite,
+                      height: 1,
+                      color: Colors.black,
+                    ),
+                  if (!isSmall) MatchOfferContent()
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -4,6 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:heroicons/heroicons.dart';
 
+class AnimatedSearch extends StatefulWidget {
+  const AnimatedSearch({super.key});
+
+  @override
+  State<AnimatedSearch> createState() => _AnimatedSearchState();
+}
+
+class _AnimatedSearchState extends State<AnimatedSearch> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
 class AnimatedSearchBar extends StatefulWidget {
   final double width;
   final double height;
@@ -82,18 +96,18 @@ class AnimatedSearchBar extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _AnimatedSearchBarState createState() => _AnimatedSearchBarState();
+  State<AnimatedSearchBar> createState() => _AnimatedSearchBarState();
 }
-
-///toggle - 0 => false or closed
-///toggle 1 => true or open
-int toggle = 0;
-
-/// * use this variable to check current text from OnChange
-String textFieldValue = '';
 
 class _AnimatedSearchBarState extends State<AnimatedSearchBar>
     with SingleTickerProviderStateMixin {
+  ///toggle - 0 => false or closed
+  ///toggle 1 => true or open
+  int toggle = 0;
+
+  /// * use this variable to check current text from OnChange
+  String textFieldValue = '';
+
   ///initializing the AnimationController
   late AnimationController _con;
   FocusNode focusNode = FocusNode();
@@ -139,18 +153,6 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar>
           border: Border.all(
             color: Colors.black,
           ),
-
-          /// show boxShadow unless false was passed
-          // boxShadow: !widget.boxShadow
-          //     ? null
-          //     : [
-          //         BoxShadow(
-          //           color: Colors.black26,
-          //           spreadRadius: -10.0,
-          //           blurRadius: 10.0,
-          //           offset: Offset(0.0, 10.0),
-          //         ),
-          //       ],
         ),
         child: Stack(
           children: [
@@ -179,19 +181,15 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar>
                           widget.onSuffixTap();
 
                           // * if field empty then the user trying to close bar
-                          if (textFieldValue == '') {
+                          if (textFieldValue.isEmpty) {
                             unfocusKeyboard();
                             setState(() {
                               toggle = 0;
                             });
 
-                            ///reverse == close
+                            ///reverse = close
                             _con.reverse();
                           }
-
-                          // * why not clear textfield here?
-                          widget.textController.clear();
-                          textFieldValue = '';
 
                           ///closeSearchOnSuffixTap will execute if it's true
                           if (widget.closeSearchOnSuffixTap) {
@@ -248,7 +246,9 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar>
                     cursorRadius: Radius.circular(10.0),
                     cursorWidth: 2.0,
                     onChanged: (value) {
-                      textFieldValue = value;
+                      setState(() {
+                        textFieldValue = value;
+                      });
                     },
                     onSubmitted: (value) => {
                       widget.onSubmitted(value),
@@ -296,35 +296,27 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar>
             /// Left Icon and default icon
             InkWell(
               onTap: () {
-                setState(
-                  () {
-                    //if the search bar is closed
-                    if (toggle == 0) {
-                      toggle = 1;
-                      Future.delayed(const Duration(milliseconds: 350), () {
-                        setState(() {
-                          ///if the autoFocus is true, the keyboard will pop open, automatically
-                          if (widget.autoFocus)
-                            FocusScope.of(context).requestFocus(focusNode);
-                        });
-                      });
-
-                      ///forward == expand
-                      _con.forward();
-                    } else {
-                      ///if the search bar is expanded
-                      toggle = 0;
-
-                      ///if the autoFocus is true, the keyboard will close, automatically
-                      setState(() {
-                        if (widget.autoFocus) unfocusKeyboard();
-                      });
-
-                      ///reverse == close
-                      _con.reverse();
-                    }
-                  },
-                );
+                if (toggle == 0) {
+                  // Searchbar is closed currently
+                  setState(() {
+                    toggle = 1;
+                  });
+                  Future.delayed(const Duration(milliseconds: 350), () {
+                    setState(() {
+                      ///if the autoFocus is true, the keyboard will pop open, automatically
+                      if (widget.autoFocus)
+                        FocusScope.of(context).requestFocus(focusNode);
+                    });
+                  });
+                  // execute animation
+                  _con.forward();
+                } else {
+                  setState(() {
+                    toggle = 0;
+                  });
+                  unfocusKeyboard();
+                  _con.reverse();
+                }
                 widget.searchBarOpen(toggle);
               },
               child: Container(
@@ -337,54 +329,6 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar>
                 ),
               ),
             ),
-            // Material(
-            //   /// can add custom color or the color will be white
-            //   /// toggle button color based on toggle state
-            //   color: Colors.white,
-            //   borderRadius: BorderRadius.circular(6.0),
-            //   child: IconButton(
-            //     splashRadius: 19.0,
-
-            //     ///if toggle is 1, which means it's open. so show the back icon, which will close it.
-            //     ///if the toggle is 0, which means it's closed, so tapping on it will expand the widget.
-            //     ///prefixIcon is of type Icon
-            //     icon: HeroIcon(
-            //       HeroIcons.magnifyingGlass,
-            //       color: CustomColors.accentGreen,
-            //       size: 35.0,
-            //     ),
-            //     onPressed: () {
-            //       setState(
-            //         () {
-            //           ///if the search bar is closed
-            //           if (toggle == 0) {
-            //             toggle = 1;
-            //             setState(() {
-            //               ///if the autoFocus is true, the keyboard will pop open, automatically
-            //               if (widget.autoFocus)
-            //                 FocusScope.of(context).requestFocus(focusNode);
-            //             });
-
-            //             ///forward == expand
-            //             _con.forward();
-            //           } else {
-            //             ///if the search bar is expanded
-            //             toggle = 0;
-
-            //             ///if the autoFocus is true, the keyboard will close, automatically
-            //             setState(() {
-            //               if (widget.autoFocus) unfocusKeyboard();
-            //             });
-
-            //             ///reverse == close
-            //             _con.reverse();
-            //           }
-            //         },
-            //       );
-            //       widget.searchBarOpen(toggle);
-            //     },
-            //   ),
-            // ),
           ],
         ),
       ),

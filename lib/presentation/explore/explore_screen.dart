@@ -14,7 +14,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:uuid/uuid.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
@@ -51,7 +50,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
       return AnimationLimiter(
         key: ValueKey<bool>(isGridView),
         child: GridView.count(
-          key: ValueKey<bool>(isGridView),
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           physics: const NeverScrollableScrollPhysics(),
           childAspectRatio: 0.70,
@@ -63,16 +61,12 @@ class _ExploreScreenState extends State<ExploreScreen> {
             20,
             (int index) {
               return AnimationConfiguration.staggeredGrid(
-                key: ValueKey<bool>(isGridView),
                 position: index,
                 duration: const Duration(milliseconds: 375),
                 columnCount: 2,
                 child: ScaleAnimation(
-                  key: ValueKey<bool>(isGridView),
                   child: FadeInAnimation(
-                    key: ValueKey<bool>(isGridView),
                     child: CampaignCard(
-                      key: ValueKey<bool>(isGridView),
                       isSmall: true,
                     ),
                   ),
@@ -86,7 +80,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
       return AnimationLimiter(
         key: ValueKey<bool>(isGridView),
         child: ListView.builder(
-          key: ValueKey<bool>(isGridView),
           padding: const EdgeInsets.symmetric(
             horizontal: Dimensions.screenHorizontalPadding,
           ),
@@ -95,17 +88,13 @@ class _ExploreScreenState extends State<ExploreScreen> {
           itemCount: 20,
           itemBuilder: (BuildContext context, int index) {
             return AnimationConfiguration.staggeredList(
-              key: ValueKey<bool>(isGridView),
               position: index,
               duration: const Duration(milliseconds: 375),
               delay: const Duration(milliseconds: 200),
               child: SlideAnimation(
-                key: ValueKey<bool>(isGridView),
                 verticalOffset: 50.0,
                 child: FadeInAnimation(
-                  key: ValueKey<bool>(isGridView),
                   child: Padding(
-                    key: ValueKey<bool>(isGridView),
                     padding: const EdgeInsets.only(bottom: 12.0),
                     child: const CampaignCard(),
                   ),
@@ -124,6 +113,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
       data: ThemeData(
         bottomSheetTheme: const BottomSheetThemeData(
           backgroundColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
         ),
         colorScheme: ColorScheme.fromSeed(seedColor: CustomColors.primaryGreen),
         useMaterial3: true,
@@ -163,6 +153,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                         },
                         onSuffixTap: () {
                           _handleHideMask();
+                          print("Suffix tap");
                         },
                         searchBarOpen: (integer) {
                           _handleShowMask();
