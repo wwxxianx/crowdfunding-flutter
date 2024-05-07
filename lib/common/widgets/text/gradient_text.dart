@@ -1,15 +1,17 @@
+import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:flutter/material.dart';
 
 class GradientText extends StatelessWidget {
+  final String text;
+  final TextStyle? style;
+  final Gradient gradient;
   const GradientText({
     Key? key,
     required this.text,
     this.style,
-    required this.gradient,
+    this.gradient = CustomColors.primaryGreenGradient,
   }) : super(key: key);
-  final String text;
-  final TextStyle? style;
-  final Gradient gradient;
+
   @override
   Widget build(BuildContext context) {
     return ShaderMask(
