@@ -13,6 +13,12 @@ class CustomFonts {
   );
 
   // Label
+  static const labelLarge = TextStyle(
+    fontSize: 18.0,
+    fontWeight: FontWeight.w500,
+    fontFamily: fontFamily,
+    color: CustomColors.fontBlack,
+  );
   static const labelMedium = TextStyle(
     fontSize: 16.0,
     fontWeight: FontWeight.w500,

@@ -70,7 +70,10 @@ class _ExploreScreenState extends State<ExploreScreen> {
         shrinkWrap: true,
         itemCount: 10,
         itemBuilder: (context, index) {
-          return const CampaignCard();
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 12.0),
+            child: const CampaignCard(),
+          );
         },
       );
     }
