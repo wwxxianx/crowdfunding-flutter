@@ -11,6 +11,18 @@ class CustomFonts {
     fontFamily: fontFamily,
     color: CustomColors.fontBlack,
   );
+  static const bodyMedium = TextStyle(
+    fontSize: 16.0,
+    fontWeight: FontWeight.normal,
+    fontFamily: fontFamily,
+    color: CustomColors.fontBlack,
+  );
+  static const bodyLarge = TextStyle(
+    fontSize: 18.0,
+    fontWeight: FontWeight.normal,
+    fontFamily: fontFamily,
+    color: CustomColors.fontBlack,
+  );
 
   // Label
   static const labelLarge = TextStyle(

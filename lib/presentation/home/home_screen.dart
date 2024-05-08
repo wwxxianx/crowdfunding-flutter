@@ -3,6 +3,7 @@ import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/campaign_card.dart';
 import 'package:crowdfunding_flutter/common/widgets/text/gradient_text.dart';
+import 'package:crowdfunding_flutter/presentation/campaign_details/campaign_details_screen.dart';
 import 'package:crowdfunding_flutter/presentation/home/widgets/header.dart';
 import 'package:crowdfunding_flutter/presentation/home/widgets/slogan_banner.dart';
 import 'package:flutter/material.dart';
@@ -87,7 +88,11 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             SloganBanner(),
-            CampaignCard(),
+            CampaignCard(
+              onPressed: () {
+                Navigator.push(context, CampaignDetailsScreen.route());
+              },
+            ),
           ],
         ),
       ),

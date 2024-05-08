@@ -1,16 +1,22 @@
 import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
+import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
+import 'package:crowdfunding_flutter/common/widgets/button/campaign_category_toggle_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_icon_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/campaign_card.dart';
+import 'package:crowdfunding_flutter/common/widgets/campaign_category_tag.dart';
+import 'package:crowdfunding_flutter/common/widgets/container/custom_bottom_sheet.dart';
 import 'package:crowdfunding_flutter/common/widgets/scaffold_mask.dart';
 import 'package:crowdfunding_flutter/common/widgets/tab/custom_tab_button.dart';
 import 'package:crowdfunding_flutter/presentation/explore/widgets/animated_search_bar.dart';
+import 'package:crowdfunding_flutter/presentation/explore/widgets/filter_bottom_sheet.dart';
 import 'package:crowdfunding_flutter/presentation/home/widgets/header.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -52,7 +58,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
         child: GridView.count(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           physics: const NeverScrollableScrollPhysics(),
-          childAspectRatio: 0.70,
+          childAspectRatio: 0.65,
           mainAxisSpacing: 12,
           crossAxisSpacing: 12,
           shrinkWrap: true,
@@ -133,10 +139,18 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   Stack(
                     alignment: Alignment.bottomRight,
                     children: [
+                      // Filter button
                       Container(
                         margin: EdgeInsets.only(right: 68),
                         child: CustomIconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            showModalBottomSheet<void>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return CampaignsFilterBottomSheet();
+                              },
+                            );
+                          },
                           icon: HeroIcon(
                             HeroIcons.adjustmentsHorizontal,
                             size: 35.0,

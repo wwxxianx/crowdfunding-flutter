@@ -3,13 +3,18 @@ import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/campaign_card.dart';
+import 'package:crowdfunding_flutter/common/widgets/campaign_category_tag.dart';
 import 'package:crowdfunding_flutter/common/widgets/image_carousel.dart';
+import 'package:crowdfunding_flutter/common/widgets/input/outlined_text_field.dart';
 import 'package:crowdfunding_flutter/presentation/campaign_details/widgets/protect_info_banner.dart';
 import 'package:crowdfunding_flutter/presentation/campaign_details/widgets/tab_view.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 
 class CampaignDetailsScreen extends StatefulWidget {
+  static route() => MaterialPageRoute(
+        builder: (context) => const CampaignDetailsScreen(),
+      );
   const CampaignDetailsScreen({super.key});
 
   @override
@@ -18,17 +23,32 @@ class CampaignDetailsScreen extends StatefulWidget {
 
 class _CampaignDetailsScreenState extends State<CampaignDetailsScreen> {
   final _textController = TextEditingController();
+  final focusNode = FocusNode();
+  bool isShowingCommentBottomBar = false;
+
+  void _handleOpenCommentBottomBar() {
+    setState(() {
+      isShowingCommentBottomBar = true;
+    });
+    focusNode.requestFocus();
+  }
+
+  void _handleHideCommentBottomBar() {
+    setState(() {
+      isShowingCommentBottomBar = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
       bottomSheet: Container(
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           horizontal: Dimensions.screenHorizontalPadding,
           vertical: 14.0,
         ),
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
           border: Border.symmetric(
             horizontal: BorderSide(
@@ -41,21 +61,36 @@ class _CampaignDetailsScreenState extends State<CampaignDetailsScreen> {
           mainAxisSize: MainAxisSize.max,
           children: [
             Expanded(
-              child: CustomButton(
-                style: CustomButtonStyle.gradientGreen,
-                onPressed: () {},
-                child: Text("Donate"),
-              ),
+              child: isShowingCommentBottomBar
+                  ? CustomOutlinedTextfield(
+                      controller: _textController,
+                      focusNode: focusNode,
+                    )
+                  : CustomButton(
+                      style: CustomButtonStyle.gradientGreen,
+                      onPressed: () {},
+                      child: const Text("Donate"),
+                    ),
             ),
             8.kW,
-            IconButton(
-              onPressed: () {},
-              icon: HeroIcon(HeroIcons.chatBubbleLeftEllipsis),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: HeroIcon(HeroIcons.share),
-            )
+            isShowingCommentBottomBar
+                ? IconButton(
+                    onPressed: _handleHideCommentBottomBar,
+                    icon: HeroIcon(HeroIcons.xMark),
+                  )
+                : IconButton(
+                    onPressed: _handleOpenCommentBottomBar,
+                    icon: HeroIcon(HeroIcons.chatBubbleLeftEllipsis),
+                  ),
+            isShowingCommentBottomBar
+                ? IconButton(
+                    onPressed: () {},
+                    icon: HeroIcon(HeroIcons.paperAirplane),
+                  )
+                : IconButton(
+                    onPressed: () {},
+                    icon: HeroIcon(HeroIcons.share),
+                  )
           ],
         ),
       ),

@@ -3,6 +3,7 @@ import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/avatar/avatar.dart';
+import 'package:crowdfunding_flutter/common/widgets/text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -66,7 +67,7 @@ class CampaignAboutTabContent extends StatelessWidget {
             ],
           ),
 
-          20.kH,
+          28.kH,
           // Beneficiary
           Row(
             children: [
@@ -102,6 +103,22 @@ class CampaignAboutTabContent extends StatelessWidget {
                 ],
               )
             ],
+          ),
+
+          28.kH,
+          // Description
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "About this campaign",
+              style: CustomFonts.titleMedium,
+            ),
+          ),
+          8.kH,
+          ExpandableText(
+            text:
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Libero enim sed faucibus turpis in eu mi. Urna porttitor rhoncus dolor purus. Gravida quis blandit turpis cursus. ",
+            maxLines: 3,
           ),
         ],
       ),

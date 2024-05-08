@@ -1,4 +1,6 @@
 import 'package:crowdfunding_flutter/presentation/campaign_details/widgets/about_tab.dart';
+import 'package:crowdfunding_flutter/presentation/campaign_details/widgets/comment_tab.dart';
+import 'package:crowdfunding_flutter/presentation/campaign_details/widgets/update_tab.dart';
 import 'package:flutter/material.dart';
 
 class CampaignDetailsTabView extends StatefulWidget {
@@ -30,9 +32,9 @@ class _CampaignDetailsTabViewState extends State<CampaignDetailsTabView> {
       case 1:
         return Text("Donations");
       case 2:
-        return Text("Comments");
+        return CampaignCommentTabContent();
       case 3:
-        return Text("Updates");
+        return CampaignUpdateTabContent();
       default:
         return Container();
     }

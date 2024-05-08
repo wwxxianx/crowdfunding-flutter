@@ -1,6 +1,5 @@
 import 'package:crowdfunding_flutter/di/init_dependencies.dart';
 import 'package:crowdfunding_flutter/presentation/account/account_screen.dart';
-import 'package:crowdfunding_flutter/presentation/campaign_details/campaign_details_screen.dart';
 import 'package:crowdfunding_flutter/presentation/explore/explore_screen.dart';
 import 'package:crowdfunding_flutter/presentation/home/home_screen.dart';
 import 'package:crowdfunding_flutter/presentation/home/widgets/bottom_nav_bar.dart';

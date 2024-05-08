@@ -320,6 +320,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
+  go_router:
+    dependency: "direct main"
+    description:
+      name: go_router
+      sha256: "07ee2436909f749d606f53521dc1725dd738dc5196e5ff815bc254253c594075"
+      url: "https://pub.dev"
+    source: hosted
+    version: "13.1.0"
+  google_fonts:
+    dependency: "direct main"
+    description:
+      name: google_fonts
+      sha256: e20ff62b158b96f392bfc8afe29dee1503c94fbea2cbe8186fd59b756b8ae982
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.1.0"
   gotrue:
     dependency: transitive
     description:
@@ -460,10 +476,10 @@ packages:
     dependency: "direct main"
     description:
       name: material_symbols_icons
-      sha256: "4410e4bb5c6e16d811340f94532c0b3161d2a0ba60b41d0fa8a603186857cabe"
+      sha256: "36d4e5dd72f2fd282aca127cc4c4c29786d702cb506231ea73a5497fc324bf46"
       url: "https://pub.dev"
     source: hosted
-    version: "4.2719.3"
+    version: "4.2741.0"
   meta:
     dependency: transitive
     description:
