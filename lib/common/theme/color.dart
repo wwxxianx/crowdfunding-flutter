@@ -7,6 +7,7 @@ class CustomColors {
     Color(0xFF9DFF9D),
     Color(0xFFE6FF82),
   ]);
+  static const containerLightGreen = Color(0xFFF5FFF4);
 
   static const fontBlack = Color(0xFF232323);
 

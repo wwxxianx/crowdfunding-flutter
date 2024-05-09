@@ -70,6 +70,12 @@ class CustomFonts {
     color: CustomColors.fontBlack,
   );
   static const titleLarge = TextStyle(
+    fontSize: 18.0,
+    fontWeight: FontWeight.bold,
+    fontFamily: fontFamily,
+    color: CustomColors.fontBlack,
+  );
+  static const titleExtraLarge = TextStyle(
     fontSize: 24.0,
     fontWeight: FontWeight.bold,
     fontFamily: fontFamily,

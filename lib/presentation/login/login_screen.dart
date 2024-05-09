@@ -21,7 +21,7 @@ class LoginScreen extends StatelessWidget {
             children: [
               Text(
                 "Login",
-                style: CustomFonts.titleLarge,
+                style: CustomFonts.titleExtraLarge,
               ),
               24.kH,
               LoginForm(),

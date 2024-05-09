@@ -129,7 +129,7 @@ class _CampaignDetailsScreenState extends State<CampaignDetailsScreen> {
                 children: [
                   Text(
                     "Campaign Title",
-                    style: CustomFonts.titleLarge,
+                    style: CustomFonts.titleExtraLarge,
                   ),
                   16.kH,
                   DonationProgressBar(

@@ -5,6 +5,7 @@ import 'package:crowdfunding_flutter/presentation/home/home_screen.dart';
 import 'package:crowdfunding_flutter/presentation/home/widgets/bottom_nav_bar.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign/manage_campaign_screen.dart';
 import 'package:crowdfunding_flutter/presentation/notification/notification_screen.dart';
+import 'package:crowdfunding_flutter/presentation/onboarding/onboarding_screen.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/navigation/navigation_cubit.dart';
 import 'package:crowdfunding_flutter/state_management/navigation/navigation_state.dart';
@@ -49,7 +50,7 @@ class _MyAppState extends State<MyApp> {
           labelColor: Colors.black,
         ),
       ),
-      home: const NavigationScreen(),
+      home: const OnboardingScreen(),
     );
   }
 }
