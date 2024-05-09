@@ -1,22 +1,18 @@
 import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
-import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
-import 'package:crowdfunding_flutter/common/widgets/button/campaign_category_toggle_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_icon_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/campaign_card.dart';
-import 'package:crowdfunding_flutter/common/widgets/campaign_category_tag.dart';
-import 'package:crowdfunding_flutter/common/widgets/container/custom_bottom_sheet.dart';
 import 'package:crowdfunding_flutter/common/widgets/scaffold_mask.dart';
 import 'package:crowdfunding_flutter/common/widgets/tab/custom_tab_button.dart';
 import 'package:crowdfunding_flutter/presentation/explore/widgets/animated_search_bar.dart';
+import 'package:crowdfunding_flutter/presentation/explore/widgets/animated_search_result_container.dart';
 import 'package:crowdfunding_flutter/presentation/explore/widgets/filter_bottom_sheet.dart';
 import 'package:crowdfunding_flutter/presentation/home/widgets/header.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -28,10 +24,36 @@ class ExploreScreen extends StatefulWidget {
   State<ExploreScreen> createState() => _ExploreScreenState();
 }
 
-class _ExploreScreenState extends State<ExploreScreen> {
+class _ExploreScreenState extends State<ExploreScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _searchResultContainerController;
+  late Animation<double> _searchResultContainerAnimation;
   final _searchTextController = TextEditingController();
+  bool isSearching = false;
   bool isShowingMask = false;
   bool isGridView = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchResultContainerController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+      reverseDuration: const Duration(milliseconds: 300),
+    );
+    _searchResultContainerAnimation = CurvedAnimation(
+        parent: _searchResultContainerController, curve: Curves.fastOutSlowIn);
+  }
+
+  void _showSearchResultContainer() {
+    Future.delayed(const Duration(milliseconds: 500), () {
+      _searchResultContainerController.forward();
+    });
+  }
+
+  void _hideContainer() {
+    _searchResultContainerController.reverse();
+  }
 
   void _handleViewChange(bool value) {
     setState(() {
@@ -157,21 +179,36 @@ class _ExploreScreenState extends State<ExploreScreen> {
                           ),
                         ),
                       ),
-                      AnimatedSearchBar(
-                        autoFocus: true,
-                        textController: _searchTextController,
-                        width: MediaQuery.of(context).size.width -
-                            Dimensions.screenHorizontalPadding,
-                        onSubmitted: (string) {
-                          _handleHideMask();
-                        },
-                        onSuffixTap: () {
-                          _handleHideMask();
-                          print("Suffix tap");
-                        },
-                        searchBarOpen: (integer) {
-                          _handleShowMask();
-                        },
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          AnimatedSearchResultContainer(
+                            scaleAnimation: _searchResultContainerAnimation,
+                          ),
+                          12.kH,
+                          AnimatedSearchBar(
+                            autoFocus: true,
+                            textController: _searchTextController,
+                            width: MediaQuery.of(context).size.width -
+                                Dimensions.screenHorizontalPadding,
+                            onSubmitted: (string) {
+                              _handleHideMask();
+                              _hideContainer();
+                            },
+                            onSuffixTap: () {
+                              _handleHideMask();
+                              _hideContainer();
+                              print("isSearching: $isSearching");
+                            },
+                            searchBarOpen: (integer) {
+                              _handleShowMask();
+                              _showSearchResultContainer();
+                              print("isSearching: $isSearching");
+                            },
+                          ),
+                        ],
                       ),
                     ],
                   ),
