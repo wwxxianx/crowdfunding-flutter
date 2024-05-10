@@ -11,6 +11,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/dialog.dart';
 
 class HomePage extends StatefulWidget {
+  static route() => MaterialPageRoute(
+        builder: (context) => const HomePage(),
+      );
   const HomePage({super.key});
 
   @override
@@ -90,7 +93,10 @@ class _HomePageState extends State<HomePage> {
             SloganBanner(),
             CampaignCard(
               onPressed: () {
-                Navigator.push(context, CampaignDetailsScreen.route());
+                Navigator.push(
+                  context,
+                  CampaignDetailsScreen.route(),
+                );
               },
             ),
           ],
