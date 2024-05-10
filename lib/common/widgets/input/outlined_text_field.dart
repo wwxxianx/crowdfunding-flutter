@@ -51,12 +51,13 @@ class _CustomOutlinedTextfieldState extends State<CustomOutlinedTextfield> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (widget.label != null)
           Text(widget.label!, style: CustomFonts.labelSmall),
-        4.kH,
+        if (widget.label != null && widget.label!.isNotEmpty) 4.kH,
         TextFormField(
           onFieldSubmitted: widget.onFieldSubmitted,
           controller: widget.controller,

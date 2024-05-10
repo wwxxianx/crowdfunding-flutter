@@ -1,3 +1,8 @@
+import 'package:crowdfunding_flutter/common/theme/typography.dart';
+import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
+import 'package:crowdfunding_flutter/common/widgets/input/custom_dropdown_menu.dart';
+import 'package:crowdfunding_flutter/common/widgets/input/decorated_input_border.dart';
+import 'package:crowdfunding_flutter/common/widgets/input/outlined_text_field.dart';
 import 'package:crowdfunding_flutter/di/init_dependencies.dart';
 import 'package:crowdfunding_flutter/presentation/account/account_screen.dart';
 import 'package:crowdfunding_flutter/presentation/explore/explore_screen.dart';
@@ -48,6 +53,11 @@ class _MyAppState extends State<MyApp> {
         tabBarTheme: TabBarTheme.of(context).copyWith(
           indicatorColor: Colors.black,
           labelColor: Colors.black,
+        ),
+        menuButtonTheme: MenuButtonThemeData(
+          style: MenuItemButton.styleFrom(
+            textStyle: CustomFonts.bodyMedium,
+          ),
         ),
       ),
       home: const OnboardingSelectAccountScreen(),
