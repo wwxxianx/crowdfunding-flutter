@@ -2,7 +2,7 @@ import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
-import 'package:crowdfunding_flutter/presentation/create_campaign/widgets/beneficiary_form.dart';
+import 'package:crowdfunding_flutter/common/widgets/media_picker.dart';
 import 'package:crowdfunding_flutter/presentation/create_campaign/widgets/tips_button.dart';
 import 'package:flutter/material.dart';
 
@@ -45,7 +45,9 @@ class _FundraiserMediaUploadPageState extends State<FundraiserMediaUploadPage> {
               style: CustomFonts.bodyMedium,
             ),
             8.kH,
-            ImagePicker(),
+            const MediaPicker(
+              limit: 5,
+            ),
             8.kH,
             TipsButton(onPressed: () {}),
             28.kH,
@@ -54,7 +56,9 @@ class _FundraiserMediaUploadPageState extends State<FundraiserMediaUploadPage> {
               style: CustomFonts.bodyMedium,
             ),
             8.kH,
-            ImagePicker(),
+            const MediaPicker(
+              isVideo: true,
+            ),
             const Spacer(),
             Row(
               children: [

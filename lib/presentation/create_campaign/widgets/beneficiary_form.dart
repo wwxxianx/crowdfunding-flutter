@@ -5,43 +5,9 @@ import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/selectable_container.dart';
 import 'package:crowdfunding_flutter/common/widgets/input/outlined_text_field.dart';
+import 'package:crowdfunding_flutter/common/widgets/media_picker.dart';
+import 'package:crowdfunding_flutter/domain/model/age_group.dart';
 import 'package:flutter/material.dart';
-import 'package:heroicons/heroicons.dart';
-
-enum AgeGroup {
-  baby,
-  child,
-  youngAdult,
-  midAndAgedAdult,
-}
-
-extension AgeGroupExtension on AgeGroup {
-  String getAgeText() {
-    switch (this) {
-      case AgeGroup.baby:
-        return "0-2";
-      case AgeGroup.child:
-        return "3-16";
-      case AgeGroup.youngAdult:
-        return "17-30";
-      case AgeGroup.midAndAgedAdult:
-        return "31+";
-    }
-  }
-
-  String getAgeTitle() {
-    switch (this) {
-      case AgeGroup.baby:
-        return "Baby";
-      case AgeGroup.child:
-        return "Child";
-      case AgeGroup.youngAdult:
-        return "Young adult";
-      case AgeGroup.midAndAgedAdult:
-        return "Mid/old-aged adult";
-    }
-  }
-}
 
 class BeneficiaryForm extends StatefulWidget {
   final VoidCallback onPreviousPage;
@@ -76,7 +42,7 @@ class _BeneficiaryFormState extends State<BeneficiaryForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               "Who are you fundraising for?",
               style: CustomFonts.bodyMedium,
             ),
@@ -86,14 +52,14 @@ class _BeneficiaryFormState extends State<BeneficiaryForm> {
               label: "Full name",
             ),
             28.kH,
-            Text(
+            const Text(
               "Upload photo for your fundraiser’s beneficiary (Optional, 1 maximum)",
               style: CustomFonts.bodyMedium,
             ),
             12.kH,
-            ImagePicker(),
+            const MediaPicker(),
             28.kH,
-            Text(
+            const Text(
               "Your beneficiary age?",
               style: CustomFonts.bodyMedium,
             ),
@@ -130,7 +96,7 @@ class _BeneficiaryFormState extends State<BeneficiaryForm> {
                   child: CustomButton(
                     style: CustomButtonStyle.white,
                     onPressed: widget.onPreviousPage,
-                    child: Text("Back"),
+                    child: const Text("Back"),
                   ),
                 )
               ],
@@ -141,7 +107,7 @@ class _BeneficiaryFormState extends State<BeneficiaryForm> {
                 Expanded(
                   child: CustomButton(
                     onPressed: widget.onNextPage,
-                    child: Text("Continue"),
+                    child: const Text("Continue"),
                   ),
                 )
               ],
@@ -149,61 +115,6 @@ class _BeneficiaryFormState extends State<BeneficiaryForm> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class ImagePicker extends StatefulWidget {
-  const ImagePicker({super.key});
-
-  @override
-  State<ImagePicker> createState() => _ImagePickerState();
-}
-
-class _ImagePickerState extends State<ImagePicker> {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 84,
-          height: 84,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: CustomColors.containerBorderGrey,
-              width: 1,
-            ),
-          ),
-          child: HeroIcon(
-            HeroIcons.photo,
-            style: HeroIconStyle.solid,
-            size: 38,
-            color: CustomColors.containerBorderGrey,
-          ),
-        ),
-        12.kW,
-        InkWell(
-          onTap: () {},
-          child: Ink(
-            width: 84,
-            height: 84,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: CustomColors.containerBorderGrey,
-                width: 1,
-              ),
-            ),
-            child: HeroIcon(
-              HeroIcons.plus,
-              style: HeroIconStyle.solid,
-              size: 38,
-              color: CustomColors.containerBorderGrey,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
