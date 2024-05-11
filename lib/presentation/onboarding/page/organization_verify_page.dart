@@ -1,10 +1,8 @@
-import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/input/custom_dropdown_menu.dart';
-import 'package:crowdfunding_flutter/common/widgets/input/decorated_input_border.dart';
 import 'package:crowdfunding_flutter/common/widgets/input/outlined_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';

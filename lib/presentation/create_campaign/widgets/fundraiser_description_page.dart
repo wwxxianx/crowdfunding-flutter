@@ -3,26 +3,27 @@ import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/input/outlined_text_field.dart';
-import 'package:crowdfunding_flutter/common/widgets/single_image_picker.dart';
+import 'package:crowdfunding_flutter/presentation/create_campaign/widgets/tips_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
-class OrganizationProfilePage extends StatefulWidget {
+class FundraiserDescriptionFormPage extends StatefulWidget {
   final VoidCallback onNextPage;
   final VoidCallback onPreviousPage;
-  const OrganizationProfilePage({
+  const FundraiserDescriptionFormPage({
     super.key,
     required this.onNextPage,
     required this.onPreviousPage,
   });
 
   @override
-  State<OrganizationProfilePage> createState() =>
-      _OrganizationProfilePageState();
+  State<FundraiserDescriptionFormPage> createState() =>
+      _FundraiserDescriptionFormPageState();
 }
 
-class _OrganizationProfilePageState extends State<OrganizationProfilePage> {
-  final npoNameTextController = TextEditingController();
+class _FundraiserDescriptionFormPageState
+    extends State<FundraiserDescriptionFormPage> {
+  final titleTextController = TextEditingController();
+  final descriptionTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -32,40 +33,37 @@ class _OrganizationProfilePageState extends State<OrganizationProfilePage> {
         return false;
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: Dimensions.screenHorizontalPadding,
+        padding: const EdgeInsets.only(
+          left: Dimensions.screenHorizontalPadding,
+          right: Dimensions.screenHorizontalPadding,
+          bottom: 20,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                SvgPicture.asset("assets/icons/organization-filled.svg"),
-                4.kW,
-                const Text(
-                  "Finish setting up your NPO",
-                  style: CustomFonts.titleLarge,
-                ),
-              ],
-            ),
             const Text(
-              "The information provided should correctly reflect your NPO.",
-              style: CustomFonts.labelSmall,
+              "Give your fundraiser a title",
+              style: CustomFonts.bodyMedium,
             ),
-            30.kH,
-            //Form
-            Align(
-              alignment: Alignment.center,
-              child: SingleImagePicker(
-                size: 130,
-              ),
-            ),
-            24.kH,
+            8.kH,
             CustomOutlinedTextfield(
-              controller: npoNameTextController,
-              label: "NPO Name",
+              label: "Title",
+              controller: titleTextController,
             ),
-
+            8.kH,
+            TipsButton(onPressed: () {}),
+            28.kH,
+            const Text(
+              "Let others know more about your fundraiser",
+              style: CustomFonts.bodyMedium,
+            ),
+            8.kH,
+            CustomOutlinedTextfield(
+              controller: descriptionTextController,
+              label: "Content",
+              maxLines: 10,
+              hintText: "Hello, I’m Ellisa and would like to...",
+            ),
             const Spacer(),
             Row(
               children: [
@@ -75,7 +73,7 @@ class _OrganizationProfilePageState extends State<OrganizationProfilePage> {
                     onPressed: widget.onPreviousPage,
                     child: const Text("Back"),
                   ),
-                ),
+                )
               ],
             ),
             8.kH,
@@ -84,11 +82,11 @@ class _OrganizationProfilePageState extends State<OrganizationProfilePage> {
                 Expanded(
                   child: CustomButton(
                     onPressed: widget.onNextPage,
-                    child: const Text("Next"),
+                    child: const Text("Continue"),
                   ),
-                ),
+                )
               ],
-            ),
+            )
           ],
         ),
       ),

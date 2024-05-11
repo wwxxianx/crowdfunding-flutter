@@ -29,6 +29,7 @@ class CustomDropdownMenu extends StatelessWidget {
         if (label != null) Text(label!, style: CustomFonts.labelSmall),
         if (label != null && label!.isNotEmpty) 4.kH,
         DropdownMenu(
+          menuHeight: 280,
           width: MediaQuery.of(context).size.width -
               (Dimensions.screenHorizontalPadding * 2),
           controller: controller,

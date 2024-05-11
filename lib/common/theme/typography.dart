@@ -9,19 +9,19 @@ class CustomFonts {
     fontSize: 14.0,
     fontWeight: FontWeight.normal,
     fontFamily: fontFamily,
-    color: CustomColors.fontBlack,
+    color: CustomColors.textBlack,
   );
   static const bodyMedium = TextStyle(
     fontSize: 16.0,
     fontWeight: FontWeight.normal,
     fontFamily: fontFamily,
-    color: CustomColors.fontBlack,
+    color: CustomColors.textBlack,
   );
   static const bodyLarge = TextStyle(
     fontSize: 18.0,
     fontWeight: FontWeight.normal,
     fontFamily: fontFamily,
-    color: CustomColors.fontBlack,
+    color: CustomColors.textBlack,
   );
 
   // Label
@@ -29,25 +29,25 @@ class CustomFonts {
     fontSize: 18.0,
     fontWeight: FontWeight.w500,
     fontFamily: fontFamily,
-    color: CustomColors.fontBlack,
+    color: CustomColors.textBlack,
   );
   static const labelMedium = TextStyle(
     fontSize: 16.0,
     fontWeight: FontWeight.w500,
     fontFamily: fontFamily,
-    color: CustomColors.fontBlack,
+    color: CustomColors.textBlack,
   );
   static const labelSmall = TextStyle(
     fontSize: 14.0,
     fontWeight: FontWeight.w500,
     fontFamily: fontFamily,
-    color: CustomColors.fontBlack,
+    color: CustomColors.textBlack,
   );
   static const labelExtraSmall = TextStyle(
     fontSize: 12.0,
     fontWeight: FontWeight.w500,
     fontFamily: fontFamily,
-    color: CustomColors.fontBlack,
+    color: CustomColors.textBlack,
   );
 
   // Title
@@ -55,30 +55,30 @@ class CustomFonts {
     fontSize: 12.0,
     fontWeight: FontWeight.bold,
     fontFamily: fontFamily,
-    color: CustomColors.fontBlack,
+    color: CustomColors.textBlack,
   );
   static const titleSmall = TextStyle(
     fontSize: 14.0,
     fontWeight: FontWeight.bold,
     fontFamily: fontFamily,
-    color: CustomColors.fontBlack,
+    color: CustomColors.textBlack,
   );
   static const titleMedium = TextStyle(
     fontSize: 16.0,
     fontWeight: FontWeight.bold,
     fontFamily: fontFamily,
-    color: CustomColors.fontBlack,
+    color: CustomColors.textBlack,
   );
   static const titleLarge = TextStyle(
     fontSize: 18.0,
     fontWeight: FontWeight.bold,
     fontFamily: fontFamily,
-    color: CustomColors.fontBlack,
+    color: CustomColors.textBlack,
   );
   static const titleExtraLarge = TextStyle(
     fontSize: 24.0,
     fontWeight: FontWeight.bold,
     fontFamily: fontFamily,
-    color: CustomColors.fontBlack,
+    color: CustomColors.textBlack,
   );
 }

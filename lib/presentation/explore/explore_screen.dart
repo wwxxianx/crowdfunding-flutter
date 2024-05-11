@@ -355,7 +355,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                               prefixIcon: Icon(
                                 Symbols.grid_view_rounded,
                                 size: 16,
-                                color: CustomColors.fontBlack,
+                                color: CustomColors.textBlack,
                                 weight: 500,
                               ),
                             ),
@@ -364,7 +364,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                               prefixIcon: HeroIcon(
                                 HeroIcons.listBullet,
                                 size: 16,
-                                color: CustomColors.fontBlack,
+                                color: CustomColors.textBlack,
                               ),
                             ),
                           ],

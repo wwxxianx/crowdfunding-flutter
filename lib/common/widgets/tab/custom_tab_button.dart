@@ -47,7 +47,7 @@ class CustomTab extends StatelessWidget {
                     ),
                   ],
                 ),
-                labelColor: CustomColors.fontBlack,
+                labelColor: CustomColors.textBlack,
                 unselectedLabelColor: Colors.black54,
                 tabs: tabs,
               ),

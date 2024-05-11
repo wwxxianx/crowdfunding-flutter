@@ -1,8 +1,4 @@
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
-import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
-import 'package:crowdfunding_flutter/common/widgets/input/custom_dropdown_menu.dart';
-import 'package:crowdfunding_flutter/common/widgets/input/decorated_input_border.dart';
-import 'package:crowdfunding_flutter/common/widgets/input/outlined_text_field.dart';
 import 'package:crowdfunding_flutter/di/init_dependencies.dart';
 import 'package:crowdfunding_flutter/presentation/account/account_screen.dart';
 import 'package:crowdfunding_flutter/presentation/explore/explore_screen.dart';
@@ -10,7 +6,6 @@ import 'package:crowdfunding_flutter/presentation/home/home_screen.dart';
 import 'package:crowdfunding_flutter/presentation/home/widgets/bottom_nav_bar.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign/manage_campaign_screen.dart';
 import 'package:crowdfunding_flutter/presentation/notification/notification_screen.dart';
-import 'package:crowdfunding_flutter/presentation/onboarding/widgets/onboarding_select_account_type_screen.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/navigation/navigation_cubit.dart';
 import 'package:crowdfunding_flutter/state_management/navigation/navigation_state.dart';
@@ -59,8 +54,11 @@ class _MyAppState extends State<MyApp> {
             textStyle: CustomFonts.bodyMedium,
           ),
         ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.white,
+        ),
       ),
-      home: const OnboardingSelectAccountScreen(),
+      home: const NavigationScreen(),
     );
   }
 }

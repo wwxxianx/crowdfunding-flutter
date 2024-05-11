@@ -63,7 +63,7 @@ class _CreateOrganizationPageViewState
               // Pregress bar
               OnboardingProgressBar(
                 currentStep: currentPage,
-                totalStep: 2,
+                totalStep: 3,
               ),
               24.kH,
               Expanded(

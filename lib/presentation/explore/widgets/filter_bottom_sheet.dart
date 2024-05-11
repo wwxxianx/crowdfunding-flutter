@@ -19,16 +19,7 @@ class CampaignsFilterBottomSheet extends StatelessWidget {
             style: CustomFonts.labelMedium,
           ),
           12.kH,
-          Wrap(
-            direction: Axis.horizontal,
-            children: [
-              CampaignCategoryToggleButton(),
-              CampaignCategoryToggleButton(),
-              CampaignCategoryToggleButton(),
-              CampaignCategoryToggleButton(),
-              CampaignCategoryToggleButton(),
-            ],
-          ),
+          CamapaignCategoryList(onPressed: (campaignCategory) {}),
           20.kH,
           //Divider
           Container(

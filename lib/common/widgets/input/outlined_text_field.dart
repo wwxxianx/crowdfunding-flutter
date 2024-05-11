@@ -3,6 +3,7 @@ import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:crowdfunding_flutter/common/widgets/input/decorated_input_border.dart';
+import 'package:flutter/services.dart';
 
 class CustomOutlinedTextfield extends StatefulWidget {
   final FocusNode? focusNode;
@@ -15,6 +16,8 @@ class CustomOutlinedTextfield extends StatefulWidget {
   final TextInputAction textInputAction;
   final TextInputType keyboardType;
   final void Function(String)? onFieldSubmitted;
+  final List<TextInputFormatter>? inputFormatters;
+  final int? maxLines;
 
   const CustomOutlinedTextfield({
     super.key,
@@ -28,6 +31,8 @@ class CustomOutlinedTextfield extends StatefulWidget {
     this.textInputAction = TextInputAction.done,
     this.keyboardType = TextInputType.text,
     this.onFieldSubmitted,
+    this.inputFormatters,
+    this.maxLines,
   });
 
   @override
@@ -59,6 +64,8 @@ class _CustomOutlinedTextfieldState extends State<CustomOutlinedTextfield> {
           Text(widget.label!, style: CustomFonts.labelSmall),
         if (widget.label != null && widget.label!.isNotEmpty) 4.kH,
         TextFormField(
+          maxLines: widget.maxLines,
+          inputFormatters: widget.inputFormatters,
           onFieldSubmitted: widget.onFieldSubmitted,
           controller: widget.controller,
           validator: widget.validator,

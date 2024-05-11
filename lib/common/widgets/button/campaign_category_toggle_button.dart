@@ -1,10 +1,55 @@
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
+import 'package:crowdfunding_flutter/common/utils/extensions/string.dart';
+import 'package:crowdfunding_flutter/presentation/explore/explore_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:material_symbols_icons/symbols.dart';
+
+class CamapaignCategoryList extends StatelessWidget {
+  final void Function(CampaignCategory campaignCategory) onPressed;
+  final campaignCategories = [
+    CampaignCategory.medical,
+    CampaignCategory.education,
+    CampaignCategory.animal,
+    CampaignCategory.food,
+    CampaignCategory.baby,
+    CampaignCategory.emergency,
+    CampaignCategory.environment,
+    CampaignCategory.naturalDisaster,
+  ];
+
+  CamapaignCategoryList({
+    super.key,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      direction: Axis.horizontal,
+      children: [
+        ...campaignCategories.map(
+          (category) => CampaignCategoryToggleButton(
+            campaignCategory: category,
+            onPressed: (campaignCategory) {
+              onPressed(campaignCategory);
+            },
+          ),
+        )
+      ],
+    );
+  }
+}
 
 class CampaignCategoryToggleButton extends StatefulWidget {
-  const CampaignCategoryToggleButton({super.key});
+  final CampaignCategory campaignCategory;
+  final void Function(CampaignCategory campaignCategory) onPressed;
+  const CampaignCategoryToggleButton({
+    super.key,
+    required this.campaignCategory,
+    required this.onPressed,
+  });
 
   @override
   State<CampaignCategoryToggleButton> createState() =>
@@ -19,6 +64,7 @@ class _CampaignCategoryToggleButtonState
     setState(() {
       isSelected = !isSelected;
     });
+    widget.onPressed(widget.campaignCategory);
   }
 
   @override
@@ -41,21 +87,17 @@ class _CampaignCategoryToggleButtonState
                 width: 1,
               ),
               borderRadius: BorderRadius.circular(100.0),
-              color: Color(0xFFFFF1F2),
+              color: widget.campaignCategory.getCampaignBGColor(),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  Symbols.ecg_heart,
-                  size: 20.0,
-                  color: Color(0xFF9F1239),
-                ),
+                widget.campaignCategory.getCampaignIcon(),
                 4.kW,
                 Text(
-                  "Medical",
+                  widget.campaignCategory.name.capitalize(),
                   style: CustomFonts.labelMedium.copyWith(
-                    color: Color(0xFF9F1239),
+                    color: widget.campaignCategory.getCampaignTextColor(),
                   ),
                 )
               ],

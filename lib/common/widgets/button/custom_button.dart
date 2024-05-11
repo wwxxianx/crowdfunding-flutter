@@ -20,6 +20,7 @@ class CustomButton extends StatelessWidget {
   final TextStyle? textStyle;
   final CustomButtonStyle style;
   final bool isLoading;
+  final List<BoxShadow>? boxShadow;
 
   const CustomButton({
     Key? key,
@@ -33,6 +34,7 @@ class CustomButton extends StatelessWidget {
     this.textStyle = CustomFonts.titleMedium,
     this.style = CustomButtonStyle.gradientGreen,
     this.isLoading = false,
+    this.boxShadow,
   }) : super(key: key);
 
   Color? _getBackgroundColor() {
@@ -73,6 +75,7 @@ class CustomButton extends StatelessWidget {
           gradient: _bgGradient,
           border: Border.all(width: 1, color: Colors.black),
           borderRadius: borderRadius,
+          boxShadow: boxShadow,
         ),
         child: FilledButton(
           onPressed: onPressed,
@@ -87,17 +90,18 @@ class CustomButton extends StatelessWidget {
                 )
               : child,
           style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all(_getForegroundColor()),
-              backgroundColor: MaterialStateProperty.all(Colors.transparent),
-              shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6.0),
-                ),
+            foregroundColor: MaterialStateProperty.all(_getForegroundColor()),
+            backgroundColor: MaterialStateProperty.all(Colors.transparent),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6.0),
               ),
-              padding: MaterialStateProperty.all(
-                padding,
-              ),
-              textStyle: MaterialStateProperty.all(textStyle)),
+            ),
+            padding: MaterialStateProperty.all(
+              padding,
+            ),
+            textStyle: MaterialStateProperty.all(textStyle),
+          ),
         ),
       ),
     );

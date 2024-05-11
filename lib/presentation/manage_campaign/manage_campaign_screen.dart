@@ -2,6 +2,7 @@ import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/widgets/campaign_card.dart';
+import 'package:crowdfunding_flutter/presentation/create_campaign/create_campaign_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 
@@ -15,12 +16,14 @@ class ManageCampaignScreen extends StatelessWidget {
         backgroundColor: Colors.black,
         foregroundColor: CustomColors.primaryGreen,
         shape: const CircleBorder(),
-        onPressed: () {},
-        child: HeroIcon(HeroIcons.plus),
+        onPressed: () {
+          Navigator.push(context, CreateCampaignScreen.route());
+        },
+        child: const HeroIcon(HeroIcons.plus),
       ),
-      body: SingleChildScrollView(
+      body: const SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(
+          padding: EdgeInsets.only(
             left: Dimensions.screenHorizontalPadding,
             right: Dimensions.screenHorizontalPadding,
             top: Dimensions.screenHorizontalPadding,

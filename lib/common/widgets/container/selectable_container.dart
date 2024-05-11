@@ -38,7 +38,10 @@ class SelectableContainer extends StatelessWidget {
                 ]
               : null,
         ),
-        child: Opacity(opacity: isSelected ? 1 : 0.6, child: child),
+        child: Opacity(
+          opacity: isSelected ? 1 : 0.6,
+          child: child,
+        ),
       ),
     );
   }
