@@ -5,10 +5,13 @@ import 'package:crowdfunding_flutter/presentation/explore/explore_screen.dart';
 import 'package:crowdfunding_flutter/presentation/home/home_screen.dart';
 import 'package:crowdfunding_flutter/presentation/home/widgets/bottom_nav_bar.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign/manage_campaign_screen.dart';
+import 'package:crowdfunding_flutter/presentation/manage_campaign_details/manage_campaign_details_screen.dart';
 import 'package:crowdfunding_flutter/presentation/notification/notification_screen.dart';
+import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/navigation/navigation_cubit.dart';
 import 'package:crowdfunding_flutter/state_management/navigation/navigation_state.dart';
+import 'package:crowdfunding_flutter/state_management/sign_up/sign_up_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:crowdfunding_flutter/common/theme/color.dart';
@@ -19,6 +22,8 @@ void main() async {
   runApp(
     MultiBlocProvider(
       providers: [
+        BlocProvider(create: (_) => serviceLocator<AppUserCubit>()),
+        BlocProvider(create: (_) => serviceLocator<SignUpBloc>()),
         BlocProvider(create: (_) => serviceLocator<NavigationCubit>()),
         BlocProvider(create: (_) => serviceLocator<ExploreCampaignsBloc>()),
       ],
@@ -58,7 +63,7 @@ class _MyAppState extends State<MyApp> {
           backgroundColor: Colors.white,
         ),
       ),
-      home: const NavigationScreen(),
+      home: const ManageCampaignDetailsScreen(),
     );
   }
 }

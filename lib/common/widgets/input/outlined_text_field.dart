@@ -18,6 +18,10 @@ class CustomOutlinedTextfield extends StatefulWidget {
   final void Function(String)? onFieldSubmitted;
   final List<TextInputFormatter>? inputFormatters;
   final int? maxLines;
+  final TextAlign textAlign;
+  final Widget? suffix;
+  final Widget? suffixIcon;
+  final EdgeInsetsGeometry? contentPadding;
 
   const CustomOutlinedTextfield({
     super.key,
@@ -32,7 +36,11 @@ class CustomOutlinedTextfield extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.onFieldSubmitted,
     this.inputFormatters,
-    this.maxLines,
+    this.maxLines = 1,
+    this.textAlign = TextAlign.start,
+    this.suffix,
+    this.contentPadding,
+    this.suffixIcon,
   });
 
   @override
@@ -64,6 +72,7 @@ class _CustomOutlinedTextfieldState extends State<CustomOutlinedTextfield> {
           Text(widget.label!, style: CustomFonts.labelSmall),
         if (widget.label != null && widget.label!.isNotEmpty) 4.kH,
         TextFormField(
+          textAlign: widget.textAlign,
           maxLines: widget.maxLines,
           inputFormatters: widget.inputFormatters,
           onFieldSubmitted: widget.onFieldSubmitted,
@@ -76,15 +85,19 @@ class _CustomOutlinedTextfieldState extends State<CustomOutlinedTextfield> {
           cursorColor: CustomColors.accentGreen,
           style: CustomFonts.labelSmall,
           decoration: InputDecoration(
+            suffix: widget.suffix,
+            errorMaxLines: 2,
             hintText: widget.hintText,
-            suffixIcon: widget.isObscureText
-                ? IconButton(
-                    onPressed: () =>
-                        setState(() => _isShowingText = !_isShowingText),
-                    icon: Icon(_isShowingText
-                        ? Icons.visibility
-                        : Icons.visibility_off))
-                : null,
+            suffixIcon: widget.suffixIcon ??
+                (widget.isObscureText
+                    ? IconButton(
+                        onPressed: () =>
+                            setState(() => _isShowingText = !_isShowingText),
+                        icon: Icon(_isShowingText
+                            ? Icons.visibility
+                            : Icons.visibility_off),
+                      )
+                    : null),
             filled: true,
             fillColor: Colors.white,
             border: OutlineInputBorder(
@@ -108,10 +121,11 @@ class _CustomOutlinedTextfieldState extends State<CustomOutlinedTextfield> {
               borderRadius: BorderRadius.circular(10.0),
             ),
             prefixIcon: widget.prefixIcon,
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: widget.prefixIcon != null ? 4.0 : 12.0,
-              vertical: 4.0,
-            ),
+            contentPadding: widget.contentPadding ??
+                EdgeInsets.symmetric(
+                  horizontal: widget.prefixIcon != null ? 4.0 : 12.0,
+                  vertical: 4.0,
+                ),
           ),
         ),
       ],

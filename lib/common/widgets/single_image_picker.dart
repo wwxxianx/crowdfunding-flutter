@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/avatar/avatar.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SingleImagePicker extends StatefulWidget {
   final double size;
@@ -17,6 +20,18 @@ class SingleImagePicker extends StatefulWidget {
 }
 
 class _SingleImagePickerState extends State<SingleImagePicker> {
+  final picker = ImagePicker();
+  File? selectedImage;
+
+  void _handlePickImage() async {
+    final image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        selectedImage = File(image.path);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -24,13 +39,16 @@ class _SingleImagePickerState extends State<SingleImagePicker> {
       alignment: Alignment.bottomCenter,
       children: [
         Avatar(
-          imageUrl: "",
+          imageUrl: null,
           size: widget.size,
+          filePath: selectedImage,
+          placeholder: "w",
         ),
         Positioned(
           bottom: -10,
           child: IntrinsicWidth(
             child: CustomButton(
+              onPressed: _handlePickImage,
               borderRadius: BorderRadius.circular(100.0),
               height: 30,
               padding: const EdgeInsets.only(
@@ -40,7 +58,6 @@ class _SingleImagePickerState extends State<SingleImagePicker> {
                 bottom: 4,
               ),
               style: CustomButtonStyle.white,
-              onPressed: () {},
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -7,7 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 class CampaignCommentTabContent extends StatelessWidget {
-  const CampaignCommentTabContent({super.key});
+  // Pass the comment id for reference in bloc
+  final void Function(String commentID) onReplyButtonPressed;
+  const CampaignCommentTabContent({
+    super.key,
+    required this.onReplyButtonPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +23,12 @@ class CampaignCommentTabContent extends StatelessWidget {
       ),
       child: Column(
         children: [
-          CommentList(),
-          CommentList(),
+          CommentList(
+            onReplyButtonPressed: onReplyButtonPressed,
+          ),
+          CommentList(
+            onReplyButtonPressed: onReplyButtonPressed,
+          ),
         ],
       ),
     );
@@ -27,7 +36,11 @@ class CampaignCommentTabContent extends StatelessWidget {
 }
 
 class CommentList extends StatelessWidget {
-  const CommentList({super.key});
+  final void Function(String commentID) onReplyButtonPressed;
+  const CommentList({
+    super.key,
+    required this.onReplyButtonPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,16 +48,19 @@ class CommentList extends StatelessWidget {
       children: [
         CommentItem(
           isShowingCommentButton: true,
+          onReplyButtonPressed: onReplyButtonPressed,
         ),
         8.kH,
         Container(
-          margin: EdgeInsets.only(left: 44),
+          margin: const EdgeInsets.only(left: 44),
           child: Column(
             children: [
               ...List.generate(2, (index) {
                 return Padding(
-                  padding: EdgeInsets.only(top: 12),
-                  child: CommentItem(),
+                  padding: const EdgeInsets.only(top: 12),
+                  child: CommentItem(
+                    onReplyButtonPressed: onReplyButtonPressed,
+                  ),
                 );
               })
             ],
@@ -56,10 +72,12 @@ class CommentList extends StatelessWidget {
 }
 
 class CommentItem extends StatelessWidget {
+  final void Function(String commentID) onReplyButtonPressed;
   final bool isShowingCommentButton;
   const CommentItem({
     super.key,
     this.isShowingCommentButton = false,
+    required this.onReplyButtonPressed,
   });
 
   @override
@@ -67,7 +85,7 @@ class CommentItem extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Avatar(imageUrl: ""),
+        const Avatar(imageUrl: ""),
         8.kW,
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,7 +96,7 @@ class CommentItem extends StatelessWidget {
                 color: CustomColors.textGrey,
               ),
             ),
-            Text(
+            const Text(
               "How about the funds?",
               style: CustomFonts.labelMedium,
             ),
@@ -93,7 +111,9 @@ class CommentItem extends StatelessWidget {
                 if (isShowingCommentButton) 4.kW,
                 if (isShowingCommentButton)
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      onReplyButtonPressed("0");
+                    },
                     child: Row(
                       children: [
                         Text(
@@ -103,7 +123,7 @@ class CommentItem extends StatelessWidget {
                           ),
                         ),
                         2.kW,
-                        Icon(
+                        const Icon(
                           Symbols.reply_rounded,
                           size: 16,
                           color: CustomColors.textGrey,

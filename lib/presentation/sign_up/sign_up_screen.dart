@@ -1,14 +1,14 @@
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
-import 'package:crowdfunding_flutter/presentation/login/widgets/login_form.dart';
-import 'package:crowdfunding_flutter/presentation/sign_up/sign_up_screen.dart';
+import 'package:crowdfunding_flutter/presentation/login/login_screen.dart';
+import 'package:crowdfunding_flutter/presentation/sign_up/widgets/sign_up_form.dart';
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatelessWidget {
+class SignUpScreen extends StatelessWidget {
   static route() =>
-      MaterialPageRoute(builder: (context) => const LoginScreen());
-  const LoginScreen({super.key});
+      MaterialPageRoute(builder: (context) => const SignUpScreen());
+  const SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,25 +37,25 @@ class LoginScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "Login",
+                  "Register",
                   style: CustomFonts.titleExtraLarge,
                 ),
                 24.kH,
-                const LoginForm(),
+                const SignUpForm(),
                 24.kH,
                 Row(
                   children: [
                     const Text(
-                      "Don't have an account?",
+                      "Already have an account?",
                       style: CustomFonts.labelMedium,
                     ),
                     InkWell(
                       onTap: () {
-                        Navigator.push(context, SignUpScreen.route());
+                        Navigator.push(context, LoginScreen.route());
                       },
                       child: Ink(
                         child: Text(
-                          "Sign up now",
+                          "Sign in now",
                           style: CustomFonts.labelMedium.copyWith(
                             decoration: TextDecoration.underline,
                           ),

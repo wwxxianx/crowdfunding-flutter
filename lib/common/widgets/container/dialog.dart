@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
+import 'package:heroicons/heroicons.dart';
+
 extension ShowDialogExtension on BuildContext {
   void displayDialog({
     EdgeInsetsGeometry padding = const EdgeInsets.only(
-      top: 35.0,
+      top: 20.0,
       bottom: 20.0,
       left: 20.0,
       right: 20.0,
@@ -32,6 +34,23 @@ extension ShowDialogExtension on BuildContext {
                 Padding(
                   padding: padding,
                   child: child,
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: HeroIcon(
+                          HeroIcons.xMark,
+                          size: 20,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

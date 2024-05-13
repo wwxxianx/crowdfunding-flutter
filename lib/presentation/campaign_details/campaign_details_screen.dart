@@ -23,14 +23,14 @@ class CampaignDetailsScreen extends StatefulWidget {
 
 class _CampaignDetailsScreenState extends State<CampaignDetailsScreen> {
   final _textController = TextEditingController();
-  final focusNode = FocusNode();
+  final commentFieldFocusNode = FocusNode();
   bool isShowingCommentBottomBar = false;
 
   void _handleOpenCommentBottomBar() {
     setState(() {
       isShowingCommentBottomBar = true;
     });
-    focusNode.requestFocus();
+    commentFieldFocusNode.requestFocus();
   }
 
   void _handleHideCommentBottomBar() {
@@ -64,7 +64,7 @@ class _CampaignDetailsScreenState extends State<CampaignDetailsScreen> {
               child: isShowingCommentBottomBar
                   ? CustomOutlinedTextfield(
                       controller: _textController,
-                      focusNode: focusNode,
+                      focusNode: commentFieldFocusNode,
                     )
                   : CustomButton(
                       style: CustomButtonStyle.gradientGreen,
@@ -145,7 +145,9 @@ class _CampaignDetailsScreenState extends State<CampaignDetailsScreen> {
               ),
             ),
             8.kH,
-            CampaignDetailsTabView(),
+            CampaignDetailsTabView(
+              onReplyButtonPreesed: (commentID) {},
+            ),
           ],
         ),
       ),

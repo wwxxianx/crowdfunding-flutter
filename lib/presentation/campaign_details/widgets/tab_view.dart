@@ -4,7 +4,11 @@ import 'package:crowdfunding_flutter/presentation/campaign_details/widgets/updat
 import 'package:flutter/material.dart';
 
 class CampaignDetailsTabView extends StatefulWidget {
-  const CampaignDetailsTabView({super.key});
+  final void Function(String commentID) onReplyButtonPreesed;
+  const CampaignDetailsTabView({
+    super.key,
+    required this.onReplyButtonPreesed,
+  });
 
   @override
   State<CampaignDetailsTabView> createState() => _CampaignDetailsTabViewState();
@@ -32,7 +36,9 @@ class _CampaignDetailsTabViewState extends State<CampaignDetailsTabView> {
       case 1:
         return Text("Donations");
       case 2:
-        return CampaignCommentTabContent();
+        return CampaignCommentTabContent(
+          onReplyButtonPressed: widget.onReplyButtonPreesed,
+        );
       case 3:
         return CampaignUpdateTabContent();
       default:
@@ -67,17 +73,12 @@ class _CampaignDetailsTabViewState extends State<CampaignDetailsTabView> {
             return ScaleTransition(scale: animation, child: child);
           },
           child: Container(
+            // This key causes the AnimatedSwitcher to interpret this as a "new"
+            // child each time the count changes, so that it will begin its animation
+            // when the count changes.
             key: ValueKey<int>(_currentTabIndex),
             child: _buildTabContent(),
           ),
-          // Text(
-          //   '${_currentTabIndex}',
-          //   // This key causes the AnimatedSwitcher to interpret this as a "new"
-          //   // child each time the count changes, so that it will begin its animation
-          //   // when the count changes.
-          //   key: ValueKey<int>(_currentTabIndex),
-          //   style: Theme.of(context).textTheme.headlineMedium,
-          // ),
         ),
       ],
     );

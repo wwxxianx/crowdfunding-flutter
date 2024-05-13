@@ -21,6 +21,7 @@ class CustomButton extends StatelessWidget {
   final CustomButtonStyle style;
   final bool isLoading;
   final List<BoxShadow>? boxShadow;
+  final bool enabled;
 
   const CustomButton({
     Key? key,
@@ -35,6 +36,7 @@ class CustomButton extends StatelessWidget {
     this.style = CustomButtonStyle.gradientGreen,
     this.isLoading = false,
     this.boxShadow,
+    this.enabled = true,
   }) : super(key: key);
 
   Color? _getBackgroundColor() {
@@ -78,7 +80,7 @@ class CustomButton extends StatelessWidget {
           boxShadow: boxShadow,
         ),
         child: FilledButton(
-          onPressed: onPressed,
+          onPressed: enabled ? onPressed : null,
           child: isLoading
               ? SizedBox(
                   width: 20,
