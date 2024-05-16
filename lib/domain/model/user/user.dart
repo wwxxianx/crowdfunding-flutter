@@ -33,4 +33,10 @@ class UserModel {
       _$UserModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserModelToJson(this);
+
+  static const sample = UserModel(
+    id: 'sample-id',
+    fullName: 'John Doe',
+    email: 'john@gmail.com',
+  );
 }

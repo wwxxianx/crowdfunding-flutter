@@ -16,4 +16,10 @@ class ImageModel {
       _$ImageModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$ImageModelToJson(this);
+
+  static const sample = ImageModel(
+    id: 'sample-id',
+    imageUrl:
+        "https://yyavkrjmlxoqxeeybxuc.supabase.co/storage/v1/object/public/campaign/thumbnail/larm-rmah-AEaTUnvneik-unsplash.jpg",
+  );
 }

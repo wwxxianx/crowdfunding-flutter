@@ -12,7 +12,10 @@ class StateAndRegion {
     required this.name,
   });
 
-  factory StateAndRegion.fromJson(Map<String, dynamic> json) => _$StateAndRegionFromJson(json);
+  factory StateAndRegion.fromJson(Map<String, dynamic> json) =>
+      _$StateAndRegionFromJson(json);
 
   Map<String, dynamic> toJson() => _$StateAndRegionToJson(this);
+
+  static const sample = StateAndRegion(id: 'sample-id', name: 'Kuala Lumpur');
 }

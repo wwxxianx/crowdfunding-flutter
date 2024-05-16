@@ -54,6 +54,7 @@ dependencies:
     lottie: ^2.6.0
     image_picker: ^1.0.7
     video_thumbnail: ^0.5.3
+    timeago: ^3.6.1
     # flutter_multi_formatter: ^2.12.8
 
 dev_dependencies:

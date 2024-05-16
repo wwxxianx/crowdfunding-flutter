@@ -71,4 +71,30 @@ class Campaign {
       _$CampaignFromJson(json);
 
   Map<String, dynamic> toJson() => _$CampaignToJson(this);
+
+  static const sample = Campaign(
+    id: 'sample-id',
+    title: 'Sample Campaign',
+    description: 'This is a sample campaign description.',
+    images: [ImageModel.sample, ImageModel.sample],
+    videoUrl: '',
+    thumbnailUrl:
+        'https://yyavkrjmlxoqxeeybxuc.supabase.co/storage/v1/object/public/campaign/thumbnail/larm-rmah-AEaTUnvneik-unsplash.jpg',
+    stateAndRegion: StateAndRegion.sample,
+    targetAmount: 1000.0,
+    contactPhoneNumber: '112189387',
+    isPublished: true,
+    beneficiaryName: 'Sample Beneficiary',
+    beneficiaryImageUrl:
+        'https://yyavkrjmlxoqxeeybxuc.supabase.co/storage/v1/object/public/campaign/thumbnail/larm-rmah-AEaTUnvneik-unsplash.jpg',
+    beneficiaryAgeGroup: AgeGroup.baby,
+    campaignCategory: CampaignCategory.sample,
+    user: UserModel.sample,
+    numOfDonations: 0,
+    createdAt: '',
+    updatedAt: '',
+    numOfComments: 0,
+    numOfLikes: 0,
+    numOfUpdates: 0,
+  );
 }

@@ -1,6 +1,8 @@
+import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
+import 'package:crowdfunding_flutter/common/widgets/campaign_card.dart';
 import 'package:crowdfunding_flutter/common/widgets/text/gradient_text.dart';
 import 'package:crowdfunding_flutter/presentation/home/widgets/header.dart';
 import 'package:crowdfunding_flutter/presentation/home/widgets/slogan_banner.dart';
@@ -105,7 +107,32 @@ class _HomePageState extends State<HomePage> {
                 if (state is FetchRecommendedCampaignsError)
                   Text("Something went wrong,"),
                 if (state is FetchRecommendedCampaignsSuccess)
-                  Text("Campaign fetched!!"),
+                  Container(
+                    height: 500,
+                    child: ListView.builder(
+                      padding: const EdgeInsets.only(
+                        left: Dimensions.screenHorizontalPadding,
+                      ),
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemCount: state.campaigns.length,
+                      itemBuilder: (context, index) {
+                        return Row(
+                          children: [
+                            CampaignCard(
+                              campaign: state.campaigns[index],
+                            ),
+                            12.kW,
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                Container(
+                  width: 200,
+                  height: 200,
+                  color: Colors.red,
+                ),
               ],
             );
           },

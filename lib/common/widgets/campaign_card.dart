@@ -2,9 +2,11 @@ import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
+import 'package:crowdfunding_flutter/common/utils/extensions/string.dart';
 import 'package:crowdfunding_flutter/common/widgets/campaign_category_tag.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/animated_bg_container.dart';
 import 'package:crowdfunding_flutter/common/widgets/tag/custom_tag.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:heroicons/heroicons.dart';
@@ -85,9 +87,11 @@ class MatchOfferContent extends StatelessWidget {
 }
 
 class CampaignCard extends StatelessWidget {
+  final Campaign campaign;
   final bool isSmall;
   final VoidCallback? onPressed;
   const CampaignCard({
+    this.campaign = Campaign.sample,
     super.key,
     this.isSmall = false,
     this.onPressed,
@@ -103,7 +107,6 @@ class CampaignCard extends StatelessWidget {
     return IntrinsicHeight(
       child: Ink(
         width: isSmall ? null : cardWidth,
-        // height: isSmall ? null : 400.0,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(6.0),
@@ -118,17 +121,18 @@ class CampaignCard extends StatelessWidget {
             children: [
               Stack(
                 children: [
-                  ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(5.0),
-                      topRight: Radius.circular(5.0),
-                    ),
-                    child: FadeInImage.memoryNetwork(
-                      placeholder: kTransparentImage,
-                      image:
-                          "https://i.ibb.co/Ss74GM1/joel-muniz-A4-Ax1-Apccf-A-unsplash.jpg",
-                      height: isSmall ? null : 246.0,
-                      fit: BoxFit.cover,
+                  AspectRatio(
+                    aspectRatio: 1.40 / 1,
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(5.0),
+                        topRight: Radius.circular(5.0),
+                      ),
+                      child: FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image: campaign.thumbnailUrl,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   if (!isSmall)
@@ -141,7 +145,7 @@ class CampaignCard extends StatelessWidget {
                           size: 16.0,
                           color: Color(0xFF2F2F2F),
                         ),
-                        label: "Kuala Lumpur",
+                        label: campaign.stateAndRegion.name,
                       ),
                     ),
                 ],
@@ -162,7 +166,7 @@ class CampaignCard extends StatelessWidget {
                             children: [
                               if (!isSmall)
                                 Text(
-                                  "2023/09/27 (2 months ago)",
+                                  "${campaign.createdAt.toISODate()} (${campaign.createdAt.toTimeAgo()})",
                                   style: CustomFonts.labelExtraSmall
                                       .copyWith(color: CustomColors.textGrey),
                                 ),
@@ -198,7 +202,7 @@ class CampaignCard extends StatelessWidget {
                       padding: EdgeInsets.symmetric(
                           horizontal: isSmall ? 8.0 : 12.0),
                       child: Text(
-                        "Green Initiatives: Saving Our Planet One Step at a Time",
+                        campaign.title,
                         style: isSmall ? null : CustomFonts.titleMedium,
                       ),
                     ),

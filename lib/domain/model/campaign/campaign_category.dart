@@ -12,7 +12,10 @@ class CampaignCategory {
     required this.title,
   });
 
-  factory CampaignCategory.fromJson(Map<String, dynamic> json) => _$CampaignCategoryFromJson(json);
+  factory CampaignCategory.fromJson(Map<String, dynamic> json) =>
+      _$CampaignCategoryFromJson(json);
 
   Map<String, dynamic> toJson() => _$CampaignCategoryToJson(this);
+
+  static const sample = CampaignCategory(id: 'sample-id', title: 'medical');
 }
