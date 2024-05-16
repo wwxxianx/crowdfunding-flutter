@@ -2,7 +2,7 @@ import 'package:crowdfunding_flutter/common/error/exceptions.dart';
 import 'package:crowdfunding_flutter/data/network/dto/sign_up_payload.dart';
 import 'package:crowdfunding_flutter/data/network/retrofit_api.dart';
 import 'package:crowdfunding_flutter/domain/model/tokens_response.dart';
-import 'package:crowdfunding_flutter/domain/model/user.dart';
+import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:crowdfunding_flutter/domain/service/auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

@@ -1,4 +1,4 @@
-import 'package:crowdfunding_flutter/domain/model/user.dart';
+import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:flutter/material.dart';
 
 @immutable

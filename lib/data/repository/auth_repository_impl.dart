@@ -1,6 +1,6 @@
 import 'package:crowdfunding_flutter/common/error/exceptions.dart';
 import 'package:crowdfunding_flutter/common/error/failure.dart';
-import 'package:crowdfunding_flutter/domain/model/user.dart';
+import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:crowdfunding_flutter/domain/repository/auth_repository.dart';
 import 'package:crowdfunding_flutter/domain/service/auth_service.dart';
 import 'package:fpdart/fpdart.dart';

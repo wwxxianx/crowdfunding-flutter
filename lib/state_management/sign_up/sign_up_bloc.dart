@@ -1,5 +1,5 @@
 import 'package:crowdfunding_flutter/common/usecase/usecase.dart';
-import 'package:crowdfunding_flutter/domain/model/user.dart';
+import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:crowdfunding_flutter/domain/usecases/auth/sign_out.dart';
 import 'package:crowdfunding_flutter/domain/usecases/auth/sign_up.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';

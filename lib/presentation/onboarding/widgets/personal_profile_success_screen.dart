@@ -1,6 +1,6 @@
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
-import 'package:crowdfunding_flutter/main.dart';
+import 'package:crowdfunding_flutter/presentation/navigation/navigation_screen.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingProfileSuccessScreen extends StatelessWidget {

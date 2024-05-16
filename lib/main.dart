@@ -1,16 +1,10 @@
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/di/init_dependencies.dart';
-import 'package:crowdfunding_flutter/presentation/account/account_screen.dart';
-import 'package:crowdfunding_flutter/presentation/explore/explore_screen.dart';
-import 'package:crowdfunding_flutter/presentation/home/home_screen.dart';
-import 'package:crowdfunding_flutter/presentation/home/widgets/bottom_nav_bar.dart';
-import 'package:crowdfunding_flutter/presentation/manage_campaign/manage_campaign_screen.dart';
-import 'package:crowdfunding_flutter/presentation/manage_campaign_details/manage_campaign_details_screen.dart';
-import 'package:crowdfunding_flutter/presentation/notification/notification_screen.dart';
+import 'package:crowdfunding_flutter/presentation/navigation/navigation_screen.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_bloc.dart';
+import 'package:crowdfunding_flutter/state_management/home/home_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/navigation/navigation_cubit.dart';
-import 'package:crowdfunding_flutter/state_management/navigation/navigation_state.dart';
 import 'package:crowdfunding_flutter/state_management/sign_up/sign_up_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,6 +20,7 @@ void main() async {
         BlocProvider(create: (_) => serviceLocator<SignUpBloc>()),
         BlocProvider(create: (_) => serviceLocator<NavigationCubit>()),
         BlocProvider(create: (_) => serviceLocator<ExploreCampaignsBloc>()),
+        BlocProvider(create: (_) => serviceLocator<HomeBloc>()),
       ],
       child: const MyApp(),
     ),
@@ -63,39 +58,7 @@ class _MyAppState extends State<MyApp> {
           backgroundColor: Colors.white,
         ),
       ),
-      home: const ManageCampaignDetailsScreen(),
-    );
-  }
-}
-
-class NavigationScreen extends StatelessWidget {
-  static route() => MaterialPageRoute(
-        builder: (context) => const NavigationScreen(),
-      );
-  const NavigationScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        bottomNavigationBar: HomeBottomNavigationBar(),
-        body: BlocBuilder<NavigationCubit, NavigationState>(
-          builder: (context, navigationState) {
-            switch (navigationState) {
-              case NavigationState.home:
-                return HomePage();
-              case NavigationState.explore:
-                return ExploreScreen();
-              case NavigationState.notification:
-                return NotificationScreen();
-              case NavigationState.manage:
-                return ManageCampaignScreen();
-              case NavigationState.account:
-                return AccountScreen();
-            }
-          },
-        ),
-      ),
+      home: const NavigationScreen(),
     );
   }
 }

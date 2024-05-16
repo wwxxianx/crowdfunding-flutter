@@ -1,5 +1,5 @@
 import 'package:crowdfunding_flutter/common/error/failure.dart';
-import 'package:crowdfunding_flutter/domain/model/user.dart';
+import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:fpdart/fpdart.dart';
 
 abstract interface class AuthRepository {

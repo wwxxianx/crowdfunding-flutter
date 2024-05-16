@@ -3,7 +3,7 @@ import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/avatar/avatar.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
-import 'package:crowdfunding_flutter/main.dart';
+import 'package:crowdfunding_flutter/presentation/navigation/navigation_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 

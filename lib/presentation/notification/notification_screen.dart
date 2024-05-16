@@ -5,13 +5,7 @@ import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension
 import 'package:crowdfunding_flutter/common/widgets/avatar/avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-enum NotificationType {
-  campaignUpdate,
-  campaignDonation,
-  campaignComment,
-  coin,
-}
+import 'package:crowdfunding_flutter/domain/model/notification/notification.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
