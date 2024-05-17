@@ -19,7 +19,7 @@ class SignUpForm extends StatefulWidget {
   State<SignUpForm> createState() => _SignUpFormState();
 }
 
-class _SignUpFormState extends State<SignUpForm> {
+class _SignUpFormState extends State<SignUpForm> with InputValidator {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -61,7 +61,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 label: "Email",
                 hintText: "email@gmail.com",
                 controller: _emailController,
-                validator: (value) => InputValidators.emailValidator(value),
+                validator: (value) => emailValidator(value),
                 prefixIcon: const HeroIcon(
                   HeroIcons.envelope,
                   size: 20.0,
@@ -78,7 +78,7 @@ class _SignUpFormState extends State<SignUpForm> {
                   HeroIcons.lockClosed,
                   size: 20.0,
                 ),
-                validator: (value) => InputValidators.passwordValidator(value),
+                validator: (value) => passwordValidator(value),
                 onFieldSubmitted: (p0) {
                   _handleSignUpSubmit();
                 },

@@ -1,6 +1,22 @@
 import 'package:dio/src/dio_exception.dart';
 import 'package:flutter/foundation.dart';
 
+class ApiResult<T> {
+  const ApiResult();
+}
+
+class ApiResultLoading<T> extends ApiResult<T> {}
+
+class ApiResultSuccess<T> extends ApiResult<T> {
+  final T data;
+  const ApiResultSuccess(this.data);
+}
+
+class ApiResultFailure<T> extends ApiResult<T> {
+  final String? errorMessage;
+  ApiResultFailure(this.errorMessage);
+}
+
 class ErrorHandler implements Exception {
   String _errorMessage = "";
 

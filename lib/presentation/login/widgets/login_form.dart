@@ -13,7 +13,7 @@ class LoginForm extends StatefulWidget {
   State<LoginForm> createState() => _LoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _LoginFormState extends State<LoginForm> with InputValidator {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -34,7 +34,7 @@ class _LoginFormState extends State<LoginForm> {
             label: "Email",
             hintText: "email@gmail.com",
             controller: _emailController,
-            validator: (value) => InputValidators.emailValidator(value),
+            validator: (value) => emailValidator(value),
             prefixIcon: const HeroIcon(
               HeroIcons.envelope,
               size: 20.0,

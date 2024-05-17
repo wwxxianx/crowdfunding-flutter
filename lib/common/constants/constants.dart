@@ -7,4 +7,8 @@ class SharedPreferencesKey {
   const SharedPreferencesKey();
   final String accessToken = "accessToken";
   final String refreshToken = "refreshToken";
+  final String stateAndRegion = "stateAndRegion";
+  final String stateAndRegionExpiration = "stateAndRegionExpiration";
+  final String campaignCategories = "campaignCategories";
+  final String campaignCategoriesExpiration = "campaignCategoriesExpiration";
 }

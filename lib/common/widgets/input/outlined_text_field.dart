@@ -22,6 +22,8 @@ class CustomOutlinedTextfield extends StatefulWidget {
   final Widget? suffix;
   final Widget? suffixIcon;
   final EdgeInsetsGeometry? contentPadding;
+  final void Function(String)? onChanged;
+  final String? initialValue;
 
   const CustomOutlinedTextfield({
     super.key,
@@ -41,6 +43,8 @@ class CustomOutlinedTextfield extends StatefulWidget {
     this.suffix,
     this.contentPadding,
     this.suffixIcon,
+    this.onChanged,
+    this.initialValue,
   });
 
   @override
@@ -72,6 +76,8 @@ class _CustomOutlinedTextfieldState extends State<CustomOutlinedTextfield> {
           Text(widget.label!, style: CustomFonts.labelSmall),
         if (widget.label != null && widget.label!.isNotEmpty) 4.kH,
         TextFormField(
+          initialValue: widget.initialValue,
+          onChanged: widget.onChanged,
           textAlign: widget.textAlign,
           maxLines: widget.maxLines,
           inputFormatters: widget.inputFormatters,

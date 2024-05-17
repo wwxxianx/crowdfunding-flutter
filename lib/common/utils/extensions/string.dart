@@ -21,3 +21,9 @@ extension StringExtensions on String {
     return timeAgo;
   }
 }
+
+extension OptionalStringExtension on String? {
+  bool get isNotNullOrEmpty {
+    return this != null && this!.isEmpty;
+  }
+}

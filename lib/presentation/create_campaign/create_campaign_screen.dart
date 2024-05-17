@@ -5,7 +5,9 @@ import 'package:crowdfunding_flutter/presentation/create_campaign/widgets/benefi
 import 'package:crowdfunding_flutter/presentation/create_campaign/widgets/fundraiser_description_page.dart';
 import 'package:crowdfunding_flutter/presentation/create_campaign/widgets/fundraiser_details_page.dart';
 import 'package:crowdfunding_flutter/presentation/create_campaign/widgets/fundraiser_media_page.dart';
+import 'package:crowdfunding_flutter/state_management/create_campaign/create_campaign_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CreateCampaignScreen extends StatefulWidget {
@@ -133,27 +135,30 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
                   kToolbarHeight -
                   MediaQuery.of(context).viewPadding.top,
             ),
-            child: PageView(
-              physics: const NeverScrollableScrollPhysics(),
-              controller: _pageController,
-              onPageChanged: _handlePageChange,
-              children: [
-                FundraiserDetailsFormPage(
-                  onNextPage: _handleNextPage,
-                ),
-                BeneficiaryForm(
-                  onNextPage: _handleNextPage,
-                  onPreviousPage: _handlePreviousPage,
-                ),
-                FundraiserDescriptionFormPage(
-                  onNextPage: _handleNextPage,
-                  onPreviousPage: _handlePreviousPage,
-                ),
-                FundraiserMediaUploadPage(
-                  onNextPage: _handleNextPage,
-                  onPreviousPage: _handlePreviousPage,
-                ),
-              ],
+            child: BlocProvider(
+              create: (context) => CreateCampaignBloc(),
+              child: PageView(
+                physics: const NeverScrollableScrollPhysics(),
+                controller: _pageController,
+                onPageChanged: _handlePageChange,
+                children: [
+                  FundraiserDetailsFormPage(
+                    onNextPage: _handleNextPage,
+                  ),
+                  BeneficiaryForm(
+                    onNextPage: _handleNextPage,
+                    onPreviousPage: _handlePreviousPage,
+                  ),
+                  FundraiserDescriptionFormPage(
+                    onNextPage: _handleNextPage,
+                    onPreviousPage: _handlePreviousPage,
+                  ),
+                  FundraiserMediaUploadPage(
+                    onNextPage: _handleNextPage,
+                    onPreviousPage: _handlePreviousPage,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

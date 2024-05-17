@@ -1,14 +1,19 @@
+import 'package:crowdfunding_flutter/data/local/shared_preference.dart';
 import 'package:crowdfunding_flutter/data/network/dio.dart';
 import 'package:crowdfunding_flutter/data/network/retrofit_api.dart';
 import 'package:crowdfunding_flutter/data/repository/auth_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/repository/campaign/campaign_repository_impl.dart';
+import 'package:crowdfunding_flutter/data/repository/constant_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/service/auth_service_impl.dart';
 import 'package:crowdfunding_flutter/domain/repository/auth_repository.dart';
 import 'package:crowdfunding_flutter/domain/repository/campaign/campaign_repository.dart';
+import 'package:crowdfunding_flutter/domain/repository/constant_repository.dart';
 import 'package:crowdfunding_flutter/domain/service/auth_service.dart';
 import 'package:crowdfunding_flutter/domain/usecases/auth/sign_out.dart';
 import 'package:crowdfunding_flutter/domain/usecases/auth/sign_up.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaign.dart';
+import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaign_categories.dart';
+import 'package:crowdfunding_flutter/domain/usecases/fetch_state_and_regions.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/home/home_bloc.dart';
@@ -32,11 +37,13 @@ Future<void> initDependencies() async {
     ..registerLazySingleton(() => AppUserCubit())
     ..registerLazySingleton(() => NavigationCubit())
     ..registerLazySingleton(() => DioNetwork.provideDio())
+    ..registerLazySingleton(() => MySharedPreference())
     ..registerLazySingleton(() => RestClient(serviceLocator()));
 
   _initAuth();
   _initExploreCampaigns();
   _initCampaign();
+  _initConstant();
 }
 
 void _initExploreCampaigns() {
@@ -73,10 +80,20 @@ void _initAuth() {
 void _initCampaign() {
   serviceLocator
     // Repo
-    ..registerFactory<CampaignRepository>(
-        () => CampaignRepositoryImpl(api: serviceLocator()))
+    ..registerFactory<CampaignRepository>(() =>
+        CampaignRepositoryImpl(api: serviceLocator(), sp: serviceLocator()))
     // Usecase
     ..registerFactory(() => FetchCampaign(campaignRepository: serviceLocator()))
     // Bloc
     ..registerLazySingleton(() => HomeBloc(fetchCampaign: serviceLocator()));
+}
+
+void _initConstant() {
+  serviceLocator
+    ..registerFactory<ConstantRepository>(() =>
+        ConstantRepositoryImpl(api: serviceLocator(), sp: serviceLocator()))
+    ..registerFactory(
+        () => FetchStateAndRegions(constantRepository: serviceLocator()))
+    ..registerFactory(
+        () => FetchCampaignCategories(campaignRepository: serviceLocator()));
 }

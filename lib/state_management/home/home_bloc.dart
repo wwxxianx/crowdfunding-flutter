@@ -21,7 +21,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(FetchRecommendedCampaignsLoading());
     final res = await _fetchCampaign.call(NoPayload());
     res.fold(
-      (l) => emit(FetchRecommendedCampaignsError(message: l.message)),
+      (l) => emit(FetchRecommendedCampaignsError(message: l.errorMessage)),
       (r) => emit(FetchRecommendedCampaignsSuccess(campaigns: r)),
     );
   }

@@ -5,16 +5,22 @@ import 'package:flutter/services.dart';
 
 class MoneyTextField extends StatelessWidget {
   final String label;
+  final String? initialValue;
   final TextEditingController controller;
+  final void Function(String)? onChanged;
   const MoneyTextField({
     super.key,
     required this.controller,
     this.label = "Donation amount",
+    this.onChanged,
+    this.initialValue,
   });
 
   @override
   Widget build(BuildContext context) {
     return CustomOutlinedTextfield(
+      initialValue: initialValue,
+      onChanged: onChanged,
       inputFormatters: [
         // Can not start with 0
         FilteringTextInputFormatter.deny(RegExp(r'^0')),
