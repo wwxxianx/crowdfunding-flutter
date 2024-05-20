@@ -19,7 +19,7 @@ class CampaignsFilterBottomSheet extends StatelessWidget {
             style: CustomFonts.labelMedium,
           ),
           12.kH,
-          CamapaignCategoryList(onPressed: (campaignCategory) {}),
+          // CamapaignCategoryList(onPressed: (campaignCategory) {}),
           20.kH,
           //Divider
           Container(

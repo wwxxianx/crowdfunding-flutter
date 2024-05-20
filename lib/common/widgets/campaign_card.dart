@@ -5,12 +5,13 @@ import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension
 import 'package:crowdfunding_flutter/common/utils/extensions/string.dart';
 import 'package:crowdfunding_flutter/common/widgets/campaign_category_tag.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/animated_bg_container.dart';
+import 'package:crowdfunding_flutter/common/widgets/skeleton.dart';
 import 'package:crowdfunding_flutter/common/widgets/tag/custom_tag.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:heroicons/heroicons.dart';
-import 'package:transparent_image/transparent_image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 
 class MatchOfferTag extends StatelessWidget {
@@ -87,6 +88,7 @@ class MatchOfferContent extends StatelessWidget {
 }
 
 class CampaignCard extends StatelessWidget {
+  final double height;
   final Campaign campaign;
   final bool isSmall;
   final VoidCallback? onPressed;
@@ -95,6 +97,7 @@ class CampaignCard extends StatelessWidget {
     super.key,
     this.isSmall = false,
     this.onPressed,
+    this.height = 500,
   });
 
   @override
@@ -104,9 +107,11 @@ class CampaignCard extends StatelessWidget {
         ? 343
         : deviceWidth - (Dimensions.screenHorizontalPadding * 2);
 
-    return IntrinsicHeight(
+    return InkWell(
+      onTap: onPressed,
       child: Ink(
         width: isSmall ? null : cardWidth,
+        height: isSmall ? null : height,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(6.0),
@@ -115,131 +120,130 @@ class CampaignCard extends StatelessWidget {
             width: 1.0,
           ),
         ),
-        child: InkWell(
-          onTap: onPressed,
-          child: Column(
-            children: [
-              Stack(
-                children: [
-                  AspectRatio(
-                    aspectRatio: 1.40 / 1,
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(5.0),
-                        topRight: Radius.circular(5.0),
-                      ),
-                      child: FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        image: campaign.thumbnailUrl,
-                        fit: BoxFit.cover,
-                      ),
+        child: Column(
+          children: [
+            Stack(
+              alignment: Alignment.topLeft,
+              children: [
+                AspectRatio(
+                  aspectRatio: 1.40 / 1,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(5.0),
+                      topRight: Radius.circular(5.0),
+                    ),
+                    child: CachedNetworkImage(
+                      imageUrl: campaign.thumbnailUrl,
+                      placeholder: (context, url) => const Skeleton(),
+                      fit: BoxFit.cover,
+                      // errorWidget: (context, url, error) => Icon(Icons.error),
                     ),
                   ),
-                  if (!isSmall)
-                    Positioned(
-                      top: 8.0,
-                      left: 12.0,
-                      child: CustomTag(
-                        prefixIcon: HeroIcon(
-                          HeroIcons.mapPin,
-                          size: 16.0,
-                          color: Color(0xFF2F2F2F),
-                        ),
-                        label: campaign.stateAndRegion.name,
+                ),
+                if (!isSmall)
+                  Positioned(
+                    top: 8.0,
+                    left: 12.0,
+                    child: CustomTag(
+                      prefixIcon: HeroIcon(
+                        HeroIcons.mapPin,
+                        size: 16.0,
+                        color: Color(0xFF2F2F2F),
                       ),
+                      label: campaign.stateAndRegion.name,
                     ),
+                  ),
+              ],
+            ),
+            8.kH,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: isSmall ? 8.0 : 12.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (!isSmall)
+                              Text(
+                                "${campaign.createdAt.toISODate()} (${campaign.createdAt.toTimeAgo()})",
+                                style: CustomFonts.labelExtraSmall
+                                    .copyWith(color: CustomColors.textGrey),
+                              ),
+                            if (!isSmall) 8.kH,
+                            Row(
+                              children: [
+                                CampaignCategoryTag(
+                                  isSmall: true,
+                                ),
+                                if (!isSmall)
+                                  CustomTag(
+                                    label: "65% Raised",
+                                  ),
+                                if (isSmall) MatchOfferTag(),
+                              ],
+                            )
+                          ],
+                        ),
+                        const Spacer(),
+                        if (!isSmall)
+                          IconButton(
+                            onPressed: () {},
+                            icon: HeroIcon(
+                              HeroIcons.heart,
+                              size: 24.0,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  6.kH,
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: isSmall ? 8.0 : 12.0),
+                    child: Text(
+                      campaign.title,
+                      style: isSmall ? null : CustomFonts.titleMedium,
+                    ),
+                  ),
+                  16.kH,
+                  const Spacer(),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: isSmall ? 8.0 : 12.0,
+                      right: isSmall ? 8.0 : 12.0,
+                      bottom: isSmall ? 8.0 : 0.0,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        DonationProgressBar(
+                          total: 10.0,
+                          current: 7.5,
+                          height: isSmall ? 8 : 10,
+                          showDonationStatusText: !isSmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (!isSmall) 12.kH,
+                  // Top border for Match Offer container
+                  if (!isSmall)
+                    Container(
+                      width: double.maxFinite,
+                      height: 1,
+                      color: Colors.black,
+                    ),
+                  if (!isSmall) MatchOfferContent()
                 ],
               ),
-              8.kH,
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: isSmall ? 8.0 : 12.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (!isSmall)
-                                Text(
-                                  "${campaign.createdAt.toISODate()} (${campaign.createdAt.toTimeAgo()})",
-                                  style: CustomFonts.labelExtraSmall
-                                      .copyWith(color: CustomColors.textGrey),
-                                ),
-                              if (!isSmall) 8.kH,
-                              Row(
-                                children: [
-                                  CampaignCategoryTag(
-                                    isSmall: true,
-                                  ),
-                                  if (!isSmall)
-                                    CustomTag(
-                                      label: "65% Raised",
-                                    ),
-                                  if (isSmall) MatchOfferTag(),
-                                ],
-                              )
-                            ],
-                          ),
-                          const Spacer(),
-                          if (!isSmall)
-                            IconButton(
-                              onPressed: () {},
-                              icon: HeroIcon(
-                                HeroIcons.heart,
-                                size: 24.0,
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                    6.kH,
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: isSmall ? 8.0 : 12.0),
-                      child: Text(
-                        campaign.title,
-                        style: isSmall ? null : CustomFonts.titleMedium,
-                      ),
-                    ),
-                    16.kH,
-                    const Spacer(),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: isSmall ? 8.0 : 12.0,
-                        right: isSmall ? 8.0 : 12.0,
-                        bottom: isSmall ? 8.0 : 0.0,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          DonationProgressBar(
-                            total: 10.0,
-                            current: 7.5,
-                            height: isSmall ? 8 : 10,
-                            showDonationStatusText: !isSmall,
-                          ),
-                        ],
-                      ),
-                    ),
-                    if (!isSmall) 12.kH,
-                    // Top border for Match Offer container
-                    if (!isSmall)
-                      Container(
-                        width: double.maxFinite,
-                        height: 1,
-                        color: Colors.black,
-                      ),
-                    if (!isSmall) MatchOfferContent()
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

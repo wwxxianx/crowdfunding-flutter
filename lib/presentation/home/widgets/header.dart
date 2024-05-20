@@ -3,7 +3,10 @@ import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/avatar/avatar.dart';
+import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
+import 'package:crowdfunding_flutter/state_management/app_user_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePageHeader extends StatelessWidget {
   final String title;
@@ -22,30 +25,39 @@ class HomePageHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: padding,
-      child: Row(
-        children: [
-          Avatar(imageUrl: ""),
-          8.kW,
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return BlocBuilder<AppUserCubit, AppUserState>(
+      builder: (context, state) {
+        return Padding(
+          padding: padding,
+          child: Row(
             children: [
-              Text(
-                title,
-                style: CustomFonts.titleSmall,
+              if (state is AppUserLoggedIn)
+                Avatar(
+                  imageUrl: state.user.profileImageUrl,
+                  placeholder: state.user.fullName[0],
+                ),
+              8.kW,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: CustomFonts.titleSmall,
+                  ),
+                  if (state is AppUserLoggedIn)
+                    Text(
+                      state.user.fullName,
+                      style: CustomFonts.labelSmall
+                          .copyWith(color: CustomColors.textGrey),
+                    ),
+                ],
               ),
-              Text(
-                "John Doe",
-                style: CustomFonts.labelSmall
-                    .copyWith(color: CustomColors.textGrey),
-              ),
+              const Spacer(),
+              action,
             ],
           ),
-          const Spacer(),
-          action,
-        ],
-      ),
+        );
+      },
     );
   }
 }

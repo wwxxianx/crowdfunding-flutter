@@ -20,18 +20,18 @@ class SignUpForm extends StatefulWidget {
 }
 
 class _SignUpFormState extends State<SignUpForm> with InputValidator {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
-  final _focusNode = FocusNode();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  final focusNode = FocusNode();
 
   void _handleSignUpSubmit() {
-    if (_formKey.currentState!.validate()) {
+    if (formKey.currentState!.validate()) {
       context.read<SignUpBloc>().add(
             OnSignUp(
-              email: _emailController.text,
-              password: _passwordController.text,
-              navigateToOnboarding: () {
+              email: emailController.text,
+              password: passwordController.text,
+              onSuccess: () {
                 Navigator.pushAndRemoveUntil(
                   context,
                   OnboardingSelectAccountScreen.route(),
@@ -46,7 +46,7 @@ class _SignUpFormState extends State<SignUpForm> with InputValidator {
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: _formKey,
+      key: formKey,
       child: BlocConsumer<SignUpBloc, SignUpState>(
         listener: (context, state) {
           if (state is SignUpFailure) {
@@ -57,11 +57,11 @@ class _SignUpFormState extends State<SignUpForm> with InputValidator {
           return Column(
             children: [
               CustomOutlinedTextfield(
-                focusNode: _focusNode,
+                focusNode: focusNode,
                 label: "Email",
                 hintText: "email@gmail.com",
-                controller: _emailController,
-                validator: (value) => emailValidator(value),
+                controller: emailController,
+                validator: (value) => validateEmail(value),
                 prefixIcon: const HeroIcon(
                   HeroIcons.envelope,
                   size: 20.0,
@@ -72,13 +72,13 @@ class _SignUpFormState extends State<SignUpForm> with InputValidator {
               CustomOutlinedTextfield(
                 label: "Password",
                 hintText: "********",
-                controller: _passwordController,
+                controller: passwordController,
                 isObscureText: true,
                 prefixIcon: const HeroIcon(
                   HeroIcons.lockClosed,
                   size: 20.0,
                 ),
-                validator: (value) => passwordValidator(value),
+                validator: (value) => validatePassword(value),
                 onFieldSubmitted: (p0) {
                   _handleSignUpSubmit();
                 },
@@ -88,6 +88,7 @@ class _SignUpFormState extends State<SignUpForm> with InputValidator {
                 width: double.infinity,
                 child: CustomButton(
                   isLoading: state is SignUpLoading,
+                  enabled: state is! SignUpLoading,
                   onPressed: _handleSignUpSubmit,
                   child: const Text("Sign Up"),
                 ),

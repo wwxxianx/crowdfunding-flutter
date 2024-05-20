@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:crowdfunding_flutter/common/error/exceptions.dart';
-import 'package:crowdfunding_flutter/data/network/dto/sign_up_payload.dart';
+import 'package:crowdfunding_flutter/data/local/shared_preference.dart';
+import 'package:crowdfunding_flutter/data/network/payload/sign_up_payload.dart';
 import 'package:crowdfunding_flutter/data/network/retrofit_api.dart';
 import 'package:crowdfunding_flutter/domain/model/tokens_response.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
@@ -10,14 +13,32 @@ import 'package:crowdfunding_flutter/common/constants/constants.dart';
 
 class AuthServiceImpl implements AuthService {
   final SupabaseClient supabaseClient;
-  final RestClient restClient;
+  final RestClient api;
+  final MySharedPreference sp;
   AuthServiceImpl({
     required this.supabaseClient,
-    required this.restClient,
+    required this.api,
+    required this.sp,
   });
 
   @override
   Session? get currentUserSession => supabaseClient.auth.currentSession;
+
+  @override
+  Future<UserModel?> getCurrentUser() async {
+    try {
+      final cachedUser = await sp.getData(Constants.sharedPreferencesKey.user);
+      if (cachedUser != null) {
+        final user = UserModel.fromJson(jsonDecode(cachedUser));
+        return user;
+      }
+
+      final user = await api.getUserProfile();
+      return user;
+    } on Exception catch (_) {
+      return null;
+    }
+  }
 
   @override
   Future<UserModel> createUserWithEmailPassword(
@@ -33,11 +54,20 @@ class AuthServiceImpl implements AuthService {
       }
       final fullName = user.email?.split("@").first ?? "";
       // Create user record in db
-      final signUpDto =
-          SignUpPayload(id: user.id, email: user.email ?? "", fullName: fullName);
-      final tokens = await restClient.signUp(signUpDto);
+      final signUpPayload = SignUpPayload(
+          id: user.id, email: user.email ?? "", fullName: fullName);
+      final tokens = await api.signUp(signUpPayload);
       await _saveTokens(tokens);
-      return UserModel.fromJson(res.user!.toJson());
+
+      // cache user
+      final userModel = UserModel(
+        id: user.id,
+        fullName: fullName,
+        email: email,
+        isOnboardingCompleted: false,
+      );
+      _cacheUser(userModel);
+      return userModel;
     } on AuthException catch (e) {
       throw ServerException(e.message);
     } catch (e) {
@@ -53,15 +83,25 @@ class AuthServiceImpl implements AuthService {
         password: password,
         email: email,
       );
-      if (response.user == null) {
+      final user = response.user;
+      if (user == null) {
         throw const ServerException('Failed to sign you in!');
       }
+      final userRes = await api.signIn(user.id);
+      final tokens = TokensResponse(
+          accessToken: userRes.accessToken, refreshToken: userRes.refreshToken);
+      await _saveTokens(tokens);
       return UserModel.fromJson(response.user!.toJson());
     } on AuthException catch (e) {
       throw ServerException(e.message);
     } catch (e) {
       throw ServerException(e.toString());
     }
+  }
+
+  _cacheUser(UserModel user) async {
+    await sp.saveData(
+        key: Constants.sharedPreferencesKey.user, data: jsonEncode(user));
   }
 
   _saveTokens(TokensResponse tokens) async {

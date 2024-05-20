@@ -26,8 +26,8 @@ class ErrorHandler implements Exception {
     _handleDioException(error);
   }
 
-  ErrorHandler.otherException() {
-    _handleOtherException();
+  ErrorHandler.otherException({Exception? error}) {
+    _handleOtherException(error);
   }
 
   get errorMessage {
@@ -35,8 +35,8 @@ class ErrorHandler implements Exception {
   }
 
   // Untracked error
-  _handleOtherException() {
-    _errorMessage = "Something went wrong, please try again later.";
+  _handleOtherException(Exception? error) {
+    _errorMessage = error != null ? error.toString() : "Something went wrong";
     ErrorHandler serverError = ErrorHandler(_errorMessage);
     return serverError;
   }

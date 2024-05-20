@@ -5,11 +5,11 @@ sealed class SignUpEvent {}
 final class OnSignUp extends SignUpEvent {
   final String email;
   final String password;
-  final VoidCallback navigateToOnboarding;
+  final VoidCallback onSuccess;
   OnSignUp({
     required this.email,
     required this.password,
-    required this.navigateToOnboarding,
+    required this.onSuccess,
   });
 }
 

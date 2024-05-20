@@ -3,8 +3,6 @@ import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:fpdart/fpdart.dart';
 
 abstract interface class AuthRepository {
-  Future<Either<Failure, UserModel>> getCurrentUser();
-
   Future<Either<Failure, UserModel>> createUserWithEmailPassword({
     required String email,
     required String password,

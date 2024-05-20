@@ -9,7 +9,8 @@ class UserModel {
   final String email;
   final String? profileImageUrl;
   final String? phoneNumber;
-  final String? refreshToken;
+  final String refreshToken;
+  final bool isOnboardingCompleted;
   // UserPreference? preference;
   // List<CampaignDonation> campaignDonations;
   // List<Campaign> campaigns;
@@ -27,6 +28,7 @@ class UserModel {
     this.profileImageUrl = "",
     this.phoneNumber = "",
     this.refreshToken = "",
+    this.isOnboardingCompleted = false,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
@@ -39,4 +41,25 @@ class UserModel {
     fullName: 'John Doe',
     email: 'john@gmail.com',
   );
+}
+
+@JsonSerializable()
+class UserModelWithAccessToken extends UserModel {
+  final String accessToken;
+
+  const UserModelWithAccessToken({
+    required String id,
+    required String fullName,
+    required String email,
+    required this.accessToken,
+  }) : super(
+          id: id,
+          fullName: fullName,
+          email: email,
+        );
+
+  factory UserModelWithAccessToken.fromJson(Map<String, dynamic> json) =>
+      _$UserModelWithAccessTokenFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserModelWithAccessTokenToJson(this);
 }

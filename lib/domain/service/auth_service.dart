@@ -4,6 +4,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 abstract interface class AuthService {
   Session? get currentUserSession;
 
+  Future<UserModel?> getCurrentUser();
+
   Future<UserModel> createUserWithEmailPassword({
     required String email,
     required String password,

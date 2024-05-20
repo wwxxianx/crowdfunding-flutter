@@ -107,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                 if (state is FetchRecommendedCampaignsError)
                   Text("Something went wrong,"),
                 if (state is FetchRecommendedCampaignsSuccess)
-                  Container(
+                  SizedBox(
                     height: 500,
                     child: ListView.builder(
                       padding: const EdgeInsets.only(

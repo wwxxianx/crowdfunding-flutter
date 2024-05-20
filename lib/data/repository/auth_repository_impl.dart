@@ -7,7 +7,9 @@ import 'package:fpdart/fpdart.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthService authService;
-  const AuthRepositoryImpl(this.authService);
+  const AuthRepositoryImpl({
+    required this.authService,
+  });
 
   @override
   Future<Either<Failure, UserModel>> createUserWithEmailPassword(
@@ -19,18 +21,6 @@ class AuthRepositoryImpl implements AuthRepository {
     } on ServerException catch (e) {
       return left(Failure(e.message));
     }
-  }
-
-  @override
-  Future<Either<Failure, UserModel>> getCurrentUser() async {
-    final session = authService.currentUserSession;
-
-    if (session == null) {
-      return left(Failure("Not logged in"));
-    }
-
-    return right(UserModel(
-        id: session.user.id, email: session.user.email ?? "", fullName: ""));
   }
 
   @override

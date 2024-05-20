@@ -1,7 +1,10 @@
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/di/init_dependencies.dart';
+import 'package:crowdfunding_flutter/presentation/login/login_screen.dart';
 import 'package:crowdfunding_flutter/presentation/navigation/navigation_screen.dart';
+import 'package:crowdfunding_flutter/presentation/onboarding/widgets/onboarding_select_account_type_screen.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
+import 'package:crowdfunding_flutter/state_management/app_user_state.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/home/home_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/navigation/navigation_cubit.dart';
@@ -35,6 +38,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<AppUserCubit>().checkUserLoggedIn();
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -58,7 +67,20 @@ class _MyAppState extends State<MyApp> {
           backgroundColor: Colors.white,
         ),
       ),
-      home: const NavigationScreen(),
+      home: BlocBuilder<AppUserCubit, AppUserState>(
+        builder: (context, state) {
+          if (state is AppUserInitial) {
+            return const LoginScreen();
+          }
+          if (state is AppUserLoggedIn) {
+            if (state.user.isOnboardingCompleted) {
+              return const NavigationScreen();
+            }
+            return const LoginScreen();
+          }
+          return const SizedBox();
+        },
+      ),
     );
   }
 }

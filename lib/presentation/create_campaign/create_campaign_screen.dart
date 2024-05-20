@@ -1,6 +1,7 @@
 import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
+import 'package:crowdfunding_flutter/di/init_dependencies.dart';
 import 'package:crowdfunding_flutter/presentation/create_campaign/widgets/beneficiary_form.dart';
 import 'package:crowdfunding_flutter/presentation/create_campaign/widgets/fundraiser_description_page.dart';
 import 'package:crowdfunding_flutter/presentation/create_campaign/widgets/fundraiser_details_page.dart';
@@ -128,38 +129,30 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height -
-                  kToolbarHeight -
-                  MediaQuery.of(context).viewPadding.top,
-            ),
-            child: BlocProvider(
-              create: (context) => CreateCampaignBloc(),
-              child: PageView(
-                physics: const NeverScrollableScrollPhysics(),
-                controller: _pageController,
-                onPageChanged: _handlePageChange,
-                children: [
-                  FundraiserDetailsFormPage(
-                    onNextPage: _handleNextPage,
-                  ),
-                  BeneficiaryForm(
-                    onNextPage: _handleNextPage,
-                    onPreviousPage: _handlePreviousPage,
-                  ),
-                  FundraiserDescriptionFormPage(
-                    onNextPage: _handleNextPage,
-                    onPreviousPage: _handlePreviousPage,
-                  ),
-                  FundraiserMediaUploadPage(
-                    onNextPage: _handleNextPage,
-                    onPreviousPage: _handlePreviousPage,
-                  ),
-                ],
+        child: BlocProvider(
+          create: (context) => CreateCampaignBloc(
+            createCampaign: serviceLocator(),
+          ),
+          child: PageView(
+            physics: const NeverScrollableScrollPhysics(),
+            controller: _pageController,
+            onPageChanged: _handlePageChange,
+            children: [
+              FundraiserDetailsFormPage(
+                onNextPage: _handleNextPage,
               ),
-            ),
+              BeneficiaryForm(
+                onNextPage: _handleNextPage,
+                onPreviousPage: _handlePreviousPage,
+              ),
+              FundraiserDescriptionFormPage(
+                onNextPage: _handleNextPage,
+                onPreviousPage: _handlePreviousPage,
+              ),
+              FundraiserMediaUploadPage(
+                onPreviousPage: _handlePreviousPage,
+              ),
+            ],
           ),
         ),
       ),

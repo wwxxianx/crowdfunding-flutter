@@ -1,8 +1,8 @@
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/utils/slide_route_transition.dart';
-import 'package:crowdfunding_flutter/presentation/onboarding/page/organization_profile_page.dart';
-import 'package:crowdfunding_flutter/presentation/onboarding/page/organization_verify_page.dart';
+import 'package:crowdfunding_flutter/presentation/onboarding/pages/npo_onboarding/organization_profile_page.dart';
+import 'package:crowdfunding_flutter/presentation/onboarding/pages/npo_onboarding/organization_verify_page.dart';
 import 'package:flutter/material.dart';
 
 class CreateOrganizationPageView extends StatefulWidget {

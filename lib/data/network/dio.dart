@@ -28,6 +28,11 @@ class AppInterceptors extends Interceptor {
     if (accessToken != null) {
       options.headers['Authorization'] = 'Bearer $accessToken';
     }
+    print('Request object: ${options}');
+    print('Request body: ${options.data}');
+    if (options.data != null) {
+      print('Request body: ${options.data}');
+    }
 
     return handler.next(options);
   }

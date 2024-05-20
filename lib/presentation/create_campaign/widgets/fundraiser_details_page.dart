@@ -1,4 +1,3 @@
-
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
@@ -38,90 +37,150 @@ class _FundraiserDetailsFormPageState extends State<FundraiserDetailsFormPage> {
     if (targetAmount != null) {
       amountTextController.text = targetAmount;
     }
+    final phoneNumber =
+        context.read<CreateCampaignBloc>().state.phoneNumberText;
+    if (phoneNumber != null) {
+      phoneTextController.text = phoneNumber;
+    }
+  }
+
+  void _handleTargetAmountChanged(targetAmount) {
+    context
+        .read<CreateCampaignBloc>()
+        .add(OnTargetAmountTextChanged(targetAmount: targetAmount));
+  }
+
+  void _handleSelectCategory(categoryId) {
+    context
+        .read<CreateCampaignBloc>()
+        .add(OnSelectCampaignCategory(categoryId: categoryId));
+  }
+
+  void _handleSelectState(stateId) {
+    context.read<CreateCampaignBloc>().add(OnSelectState(stateId: stateId));
+  }
+
+  void _handlePhoneNumberChanged(phoneNumber) {
+    context
+        .read<CreateCampaignBloc>()
+        .add(OnPhoneNumberChanged(phoneNumber: phoneNumber));
+  }
+
+  void _navigateToNextPage() {
+    context.read<CreateCampaignBloc>().add(ValidateStepOne(
+      onSuccess: () {
+        widget.onNextPage();
+      },
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CreateCampaignBloc, CreateCampaignState>(
       builder: (context, state) {
-        return Padding(
-          padding: const EdgeInsets.only(
-            left: Dimensions.screenHorizontalPadding,
-            right: Dimensions.screenHorizontalPadding,
-            bottom: 20,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "How much would you like to raise?",
-                style: CustomFonts.bodyMedium,
-              ),
-              8.kH,
-              MoneyTextField(
-                controller: amountTextController,
-                onChanged: (value) {
-                  context
-                      .read<CreateCampaignBloc>()
-                      .add(OnTargetAmountTextChanged(targetAmount: value));
-                },
-              ),
-              28.kH,
-              const Text(
-                "What kind of fundraiser are you creating? (Select one)",
-                style: CustomFonts.bodyMedium,
-              ),
-              8.kH,
-              CamapaignCategoryList(
-                onPressed: (campaignCategory) {},
-              ),
-              28.kH,
-              const Text(
-                "Where are you fundraising?",
-                style: CustomFonts.bodyMedium,
-              ),
-              8.kH,
-              
-              StateAndRegionsDropdownMenu(),
-              28.kH,
-              const Text(
-                "Fundraiser contact method",
-                style: CustomFonts.bodyMedium,
-              ),
-              8.kH,
-              CustomOutlinedTextfield(
-                controller: phoneTextController,
-                label: "Phone number",
-                prefixIcon: Padding(
-                  padding: const EdgeInsets.only(left: 12.0, right: 8.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Image.asset("assets/images/malaysia-flag.png"),
-                      4.kW,
-                      const Text(
-                        "+60",
-                        style: CustomFonts.labelSmall,
-                      )
-                    ],
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: Dimensions.screenHorizontalPadding,
+                      right: Dimensions.screenHorizontalPadding,
+                      bottom: 20,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "How much would you like to raise?",
+                          style: CustomFonts.bodyMedium,
+                        ),
+                        8.kH,
+                        MoneyTextField(
+                          errorText: state.targetAmountError,
+                          controller: amountTextController,
+                          onChanged: _handleTargetAmountChanged,
+                        ),
+                        28.kH,
+                        const Text(
+                          "What kind of fundraiser are you creating? (Select one)",
+                          style: CustomFonts.bodyMedium,
+                        ),
+                        if (state.categoryError != null)
+                          Text(
+                            state.categoryError!,
+                            style: CustomFonts.bodySmall
+                                .copyWith(color: Colors.redAccent),
+                          ),
+                        8.kH,
+                        CampaignCategoryList(
+                          onPressed: (campaignCategory) {
+                            _handleSelectCategory(campaignCategory.id);
+                          },
+                          selectedCategoryIds:
+                              List.from([state.selectedCategoryId]),
+                        ),
+                        28.kH,
+                        const Text(
+                          "Where are you fundraising?",
+                          style: CustomFonts.bodyMedium,
+                        ),
+                        8.kH,
+                        StateAndRegionsDropdownMenu(
+                          errorText: state.stateError,
+                          onSelected: (stateId) => _handleSelectState(stateId),
+                          initialSelection: state.selectedStateId,
+                        ),
+                        28.kH,
+                        const Text(
+                          "Fundraiser contact method",
+                          style: CustomFonts.bodyMedium,
+                        ),
+                        8.kH,
+                        CustomOutlinedTextfield(
+                          errorText: state.phoneNumberError,
+                          controller: phoneTextController,
+                          onChanged: (value) =>
+                              _handlePhoneNumberChanged(value),
+                          label: "Phone number",
+                          prefixIcon: Padding(
+                            padding:
+                                const EdgeInsets.only(left: 12.0, right: 8.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Image.asset("assets/images/malaysia-flag.png"),
+                                4.kW,
+                                const Text(
+                                  "+60",
+                                  style: CustomFonts.labelSmall,
+                                )
+                              ],
+                            ),
+                          ),
+                          inputFormatters: [PhoneInputFormatter()],
+                          keyboardType: TextInputType.phone,
+                        ),
+                        const Spacer(),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: CustomButton(
+                                onPressed: _navigateToNextPage,
+                                child: const Text("Continue"),
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
-                inputFormatters: [PhoneInputFormatter()],
-                keyboardType: TextInputType.phone,
               ),
-              const Spacer(),
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomButton(
-                      onPressed: widget.onNextPage,
-                      child: const Text("Continue"),
-                    ),
-                  )
-                ],
-              )
-            ],
-          ),
+            );
+          },
         );
       },
     );

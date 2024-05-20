@@ -137,12 +137,14 @@ extension CampaignCategoryExtension on CampaignCategoryEnum {
   }
 }
 
-class CamapaignCategoryList extends StatelessWidget {
+class CampaignCategoryList extends StatelessWidget {
+  final List<String> selectedCategoryIds;
   final void Function(CampaignCategory campaignCategory) onPressed;
 
-  CamapaignCategoryList({
+  CampaignCategoryList({
     super.key,
     required this.onPressed,
+    required this.selectedCategoryIds,
   });
 
   List<Widget> _buildContent(ApiResult campaignCategories) {
@@ -162,6 +164,7 @@ class CamapaignCategoryList extends StatelessWidget {
             onPressed: (campaignCategory) {
               onPressed(campaignCategory);
             },
+            isSelected: selectedCategoryIds.contains(category.id),
           ),
         )
         .toList();
@@ -188,29 +191,19 @@ class CamapaignCategoryList extends StatelessWidget {
   }
 }
 
-class CampaignCategoryToggleButton extends StatefulWidget {
+class CampaignCategoryToggleButton extends StatelessWidget {
+  final bool isSelected;
   final CampaignCategory campaignCategory;
   final void Function(CampaignCategory campaignCategory) onPressed;
   const CampaignCategoryToggleButton({
     super.key,
     required this.campaignCategory,
     required this.onPressed,
+    required this.isSelected,
   });
 
-  @override
-  State<CampaignCategoryToggleButton> createState() =>
-      _CampaignCategoryToggleButtonState();
-}
-
-class _CampaignCategoryToggleButtonState
-    extends State<CampaignCategoryToggleButton> {
-  bool isSelected = false;
-
   void _handleToggle() {
-    setState(() {
-      isSelected = !isSelected;
-    });
-    widget.onPressed(widget.campaignCategory);
+    onPressed(campaignCategory);
   }
 
   @override
@@ -234,21 +227,21 @@ class _CampaignCategoryToggleButtonState
               ),
               borderRadius: BorderRadius.circular(100.0),
               color: CampaignCategoryEnum.values
-                  .byName(widget.campaignCategory.title)
+                  .byName(campaignCategory.title)
                   .getCampaignBGColor(),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 CampaignCategoryEnum.values
-                    .byName(widget.campaignCategory.title)
+                    .byName(campaignCategory.title)
                     .getCampaignIcon(),
                 4.kW,
                 Text(
-                  widget.campaignCategory.title.capitalize(),
+                  campaignCategory.title.capitalize(),
                   style: CustomFonts.labelMedium.copyWith(
                     color: CampaignCategoryEnum.values
-                        .byName(widget.campaignCategory.title)
+                        .byName(campaignCategory.title)
                         .getCampaignTextColor(),
                   ),
                 )

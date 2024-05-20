@@ -1,6 +1,35 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MySharedPreference {
+  Future<bool> saveData({
+    required String key,
+    required String data,
+  }) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      // Clear data before saving
+      // to ensure none error
+      await prefs.remove(key);
+      await prefs.setString(key, data);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<String?> getData(String key) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? data = prefs.getString(key);
+      if (data == null) {
+        return null; // No data or expiration time found.
+      }
+      return data;
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<bool> saveDataWithExpiration(
     String key,
     String expirationKey,

@@ -11,29 +11,46 @@ class MediaPicker extends StatefulWidget {
   final bool isVideo;
   // Determine whether is multiple, and use to discard extra image
   final int limit;
+  final void Function(List<File>)? onSelected;
+  final List<File>? preview;
 
   const MediaPicker({
     super.key,
     this.isVideo = false,
     this.limit = 1,
+    this.onSelected,
+    this.preview,
   });
 
   @override
   State<MediaPicker> createState() => _MediaPickerState();
 }
 
-class _MediaPickerState extends State<MediaPicker> {
+class _MediaPickerState<T> extends State<MediaPicker> {
   final picker = ImagePicker();
   List<File> selectedImages = [];
   Uint8List? videoThumbnail;
 
+  @override
+  void initState() {
+    super.initState();
+    if (widget.preview != null && widget.preview!.isNotEmpty) {
+      selectedImages = widget.preview!;
+    }
+  }
+
   void _handlePickButtonPressed() async {
     if (!widget.isVideo) {
       if (widget.limit == 1) {
+        // Single image
         XFile? image = await picker.pickImage(source: ImageSource.gallery);
         if (image != null) {
+          final imageFile = File(image.path);
           setState(() {
-            selectedImages.add(File(image.path));
+            selectedImages.add(imageFile);
+            if (widget.onSelected != null) {
+              widget.onSelected!([imageFile]);
+            }
           });
         }
       } else {
@@ -46,6 +63,9 @@ class _MediaPickerState extends State<MediaPicker> {
           }
           setState(() {
             selectedImages = images.map((e) => File(e.path)).toList();
+            if (widget.onSelected != null) {
+              widget.onSelected!(selectedImages);
+            }
           });
         }
       }
@@ -60,12 +80,16 @@ class _MediaPickerState extends State<MediaPicker> {
               128, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
           quality: 25,
         );
+        final videoFile = File(video.path);
         setState(
           () {
-            selectedImages.add(File(video.path));
+            selectedImages.add(videoFile);
             videoThumbnail = thumbnail;
           },
         );
+        if (widget.onSelected != null) {
+          widget.onSelected!([videoFile]);
+        }
       }
     }
   }

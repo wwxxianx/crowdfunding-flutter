@@ -4,16 +4,21 @@ import 'package:crowdfunding_flutter/data/network/retrofit_api.dart';
 import 'package:crowdfunding_flutter/data/repository/auth_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/repository/campaign/campaign_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/repository/constant_repository_impl.dart';
+import 'package:crowdfunding_flutter/data/repository/user/user_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/service/auth_service_impl.dart';
 import 'package:crowdfunding_flutter/domain/repository/auth_repository.dart';
 import 'package:crowdfunding_flutter/domain/repository/campaign/campaign_repository.dart';
 import 'package:crowdfunding_flutter/domain/repository/constant_repository.dart';
+import 'package:crowdfunding_flutter/domain/repository/user/user_repository.dart';
 import 'package:crowdfunding_flutter/domain/service/auth_service.dart';
+import 'package:crowdfunding_flutter/domain/usecases/auth/get_current_user.dart';
 import 'package:crowdfunding_flutter/domain/usecases/auth/sign_out.dart';
 import 'package:crowdfunding_flutter/domain/usecases/auth/sign_up.dart';
+import 'package:crowdfunding_flutter/domain/usecases/campaign/create_campaign.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaign.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaign_categories.dart';
 import 'package:crowdfunding_flutter/domain/usecases/fetch_state_and_regions.dart';
+import 'package:crowdfunding_flutter/domain/usecases/user/update_user_profile.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/home/home_bloc.dart';
@@ -34,7 +39,8 @@ Future<void> initDependencies() async {
 
   // core
   serviceLocator
-    ..registerLazySingleton(() => AppUserCubit())
+    ..registerLazySingleton(
+        () => AppUserCubit(getCurrentUser: serviceLocator()))
     ..registerLazySingleton(() => NavigationCubit())
     ..registerLazySingleton(() => DioNetwork.provideDio())
     ..registerLazySingleton(() => MySharedPreference())
@@ -44,6 +50,7 @@ Future<void> initDependencies() async {
   _initExploreCampaigns();
   _initCampaign();
   _initConstant();
+  _initUser();
 }
 
 void _initExploreCampaigns() {
@@ -55,16 +62,17 @@ void _initAuth() {
     //Service
     ..registerFactory<AuthService>(
       () => AuthServiceImpl(
-        restClient: serviceLocator(),
+        api: serviceLocator(),
         supabaseClient: serviceLocator(),
+        sp: serviceLocator(),
       ),
     )
     //Repo
     ..registerFactory<AuthRepository>(
-        () => AuthRepositoryImpl(serviceLocator()))
+        () => AuthRepositoryImpl(authService: serviceLocator()))
     //Usecases
     // ..registerFactory(() => Login(serviceLocator()))
-    // ..registerFactory(() => GetCurrentUser(serviceLocator()))
+    ..registerFactory(() => GetCurrentUser(serviceLocator()))
     ..registerFactory(() => SignOut(serviceLocator()))
     ..registerFactory(() => SignUp(serviceLocator()))
     //Bloc
@@ -84,6 +92,8 @@ void _initCampaign() {
         CampaignRepositoryImpl(api: serviceLocator(), sp: serviceLocator()))
     // Usecase
     ..registerFactory(() => FetchCampaign(campaignRepository: serviceLocator()))
+    ..registerFactory(
+        () => CreateCampaign(campaignRepository: serviceLocator()))
     // Bloc
     ..registerLazySingleton(() => HomeBloc(fetchCampaign: serviceLocator()));
 }
@@ -96,4 +106,14 @@ void _initConstant() {
         () => FetchStateAndRegions(constantRepository: serviceLocator()))
     ..registerFactory(
         () => FetchCampaignCategories(campaignRepository: serviceLocator()));
+}
+
+void _initUser() {
+  serviceLocator
+    // Repo
+    ..registerFactory<UserRepository>(
+        () => UserRepositoryImpl(api: serviceLocator(), sp: serviceLocator(), authService: serviceLocator()))
+    // Usecases
+    ..registerFactory(
+        () => UpdateUserProfile(userRepository: serviceLocator()));
 }

@@ -8,27 +8,34 @@ import 'package:heroicons/heroicons.dart';
 
 class CustomDropdownMenu extends StatelessWidget {
   final TextEditingController? controller;
+  final String? initialSelection;
   final String? label;
   final List<DropdownMenuEntry<String>> dropdownMenuEntries;
   final void Function(String?)? onSelected;
+  final String? errorText;
+
   const CustomDropdownMenu({
     super.key,
     this.controller,
     this.label,
     required this.dropdownMenuEntries,
     this.onSelected,
+    this.initialSelection,
+    this.errorText,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
+      // mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (label != null) Text(label!, style: CustomFonts.labelSmall),
         if (label != null && label!.isNotEmpty) 4.kH,
         DropdownMenu(
+          errorText: errorText,
+          initialSelection: initialSelection,
           menuHeight: 280,
           width: MediaQuery.of(context).size.width -
               (Dimensions.screenHorizontalPadding * 2),
@@ -48,7 +55,7 @@ class CustomDropdownMenu extends StatelessWidget {
           ),
           inputDecorationTheme: InputDecorationTheme(
             constraints: BoxConstraints(
-              maxHeight: 48,
+              maxHeight: errorText == null ? 48 : 72,
               // minWidth: 400,
             ),
             contentPadding: const EdgeInsets.symmetric(

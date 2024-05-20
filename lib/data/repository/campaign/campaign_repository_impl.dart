@@ -4,11 +4,13 @@ import 'package:crowdfunding_flutter/common/constants/constants.dart';
 import 'package:crowdfunding_flutter/common/error/failure.dart';
 import 'package:crowdfunding_flutter/data/local/shared_preference.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
+import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_payload.dart';
 import 'package:crowdfunding_flutter/data/network/retrofit_api.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_category.dart';
 import 'package:crowdfunding_flutter/domain/repository/campaign/campaign_repository.dart';
 import 'package:dio/dio.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:fpdart/src/either.dart';
 
 class CampaignRepositoryImpl implements CampaignRepository {
@@ -25,12 +27,12 @@ class CampaignRepositoryImpl implements CampaignRepository {
     try {
       final campaignsRes = await api.getCampaigns();
       return right(campaignsRes);
-    } catch (e) {
+    } on Exception catch (e) {
       if (e is DioException) {
         final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
         return left(Failure(errorMessage));
       }
-      return left(Failure(ErrorHandler.otherException().errorMessage));
+      return left(Failure(ErrorHandler.otherException(error: e).errorMessage));
     }
   }
 
@@ -62,6 +64,32 @@ class CampaignRepositoryImpl implements CampaignRepository {
         );
       }
       return right(remoteData);
+    } catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException().errorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> createCampaign(
+      CreateCampaignPayload payload) async {
+    try {
+      await api.createCampaign(
+        title: payload.title,
+        description: payload.description,
+        targetAmount: payload.targetAmount,
+        categoryId: payload.categoryId,
+        phoneNumber: payload.phoneNumber,
+        stateId: payload.stateId,
+        beneficiaryName: payload.beneficiaryName,
+        campaignImageFiles: payload.campaignImageFiles,
+        campaignVideoFile: payload.campaignVideoFile,
+        beneficiaryImageFile: payload.beneficiaryImageFile,
+      );
+      return right(unit);
     } catch (e) {
       if (e is DioException) {
         final errorMessage = ErrorHandler.dioException(error: e).errorMessage;

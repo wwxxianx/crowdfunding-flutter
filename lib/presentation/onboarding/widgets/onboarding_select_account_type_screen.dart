@@ -6,7 +6,7 @@ import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/dialog.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/selectable_container.dart';
 import 'package:crowdfunding_flutter/presentation/onboarding/widgets/onboarding_select_npo_join_method_screen.dart';
-import 'package:crowdfunding_flutter/presentation/onboarding/widgets/setup_personal_profile_screen.dart';
+import 'package:crowdfunding_flutter/presentation/onboarding/widgets/personal_account_page_view.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingSelectAccountScreen extends StatefulWidget {

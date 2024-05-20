@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 class MoneyTextField extends StatelessWidget {
   final String label;
+  final String? errorText;
   final String? initialValue;
   final TextEditingController controller;
   final void Function(String)? onChanged;
@@ -14,11 +15,13 @@ class MoneyTextField extends StatelessWidget {
     this.label = "Donation amount",
     this.onChanged,
     this.initialValue,
+    this.errorText,
   });
 
   @override
   Widget build(BuildContext context) {
     return CustomOutlinedTextfield(
+      errorText: errorText,
       initialValue: initialValue,
       onChanged: onChanged,
       inputFormatters: [

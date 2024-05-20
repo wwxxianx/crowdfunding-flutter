@@ -64,7 +64,7 @@ class _RestClient implements RestClient {
     )
             .compose(
               _dio.options,
-              'auth/signUp',
+              'auth/sign-up',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -78,20 +78,20 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<TokensResponse> signIn(String email) async {
+  Future<UserModelWithAccessToken> signIn(String userId) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = email;
-    final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<TokensResponse>(Options(
+    final _data = userId;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<UserModelWithAccessToken>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              'auth/login',
+              'auth/sign-in',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -100,7 +100,7 @@ class _RestClient implements RestClient {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = TokensResponse.fromJson(_result.data!);
+    final value = UserModelWithAccessToken.fromJson(_result.data!);
     return value;
   }
 
@@ -134,6 +134,96 @@ class _RestClient implements RestClient {
   }
 
   @override
+  Future<void> createCampaign({
+    required String title,
+    required String description,
+    required int targetAmount,
+    required String categoryId,
+    required String phoneNumber,
+    required String stateId,
+    required String beneficiaryName,
+    required List<File> campaignImageFiles,
+    File? campaignVideoFile,
+    File? beneficiaryImageFile,
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    final _data = FormData();
+    _data.fields.add(MapEntry(
+      'title',
+      title,
+    ));
+    _data.fields.add(MapEntry(
+      'description',
+      description,
+    ));
+    _data.fields.add(MapEntry(
+      'targetAmount',
+      targetAmount.toString(),
+    ));
+    _data.fields.add(MapEntry(
+      'titcategoryIdle',
+      categoryId,
+    ));
+    _data.fields.add(MapEntry(
+      'contactPhoneNumber',
+      phoneNumber,
+    ));
+    _data.fields.add(MapEntry(
+      'stateId',
+      stateId,
+    ));
+    _data.fields.add(MapEntry(
+      'beneficiaryName',
+      beneficiaryName,
+    ));
+    _data.files.addAll(campaignImageFiles.map((i) => MapEntry(
+        'campaignImages',
+        MultipartFile.fromFileSync(
+          i.path,
+          filename: i.path.split(Platform.pathSeparator).last,
+        ))));
+    if (campaignVideoFile != null) {
+      _data.files.add(MapEntry(
+        'campaignVideo',
+        MultipartFile.fromFileSync(
+          campaignVideoFile.path,
+          filename: campaignVideoFile.path.split(Platform.pathSeparator).last,
+        ),
+      ));
+    }
+    if (beneficiaryImageFile != null) {
+      _data.files.add(MapEntry(
+        'beneficiaryImage',
+        MultipartFile.fromFileSync(
+          beneficiaryImageFile.path,
+          filename:
+              beneficiaryImageFile.path.split(Platform.pathSeparator).last,
+        ),
+      ));
+    }
+    await _dio.fetch<void>(_setStreamType<void>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: 'multipart/form-data',
+    )
+        .compose(
+          _dio.options,
+          'campaigns',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        ))));
+  }
+
+  @override
   Future<List<CampaignCategory>> getCampaignCategories() async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -160,6 +250,96 @@ class _RestClient implements RestClient {
         .map(
             (dynamic i) => CampaignCategory.fromJson(i as Map<String, dynamic>))
         .toList();
+    return value;
+  }
+
+  @override
+  Future<UserModel> updateUserProfile({
+    String? fullName,
+    File? profileImageFile,
+    List<String>? favouriteCategoriesId,
+    String phoneNumber = "112901029",
+    bool? isOnboardingCompleted,
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    final _data = FormData();
+    if (fullName != null) {
+      _data.fields.add(MapEntry(
+        'fullName',
+        fullName,
+      ));
+    }
+    if (profileImageFile != null) {
+      _data.files.add(MapEntry(
+        'profileImageFile',
+        MultipartFile.fromFileSync(
+          profileImageFile.path,
+          filename: profileImageFile.path.split(Platform.pathSeparator).last,
+        ),
+      ));
+    }
+    favouriteCategoriesId?.forEach((i) {
+      _data.fields.add(MapEntry('favouriteCategoriesId', i));
+    });
+    _data.fields.add(MapEntry(
+      'phoneNumber',
+      phoneNumber,
+    ));
+    if (isOnboardingCompleted != null) {
+      _data.fields.add(MapEntry(
+        'isOnboardingCompleted',
+        isOnboardingCompleted.toString(),
+      ));
+    }
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<UserModel>(Options(
+      method: 'PATCH',
+      headers: _headers,
+      extra: _extra,
+      contentType: 'multipart/form-data',
+    )
+            .compose(
+              _dio.options,
+              'users',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = UserModel.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<UserModel> getUserProfile() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<UserModel>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'users',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = UserModel.fromJson(_result.data!);
     return value;
   }
 

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:flutter/material.dart';
@@ -32,8 +33,20 @@ class Avatar extends StatelessWidget {
       );
     }
     if (imageUrl != null) {
-      return Image.asset(
-        "assets/images/avatar-sample.png",
+      return CachedNetworkImage(
+        placeholder: (context, url) {
+          return Container(
+            width: size,
+            height: size,
+            child: Text(
+              placeholder.toUpperCase(),
+              style: CustomFonts.titleExtraLarge.copyWith(
+                color: Colors.black.withOpacity(0.4),
+              ),
+            ),
+          );
+        },
+        imageUrl: imageUrl!,
         fit: BoxFit.cover,
       );
     }

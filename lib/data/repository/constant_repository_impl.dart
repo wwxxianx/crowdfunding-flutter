@@ -46,12 +46,12 @@ class ConstantRepositoryImpl implements ConstantRepository {
         );
       }
       return right(res);
-    } catch (e) {
+    } on Exception catch (e) {
       if (e is DioException) {
         final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
         return left(Failure(errorMessage));
       }
-      return left(Failure(ErrorHandler.otherException().errorMessage));
+      return left(Failure(ErrorHandler.otherException(error: e).errorMessage));
     }
   }
 }

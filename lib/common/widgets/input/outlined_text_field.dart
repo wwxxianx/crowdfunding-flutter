@@ -24,6 +24,7 @@ class CustomOutlinedTextfield extends StatefulWidget {
   final EdgeInsetsGeometry? contentPadding;
   final void Function(String)? onChanged;
   final String? initialValue;
+  final String? errorText;
 
   const CustomOutlinedTextfield({
     super.key,
@@ -45,6 +46,7 @@ class CustomOutlinedTextfield extends StatefulWidget {
     this.suffixIcon,
     this.onChanged,
     this.initialValue,
+    this.errorText,
   });
 
   @override
@@ -91,6 +93,7 @@ class _CustomOutlinedTextfieldState extends State<CustomOutlinedTextfield> {
           cursorColor: CustomColors.accentGreen,
           style: CustomFonts.labelSmall,
           decoration: InputDecoration(
+            errorText: widget.errorText,
             suffix: widget.suffix,
             errorMaxLines: 2,
             hintText: widget.hintText,

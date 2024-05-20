@@ -3,8 +3,12 @@ import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension
 import 'package:crowdfunding_flutter/common/utils/input_validator.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/input/outlined_text_field.dart';
+import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
+import 'package:crowdfunding_flutter/state_management/app_user_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:logger/logger.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -34,7 +38,7 @@ class _LoginFormState extends State<LoginForm> with InputValidator {
             label: "Email",
             hintText: "email@gmail.com",
             controller: _emailController,
-            validator: (value) => emailValidator(value),
+            validator: (value) => validateEmail(value),
             prefixIcon: const HeroIcon(
               HeroIcons.envelope,
               size: 20.0,
@@ -100,7 +104,14 @@ class _LoginFormState extends State<LoginForm> with InputValidator {
             width: double.maxFinite,
             child: CustomButton(
               style: CustomButtonStyle.white,
-              onPressed: () {},
+              onPressed: () {
+                final state = context.read<AppUserCubit>().state;
+                var logger = Logger();
+                logger.w(state);
+                if (state is AppUserLoggedIn) {
+                  logger.w(state.user.isOnboardingCompleted);
+                }
+              },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

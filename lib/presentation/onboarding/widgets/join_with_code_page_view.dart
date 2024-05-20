@@ -1,9 +1,9 @@
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/utils/slide_route_transition.dart';
-import 'package:crowdfunding_flutter/presentation/onboarding/page/enter_code_page.dart';
-import 'package:crowdfunding_flutter/presentation/onboarding/page/join_success_page.dart';
-import 'package:crowdfunding_flutter/presentation/onboarding/page/matched_code_npo_page.dart';
+import 'package:crowdfunding_flutter/presentation/onboarding/pages/npo_onboarding/enter_code_page.dart';
+import 'package:crowdfunding_flutter/presentation/onboarding/pages/npo_onboarding/join_success_page.dart';
+import 'package:crowdfunding_flutter/presentation/onboarding/pages/npo_onboarding/matched_code_npo_page.dart';
 import 'package:flutter/material.dart';
 
 class JoinWithCodePageView extends StatefulWidget {
