@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'package:crowdfunding_flutter/domain/model/tokens_response.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:crowdfunding_flutter/common/constants/constants.dart';
+import 'package:http/http.dart' as http;
 
 class DioNetwork {
   // static const baseUrl = "https://fixed-elisabeth-ngustudio.koyeb.app/";
@@ -28,11 +30,6 @@ class AppInterceptors extends Interceptor {
     if (accessToken != null) {
       options.headers['Authorization'] = 'Bearer $accessToken';
     }
-    print('Request object: ${options}');
-    print('Request body: ${options.data}');
-    if (options.data != null) {
-      print('Request body: ${options.data}');
-    }
 
     return handler.next(options);
   }
@@ -44,17 +41,27 @@ class AppInterceptors extends Interceptor {
       SharedPreferences sp = await SharedPreferences.getInstance();
       var refreshToken =
           sp.getString(Constants.sharedPreferencesKey.refreshToken);
-      e.requestOptions.headers['Authorization'] = 'Bearer $refreshToken';
-      var tokenRes = await dio.post("auth/refresh");
-      dynamic data = jsonDecode(tokenRes.data);
+      
+      // NOTE:
+      // Use HTTP package as the Dio onRequest method is override to use accessToken
+      // everytime, so the refreshToken will be overwritten everytime.
+      final tokenRes = await http.post(
+        Uri.parse('${Constants.apiUrl}auth/refresh'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $refreshToken',
+        },
+      );
+      TokensResponse token = TokensResponse.fromJson(
+          jsonDecode(tokenRes.body) as Map<String, dynamic>);
       // Save new tokens to sp
       sp.setString(
-          Constants.sharedPreferencesKey.refreshToken, data.refreshToken);
+          Constants.sharedPreferencesKey.refreshToken, token.refreshToken);
       sp.setString(
-          Constants.sharedPreferencesKey.accessToken, data.accessToken);
+          Constants.sharedPreferencesKey.accessToken, token.accessToken);
 
       // Update the request header with the new access token
-      e.requestOptions.headers['Authorization'] = 'Bearer ${data.accessToken}';
+      e.requestOptions.headers['Authorization'] = 'Bearer ${token.accessToken}';
 
       // Repeat the request with the updated header
       return handler.resolve(await dio.fetch(e.requestOptions));

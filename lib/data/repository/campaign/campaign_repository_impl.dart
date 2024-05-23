@@ -4,10 +4,13 @@ import 'package:crowdfunding_flutter/common/constants/constants.dart';
 import 'package:crowdfunding_flutter/common/error/failure.dart';
 import 'package:crowdfunding_flutter/data/local/shared_preference.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
+import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_comment_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_payload.dart';
+import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_reply_payload.dart';
 import 'package:crowdfunding_flutter/data/network/retrofit_api.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_category.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
 import 'package:crowdfunding_flutter/domain/repository/campaign/campaign_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
@@ -91,6 +94,50 @@ class CampaignRepositoryImpl implements CampaignRepository {
       );
       return right(unit);
     } catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException().errorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Campaign>> getCampaign(String campaignId) async {
+    try {
+      final res = await api.getCampaign(campaignId);
+      return right(res);
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException().errorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, CampaignComment>> createCampaignComment(
+      CreateCampaignCommentPayload payload) async {
+    try {
+      final res = await api.createCampaignComment(payload);
+      return right(res);
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException().errorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, CampaignComment>> createCampaignReply(
+      CreateCampaignReplyPayload payload) async {
+    try {
+      final res = await api.createCampaignReply(payload);
+      return right(res);
+    } on Exception catch (e) {
       if (e is DioException) {
         final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
         return left(Failure(errorMessage));

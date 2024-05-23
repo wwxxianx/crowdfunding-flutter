@@ -19,6 +19,8 @@ class CustomColors {
   static const lightBlue = Color(0xFFEFF6FF);
   static const accentBlue = Color(0xFF1E40AF);
 
+  static const pink = Color(0xFFFFDADD);
+
   static const containerBorderGrey = Color(0xFFE2E2EA);
 
   static final containerLightShadow = [

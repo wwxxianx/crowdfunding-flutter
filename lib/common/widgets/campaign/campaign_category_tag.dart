@@ -1,13 +1,17 @@
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
+import 'package:crowdfunding_flutter/common/utils/extensions/string.dart';
+import 'package:crowdfunding_flutter/common/widgets/button/campaign_category_toggle_button.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign_category.dart';
 import 'package:flutter/material.dart';
-import 'package:material_symbols_icons/symbols.dart';
 
 class CampaignCategoryTag extends StatelessWidget {
   final bool isSmall;
+  final CampaignCategory category;
   const CampaignCategoryTag({
     super.key,
     this.isSmall = false,
+    required this.category,
   });
 
   @override
@@ -25,21 +29,23 @@ class CampaignCategoryTag extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(100.0),
-          color: Color(0xFFFFF1F2),
+          color: CampaignCategoryEnum.values
+              .byName(category.title)
+              .getCampaignBGColor(),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Symbols.ecg_heart,
-              size: isSmall ? 16.0 : 20.0,
-              color: Color(0xFF9F1239),
-            ),
+            CampaignCategoryEnum.values
+                .byName(category.title)
+                .getCampaignIcon(),
             4.kW,
             Text(
-              "Medical",
+              category.title.capitalize(),
               style: textStyle.copyWith(
-                color: Color(0xFF9F1239),
+                color: CampaignCategoryEnum.values
+                    .byName(category.title)
+                    .getCampaignTextColor(),
               ),
             )
           ],

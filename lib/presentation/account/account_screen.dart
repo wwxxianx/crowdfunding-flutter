@@ -3,25 +3,36 @@ import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/avatar/avatar.dart';
+import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_list_tile.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/custom_card.dart';
 import 'package:crowdfunding_flutter/common/widgets/text/text_bg_gradient_shape.dart';
+import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:heroicons/heroicons.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
+
+  void handleSignOut(BuildContext context) {
+    context.read<AppUserCubit>().signOut(onSuccess: () {
+      context.go('/login');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(
+          padding: const EdgeInsets.symmetric(
             horizontal: Dimensions.screenHorizontalPadding,
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Avatar header
               20.kH,
@@ -200,6 +211,29 @@ class AccountScreen extends StatelessWidget {
                   ],
                 ),
               ),
+              24.kH,
+              CustomButton(
+                style: CustomButtonStyle.white,
+                onPressed: () {
+                  handleSignOut(context);
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    HeroIcon(
+                      HeroIcons.arrowLeftOnRectangle,
+                      size: 16,
+                      style: HeroIconStyle.mini,
+                    ),
+                    4.kW,
+                    Text(
+                      "Sign out",
+                      style: CustomFonts.labelSmall,
+                    ),
+                  ],
+                ),
+              ),
+              20.kH,
             ],
           ),
         ),

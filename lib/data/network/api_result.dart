@@ -1,11 +1,17 @@
 import 'package:dio/src/dio_exception.dart';
 import 'package:flutter/foundation.dart';
 
-class ApiResult<T> {
+sealed class ApiResult<T> {
   const ApiResult();
 }
 
-class ApiResultLoading<T> extends ApiResult<T> {}
+class ApiResultInitial<T> extends ApiResult<T> {
+  const ApiResultInitial();
+}
+
+class ApiResultLoading<T> extends ApiResult<T> {
+  const ApiResultLoading();
+}
 
 class ApiResultSuccess<T> extends ApiResult<T> {
   final T data;
@@ -62,7 +68,12 @@ class ErrorHandler implements Exception {
           _errorMessage = "Something went wrong";
           serverError = ErrorHandler(_errorMessage);
         } else if (error.response?.statusCode != 401) {
-          _errorMessage = handleBadRequest(error.response?.data);
+          final errorRes = error.response?.data;
+          if (errorRes is Map<String, dynamic>) {
+            _errorMessage = handleBadRequest(errorRes);
+          } else {
+            _errorMessage = error.message ?? "Something went wrong";
+          }
           serverError = ErrorHandler(_errorMessage);
         } else {
           _errorMessage = "UnAuthorized";

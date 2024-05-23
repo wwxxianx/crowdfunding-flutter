@@ -32,7 +32,7 @@ class Avatar extends StatelessWidget {
         fit: BoxFit.cover,
       );
     }
-    if (imageUrl != null) {
+    if (imageUrl != null && imageUrl!.isNotEmpty) {
       return CachedNetworkImage(
         placeholder: (context, url) {
           return Container(

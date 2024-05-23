@@ -13,7 +13,8 @@ class _RestClient implements RestClient {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://crowdfunding-ngustudio-7cca7759.koyeb.app/';
+    baseUrl ??=
+        'https://2f35-2001-f40-987-516-e8bb-4157-bc82-df6b.ngrok-free.app/';
   }
 
   final Dio _dio;
@@ -50,12 +51,12 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<TokensResponse> signUp(SignUpPayload signUpDto) async {
+  Future<TokensResponse> signUp(SignUpPayload signUpPayload) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(signUpDto.toJson());
+    _data.addAll(signUpPayload.toJson());
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<TokensResponse>(Options(
       method: 'POST',
@@ -78,11 +79,12 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<UserModelWithAccessToken> signIn(String userId) async {
+  Future<UserModelWithAccessToken> signIn(LoginBEPayload payload) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = userId;
+    final _data = <String, dynamic>{};
+    _data.addAll(payload.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<UserModelWithAccessToken>(Options(
       method: 'POST',
@@ -101,6 +103,33 @@ class _RestClient implements RestClient {
               baseUrl,
             ))));
     final value = UserModelWithAccessToken.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<TokensResponse> getRefreshToken() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<TokensResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'auth/refresh',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = TokensResponse.fromJson(_result.data!);
     return value;
   }
 
@@ -130,6 +159,33 @@ class _RestClient implements RestClient {
     var value = _result.data!
         .map((dynamic i) => Campaign.fromJson(i as Map<String, dynamic>))
         .toList();
+    return value;
+  }
+
+  @override
+  Future<Campaign> getCampaign(String campaignId) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result =
+        await _dio.fetch<Map<String, dynamic>>(_setStreamType<Campaign>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'campaigns/${campaignId}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = Campaign.fromJson(_result.data!);
     return value;
   }
 
@@ -221,6 +277,64 @@ class _RestClient implements RestClient {
           _dio.options.baseUrl,
           baseUrl,
         ))));
+  }
+
+  @override
+  Future<CampaignComment> createCampaignComment(
+      CreateCampaignCommentPayload payload) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(payload.toJson());
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<CampaignComment>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'campaign-comments',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = CampaignComment.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<CampaignComment> createCampaignReply(
+      CreateCampaignReplyPayload payload) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(payload.toJson());
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<CampaignComment>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'campaign-comments/reply',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = CampaignComment.fromJson(_result.data!);
+    return value;
   }
 
   @override
@@ -341,6 +455,91 @@ class _RestClient implements RestClient {
             ))));
     final value = UserModel.fromJson(_result.data!);
     return value;
+  }
+
+  @override
+  Future<List<UserFavouriteCampaign>> getUserFavouriteCampaigns() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<List<dynamic>>(
+        _setStreamType<List<UserFavouriteCampaign>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'user-favourite-campaigns',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    var value = _result.data!
+        .map((dynamic i) =>
+            UserFavouriteCampaign.fromJson(i as Map<String, dynamic>))
+        .toList();
+    return value;
+  }
+
+  @override
+  Future<UserFavouriteCampaign> createUserFavouriteCampaign(
+      FavouriteCampaignPayload payload) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(payload.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<UserFavouriteCampaign>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'user-favourite-campaigns',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = UserFavouriteCampaign.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<void> deleteUserFavouriteCampaign(
+      FavouriteCampaignPayload payload) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(payload.toJson());
+    await _dio.fetch<void>(_setStreamType<void>(Options(
+      method: 'DELETE',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          'user-favourite-campaigns',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        ))));
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {

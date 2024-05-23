@@ -1,9 +1,12 @@
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
+import 'package:crowdfunding_flutter/di/init_dependencies.dart';
 import 'package:crowdfunding_flutter/presentation/login/widgets/login_form.dart';
 import 'package:crowdfunding_flutter/presentation/sign_up/sign_up_screen.dart';
+import 'package:crowdfunding_flutter/state_management/login/login_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginScreen extends StatelessWidget {
   static route() =>
@@ -12,10 +15,11 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
+    return BlocProvider(
+      create: (context) => LoginBloc(login: serviceLocator()),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
           child: Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(

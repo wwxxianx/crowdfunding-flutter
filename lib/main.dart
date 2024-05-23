@@ -1,3 +1,4 @@
+import 'package:crowdfunding_flutter/app_router.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/di/init_dependencies.dart';
 import 'package:crowdfunding_flutter/presentation/login/login_screen.dart';
@@ -12,10 +13,13 @@ import 'package:crowdfunding_flutter/state_management/sign_up/sign_up_bloc.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:crowdfunding_flutter/common/theme/color.dart';
+import 'package:go_router/go_router.dart';
+import 'package:crowdfunding_flutter/presentation/splash/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initDependencies();
+
   runApp(
     MultiBlocProvider(
       providers: [
@@ -31,23 +35,21 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  const MyApp({
+    super.key,
+  });
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<AppUserCubit>().checkUserLoggedIn();
-  }
+  final AppRouter _appRouter = AppRouter(serviceLocator());
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Crowdfunding App',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: CustomColors.primaryGreen),
@@ -67,20 +69,22 @@ class _MyAppState extends State<MyApp> {
           backgroundColor: Colors.white,
         ),
       ),
-      home: BlocBuilder<AppUserCubit, AppUserState>(
-        builder: (context, state) {
-          if (state is AppUserInitial) {
-            return const LoginScreen();
-          }
-          if (state is AppUserLoggedIn) {
-            if (state.user.isOnboardingCompleted) {
-              return const NavigationScreen();
-            }
-            return const LoginScreen();
-          }
-          return const SizedBox();
-        },
-      ),
+      // home: SplashScreen(),
+      routerConfig: _appRouter.router,
+      // home: BlocBuilder<AppUserCubit, AppUserState>(
+      //   builder: (context, state) {
+      //     if (state is AppUserInitial) {
+      //       return const LoginScreen();
+      //     }
+      //     if (state is AppUserLoggedIn) {
+      //       if (state.user.isOnboardingCompleted) {
+      //         return const NavigationScreen();
+      //       }
+      //       return const LoginScreen();
+      //     }
+      //     return const SizedBox();
+      //   },
+      // ),
     );
   }
 }

@@ -3,89 +3,17 @@ import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/string.dart';
-import 'package:crowdfunding_flutter/common/widgets/campaign_category_tag.dart';
-import 'package:crowdfunding_flutter/common/widgets/container/animated_bg_container.dart';
+import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_favourite_button.dart';
+import 'package:crowdfunding_flutter/common/widgets/campaign/donation_progress_bar.dart';
+import 'package:crowdfunding_flutter/common/widgets/campaign/match_offer_content.dart';
+import 'package:crowdfunding_flutter/common/widgets/campaign/match_offer_tag.dart';
+import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_category_tag.dart';
 import 'package:crowdfunding_flutter/common/widgets/skeleton.dart';
 import 'package:crowdfunding_flutter/common/widgets/tag/custom_tag.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:intl/intl.dart';
-
-class MatchOfferTag extends StatelessWidget {
-  const MatchOfferTag({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBGContainer(
-      startColor: const Color(0xFFF1FAEA),
-      endColor: const Color(0xFFB7FF87),
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-      borderRadius: BorderRadius.circular(100),
-      child: Row(
-        children: [
-          SvgPicture.asset(
-            "assets/icons/offer-fire.svg",
-            width: 16,
-            height: 16,
-          ),
-          4.kW,
-          Text(
-            "Match",
-            style: CustomFonts.labelExtraSmall.copyWith(
-              color: const Color(0xFF335B17),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class MatchOfferContent extends StatelessWidget {
-  const MatchOfferContent({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBGContainer(
-      startColor: Color(0xFFF1FAEA),
-      endColor: Color(0xFFB7FF87),
-      borderRadius: BorderRadius.only(
-        bottomLeft: Radius.circular(6),
-        bottomRight: Radius.circular(6),
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              SvgPicture.asset(
-                "assets/icons/offer-fire.svg",
-                width: 18,
-                height: 18,
-              ),
-              4.kW,
-              Text(
-                "Match Offer!",
-                style: CustomFonts.titleSmall.copyWith(
-                  color: Color(0xFF335B17),
-                ),
-              )
-            ],
-          ),
-          4.kH,
-          Text(
-            "Your donation to this campaign, our community will donate RM1 more!",
-            style: CustomFonts.labelExtraSmall.copyWith(
-              color: Color(0xFF1A3E01),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
 
 class CampaignCard extends StatelessWidget {
   final double height;
@@ -97,7 +25,7 @@ class CampaignCard extends StatelessWidget {
     super.key,
     this.isSmall = false,
     this.onPressed,
-    this.height = 500,
+    this.height = 530,
   });
 
   @override
@@ -180,6 +108,7 @@ class CampaignCard extends StatelessWidget {
                               children: [
                                 CampaignCategoryTag(
                                   isSmall: true,
+                                  category: campaign.campaignCategory,
                                 ),
                                 if (!isSmall)
                                   CustomTag(
@@ -192,12 +121,9 @@ class CampaignCard extends StatelessWidget {
                         ),
                         const Spacer(),
                         if (!isSmall)
-                          IconButton(
+                          CampaignFavouriteButton(
                             onPressed: () {},
-                            icon: HeroIcon(
-                              HeroIcons.heart,
-                              size: 24.0,
-                            ),
+                            campaign: campaign,
                           ),
                       ],
                     ),
@@ -209,6 +135,8 @@ class CampaignCard extends StatelessWidget {
                     child: Text(
                       campaign.title,
                       style: isSmall ? null : CustomFonts.titleMedium,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   16.kH,
@@ -246,80 +174,6 @@ class CampaignCard extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class DonationProgressBar extends StatelessWidget {
-  final double total;
-  final double current;
-  final double height;
-  final bool showDonationStatusText;
-  const DonationProgressBar({
-    super.key,
-    required this.current,
-    required this.total,
-    this.height = 10.0,
-    this.showDonationStatusText = true,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final double progress = (current / total);
-    String formattedTotal = NumberFormat('#,###').format(total);
-    String formattedCurrent = NumberFormat('#,###').format(current);
-
-    return Column(
-      // mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 4.0),
-          child: Row(
-            // mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "RM ${formattedCurrent} / RM ${formattedTotal}",
-                style: CustomFonts.labelExtraSmall,
-              ),
-              if (showDonationStatusText)
-                Text(
-                  " (800 donations)",
-                  style: CustomFonts.titleExtraSmall,
-                ),
-            ],
-          ),
-        ),
-        2.kH,
-        Stack(
-          children: [
-            Container(
-              height: height,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.0),
-                color: const Color(0xFFF2F1F1),
-                border: Border.all(
-                  color: Colors.black,
-                  width: 1.0,
-                ),
-              ),
-            ),
-            FractionallySizedBox(
-              widthFactor: progress,
-              child: Container(
-                height: height,
-                decoration: BoxDecoration(
-                  gradient: CustomColors.primaryGreenGradient,
-                  borderRadius: BorderRadius.circular(20.0),
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 1.0,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 }

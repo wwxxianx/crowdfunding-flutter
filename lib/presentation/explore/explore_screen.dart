@@ -1,8 +1,8 @@
 import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
-import 'package:crowdfunding_flutter/common/widgets/button/custom_icon_button.dart';
-import 'package:crowdfunding_flutter/common/widgets/campaign_card.dart';
+import 'package:crowdfunding_flutter/common/widgets/button/custom_outlined_icon_button.dart';
+import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_card.dart';
 import 'package:crowdfunding_flutter/common/widgets/scaffold_mask.dart';
 import 'package:crowdfunding_flutter/common/widgets/tab/custom_tab_button.dart';
 import 'package:crowdfunding_flutter/presentation/explore/widgets/animated_search_bar.dart';
@@ -164,7 +164,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                       // Filter button
                       Container(
                         margin: EdgeInsets.only(right: 68),
-                        child: CustomIconButton(
+                        child: CustomOutlinedIconButton(
                           onPressed: () {
                             showModalBottomSheet<void>(
                               context: context,

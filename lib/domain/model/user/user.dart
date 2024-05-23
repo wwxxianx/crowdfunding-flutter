@@ -41,6 +41,17 @@ class UserModel {
     fullName: 'John Doe',
     email: 'john@gmail.com',
   );
+
+  @override
+  String toString() => """
+  id: $id,
+  fullName: $fullName,
+  email: $email,
+  profileImageUrl: $profileImageUrl,
+  phoneNumber: $phoneNumber,
+  refreshToken: $refreshToken,
+  isOnboardingCompleted: $isOnboardingCompleted,
+  """;
 }
 
 @JsonSerializable()
@@ -51,15 +62,47 @@ class UserModelWithAccessToken extends UserModel {
     required String id,
     required String fullName,
     required String email,
+    String? profileImageUrl,
+    String? phoneNumber,
+    String refreshToken = "",
+    bool isOnboardingCompleted = false,
     required this.accessToken,
   }) : super(
           id: id,
           fullName: fullName,
           email: email,
+          isOnboardingCompleted: isOnboardingCompleted,
+          profileImageUrl: profileImageUrl,
+          phoneNumber: phoneNumber,
+          refreshToken: refreshToken,
         );
+
+  UserModel toUserModel() {
+    return UserModel(
+      id: id,
+      fullName: fullName,
+      email: email,
+      profileImageUrl: profileImageUrl,
+      phoneNumber: phoneNumber ?? "",
+      refreshToken: refreshToken,
+      isOnboardingCompleted: isOnboardingCompleted,
+    );
+  }
+
+  @override
+  String toString() => """
+  id: $id,
+  fullName: $fullName,
+  email: $email,
+  profileImageUrl: $profileImageUrl,
+  phoneNumber: $phoneNumber,
+  refreshToken: $refreshToken,
+  isOnboardingCompleted: $isOnboardingCompleted,
+  """;
 
   factory UserModelWithAccessToken.fromJson(Map<String, dynamic> json) =>
       _$UserModelWithAccessTokenFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$UserModelWithAccessTokenToJson(this);
 }

@@ -1,9 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
+import 'package:crowdfunding_flutter/common/widgets/image/gallery_photo_viewer.dart';
 import 'package:crowdfunding_flutter/common/widgets/text/expandable_text.dart';
+import 'package:crowdfunding_flutter/domain/model/image/image_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CampaignUpdateTabContent extends StatelessWidget {
@@ -17,21 +21,32 @@ class CampaignUpdateTabContent extends StatelessWidget {
         vertical: Dimensions.screenHorizontalPadding,
       ),
       child: Column(
-        children: [...List.generate(1, (index) => CampaignUpdateItem())],
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CampaignUpdateItem(
+            images: ImageModel.samples,
+          )
+        ],
       ),
     );
   }
 }
 
 class CampaignUpdateItem extends StatelessWidget {
-  const CampaignUpdateItem({super.key});
+  final List<ImageModel> images;
+  const CampaignUpdateItem({
+    super.key,
+    required this.images,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ImageCarouselWithNumberIndicator(),
+        ImageCarouselWithNumberIndicator(
+          images: images,
+        ),
         8.kH,
         Text(
           "2023/09/27 - 08:00",
@@ -54,7 +69,11 @@ class CampaignUpdateItem extends StatelessWidget {
 }
 
 class ImageCarouselWithNumberIndicator extends StatefulWidget {
-  const ImageCarouselWithNumberIndicator({super.key});
+  final List<ImageModel> images;
+  const ImageCarouselWithNumberIndicator({
+    super.key,
+    required this.images,
+  });
 
   @override
   State<ImageCarouselWithNumberIndicator> createState() =>
@@ -78,18 +97,27 @@ class _ImageCarouselWithNumberIndicatorState
     _pageViewController.dispose();
   }
 
+  void _handleExpandImage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GalleryPhotoViewWrapper(
+          galleryItems: widget.images,
+          backgroundDecoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.4),
+          ),
+          initialIndex: _currentPage,
+          scrollDirection: Axis.horizontal,
+        ),
+      ),
+    );
+  }
+
   void _handlePageChange(int index) {
     setState(() {
       _currentPage = index;
     });
   }
-
-  final List<String> images = [
-    "assets/images/campaign-image-sample.jpg",
-    "assets/images/campaign-image-sample-2.jpg",
-    "assets/images/campaign-image-sample.jpg",
-    "assets/images/campaign-image-sample-2.jpg",
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -100,19 +128,19 @@ class _ImageCarouselWithNumberIndicatorState
       ),
       child: Stack(
         alignment: Alignment.topRight,
-        fit: StackFit.expand,
+        // fit: StackFit.expand,
         children: [
           AspectRatio(
             aspectRatio: 1.25 / 1,
             child: PageView.builder(
               controller: _pageViewController,
               onPageChanged: _handlePageChange,
-              itemCount: images.length,
+              itemCount: widget.images.length,
               itemBuilder: (context, index) {
                 return ClipRRect(
                   // borderRadius: BorderRadius.circular(8),
-                  child: Image.asset(
-                    images[index],
+                  child: CachedNetworkImage(
+                    imageUrl: widget.images[index].imageUrl,
                     fit: BoxFit.fill,
                   ),
                 );
@@ -151,7 +179,7 @@ class _ImageCarouselWithNumberIndicatorState
                     ),
                     children: <TextSpan>[
                       TextSpan(
-                        text: ' / ${images.length}',
+                        text: ' / ${widget.images.length}',
                         style: GoogleFonts.roboto(
                           textStyle: const TextStyle(
                             color: Color(0xFFD2CFCF),
@@ -165,6 +193,28 @@ class _ImageCarouselWithNumberIndicatorState
                 ),
               ),
             ],
+          ),
+          Positioned(
+            bottom: 10,
+            right: 10,
+            child: GestureDetector(
+              onTap: _handleExpandImage,
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  color: Colors.black.withOpacity(0.3),
+                  border: Border.all(
+                    color: const Color(0xFFD2CFCF),
+                    width: 1,
+                  ),
+                ),
+                child: SvgPicture.asset(
+                  "assets/icons/expand.svg",
+                  color: Colors.white,
+                ),
+              ),
+            ),
           ),
         ],
       ),

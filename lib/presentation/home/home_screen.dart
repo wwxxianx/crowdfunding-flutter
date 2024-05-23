@@ -2,7 +2,7 @@ import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
-import 'package:crowdfunding_flutter/common/widgets/campaign_card.dart';
+import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_card.dart';
 import 'package:crowdfunding_flutter/common/widgets/text/gradient_text.dart';
 import 'package:crowdfunding_flutter/presentation/home/widgets/header.dart';
 import 'package:crowdfunding_flutter/presentation/home/widgets/slogan_banner.dart';
@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/dialog.dart';
+import 'package:go_router/go_router.dart';
 
 class HomePage extends StatefulWidget {
   static route() => MaterialPageRoute(
@@ -108,7 +109,7 @@ class _HomePageState extends State<HomePage> {
                   Text("Something went wrong,"),
                 if (state is FetchRecommendedCampaignsSuccess)
                   SizedBox(
-                    height: 500,
+                    height: 600,
                     child: ListView.builder(
                       padding: const EdgeInsets.only(
                         left: Dimensions.screenHorizontalPadding,
@@ -117,10 +118,17 @@ class _HomePageState extends State<HomePage> {
                       shrinkWrap: true,
                       itemCount: state.campaigns.length,
                       itemBuilder: (context, index) {
+                        final campaign = state.campaigns[index];
                         return Row(
                           children: [
                             CampaignCard(
-                              campaign: state.campaigns[index],
+                              campaign: campaign,
+                              onPressed: () {
+                                // Navigator.push(
+                                //     context, CampaignDetailsScreen.route());
+                                context
+                                    .push('/campaign-details/${campaign.id}');
+                              },
                             ),
                             12.kW,
                           ],

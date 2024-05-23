@@ -12,12 +12,19 @@ import 'package:crowdfunding_flutter/domain/repository/constant_repository.dart'
 import 'package:crowdfunding_flutter/domain/repository/user/user_repository.dart';
 import 'package:crowdfunding_flutter/domain/service/auth_service.dart';
 import 'package:crowdfunding_flutter/domain/usecases/auth/get_current_user.dart';
+import 'package:crowdfunding_flutter/domain/usecases/auth/login.dart';
 import 'package:crowdfunding_flutter/domain/usecases/auth/sign_out.dart';
 import 'package:crowdfunding_flutter/domain/usecases/auth/sign_up.dart';
+import 'package:crowdfunding_flutter/domain/usecases/campaign/campaign_comment/create_campaign_comment.dart';
+import 'package:crowdfunding_flutter/domain/usecases/campaign/campaign_comment/create_campaign_reply.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/create_campaign.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaign.dart';
+import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaigns.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaign_categories.dart';
 import 'package:crowdfunding_flutter/domain/usecases/fetch_state_and_regions.dart';
+import 'package:crowdfunding_flutter/domain/usecases/user/favourite_campaign/create_favourite_campaign.dart';
+import 'package:crowdfunding_flutter/domain/usecases/user/favourite_campaign/delete_favourite_campaign.dart';
+import 'package:crowdfunding_flutter/domain/usecases/user/favourite_campaign/fetch_favourite_campaigns.dart';
 import 'package:crowdfunding_flutter/domain/usecases/user/update_user_profile.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_bloc.dart';
@@ -39,8 +46,10 @@ Future<void> initDependencies() async {
 
   // core
   serviceLocator
-    ..registerLazySingleton(
-        () => AppUserCubit(getCurrentUser: serviceLocator()))
+    ..registerLazySingleton(() => AppUserCubit(
+          getCurrentUser: serviceLocator(),
+          signOut: serviceLocator(),
+        ))
     ..registerLazySingleton(() => NavigationCubit())
     ..registerLazySingleton(() => DioNetwork.provideDio())
     ..registerLazySingleton(() => MySharedPreference())
@@ -75,6 +84,7 @@ void _initAuth() {
     ..registerFactory(() => GetCurrentUser(serviceLocator()))
     ..registerFactory(() => SignOut(serviceLocator()))
     ..registerFactory(() => SignUp(serviceLocator()))
+    ..registerFactory(() => Login(authRepository: serviceLocator()))
     //Bloc
     ..registerLazySingleton(() => SignUpBloc(
           // login: serviceLocator(),
@@ -91,9 +101,15 @@ void _initCampaign() {
     ..registerFactory<CampaignRepository>(() =>
         CampaignRepositoryImpl(api: serviceLocator(), sp: serviceLocator()))
     // Usecase
+    ..registerFactory(
+        () => FetchCampaigns(campaignRepository: serviceLocator()))
     ..registerFactory(() => FetchCampaign(campaignRepository: serviceLocator()))
     ..registerFactory(
         () => CreateCampaign(campaignRepository: serviceLocator()))
+    ..registerFactory(
+        () => CreateCampaignComment(campaignRepository: serviceLocator()))
+    ..registerFactory(
+        () => CreateCampaignReply(campaignRepository: serviceLocator()))
     // Bloc
     ..registerLazySingleton(() => HomeBloc(fetchCampaign: serviceLocator()));
 }
@@ -111,9 +127,16 @@ void _initConstant() {
 void _initUser() {
   serviceLocator
     // Repo
-    ..registerFactory<UserRepository>(
-        () => UserRepositoryImpl(api: serviceLocator(), sp: serviceLocator(), authService: serviceLocator()))
+    ..registerFactory<UserRepository>(() => UserRepositoryImpl(
+        api: serviceLocator(),
+        sp: serviceLocator(),
+        authService: serviceLocator()))
     // Usecases
+    ..registerFactory(() => UpdateUserProfile(userRepository: serviceLocator()))
     ..registerFactory(
-        () => UpdateUserProfile(userRepository: serviceLocator()));
+        () => FetchFavouriteCampaigns(userRepository: serviceLocator()))
+    ..registerFactory(
+        () => CreateFavouriteCampaign(userRepository: serviceLocator()))
+    ..registerFactory(
+        () => DeleteFavouriteCampaign(userRepository: serviceLocator()));
 }

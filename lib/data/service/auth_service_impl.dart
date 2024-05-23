@@ -2,12 +2,13 @@ import 'dart:convert';
 
 import 'package:crowdfunding_flutter/common/error/exceptions.dart';
 import 'package:crowdfunding_flutter/data/local/shared_preference.dart';
-import 'package:crowdfunding_flutter/data/network/payload/sign_up_payload.dart';
+import 'package:crowdfunding_flutter/data/network/payload/auth/login_be_payload.dart';
+import 'package:crowdfunding_flutter/data/network/payload/auth/sign_up_payload.dart';
 import 'package:crowdfunding_flutter/data/network/retrofit_api.dart';
 import 'package:crowdfunding_flutter/domain/model/tokens_response.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:crowdfunding_flutter/domain/service/auth_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:crowdfunding_flutter/common/constants/constants.dart';
 
@@ -32,9 +33,7 @@ class AuthServiceImpl implements AuthService {
         final user = UserModel.fromJson(jsonDecode(cachedUser));
         return user;
       }
-
-      final user = await api.getUserProfile();
-      return user;
+      return null;
     } on Exception catch (_) {
       return null;
     }
@@ -87,16 +86,27 @@ class AuthServiceImpl implements AuthService {
       if (user == null) {
         throw const ServerException('Failed to sign you in!');
       }
-      final userRes = await api.signIn(user.id);
+      final UserModelWithAccessToken userRes =
+          await api.signIn(LoginBEPayload(userId: user.id));
+      _cacheUser(userRes.toUserModel());
       final tokens = TokensResponse(
           accessToken: userRes.accessToken, refreshToken: userRes.refreshToken);
       await _saveTokens(tokens);
-      return UserModel.fromJson(response.user!.toJson());
+
+      return userRes.toUserModel();
     } on AuthException catch (e) {
       throw ServerException(e.message);
     } catch (e) {
       throw ServerException(e.toString());
     }
+  }
+
+  @override
+  Future<void> signOut() async {
+    await supabaseClient.auth.signOut();
+    sp.clearData(Constants.sharedPreferencesKey.user);
+    sp.clearData(Constants.sharedPreferencesKey.accessToken);
+    sp.clearData(Constants.sharedPreferencesKey.refreshToken);
   }
 
   _cacheUser(UserModel user) async {
@@ -105,15 +115,13 @@ class AuthServiceImpl implements AuthService {
   }
 
   _saveTokens(TokensResponse tokens) async {
-    SharedPreferences sp = await SharedPreferences.getInstance();
-    sp.setString(
-        Constants.sharedPreferencesKey.accessToken, tokens.accessToken);
-    sp.setString(
-        Constants.sharedPreferencesKey.refreshToken, tokens.refreshToken);
-  }
-
-  @override
-  Future<void> signOut() async {
-    return await supabaseClient.auth.signOut();
+    sp.saveData(
+      key: Constants.sharedPreferencesKey.accessToken,
+      data: tokens.accessToken,
+    );
+    sp.saveData(
+      key: Constants.sharedPreferencesKey.refreshToken,
+      data: tokens.refreshToken,
+    );
   }
 }

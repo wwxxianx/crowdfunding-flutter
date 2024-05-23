@@ -77,11 +77,13 @@ class MySharedPreference {
     }
   }
 
-  Future<void> clearData(String key, String expirationKey) async {
+  Future<void> clearData(String key, {String? expirationKey}) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.remove(key);
-      await prefs.remove(expirationKey);
+      if (expirationKey != null) {
+        await prefs.remove(expirationKey);
+      }
     } catch (e) {
       print('Error clearing data from SharedPreferences: $e');
     }

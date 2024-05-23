@@ -32,6 +32,10 @@ UserModelWithAccessToken _$UserModelWithAccessTokenFromJson(
       id: json['id'] as String,
       fullName: json['fullName'] as String,
       email: json['email'] as String,
+      profileImageUrl: json['profileImageUrl'] as String?,
+      phoneNumber: json['phoneNumber'] as String?,
+      refreshToken: json['refreshToken'] as String? ?? "",
+      isOnboardingCompleted: json['isOnboardingCompleted'] as bool? ?? false,
       accessToken: json['accessToken'] as String,
     );
 
@@ -41,5 +45,9 @@ Map<String, dynamic> _$UserModelWithAccessTokenToJson(
       'id': instance.id,
       'fullName': instance.fullName,
       'email': instance.email,
+      'profileImageUrl': instance.profileImageUrl,
+      'phoneNumber': instance.phoneNumber,
+      'refreshToken': instance.refreshToken,
+      'isOnboardingCompleted': instance.isOnboardingCompleted,
       'accessToken': instance.accessToken,
     };

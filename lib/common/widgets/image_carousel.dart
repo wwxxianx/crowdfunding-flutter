@@ -1,9 +1,19 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
+import 'package:crowdfunding_flutter/domain/model/image/image_model.dart';
 import 'package:flutter/material.dart';
 
 class ImageCarousel extends StatefulWidget {
-  const ImageCarousel({super.key});
+  final double? height;
+  final double? width;
+  final List<ImageModel> images;
+  const ImageCarousel({
+    super.key,
+    this.height,
+    this.width,
+    required this.images,
+  });
 
   @override
   State<ImageCarousel> createState() => _ImageCarouselState();
@@ -31,13 +41,6 @@ class _ImageCarouselState extends State<ImageCarousel> {
     });
   }
 
-  final List<String> images = [
-    "assets/images/campaign-image-sample.jpg",
-    "assets/images/campaign-image-sample-2.jpg",
-    "assets/images/campaign-image-sample.jpg",
-    "assets/images/campaign-image-sample-2.jpg",
-  ];
-
   // late PageController _pageViewController;
   @override
   Widget build(BuildContext context) {
@@ -46,28 +49,29 @@ class _ImageCarouselState extends State<ImageCarousel> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height / 2.75,
+          width: widget.width ?? MediaQuery.of(context).size.width,
+          height: widget.height ?? MediaQuery.of(context).size.height / 2.75,
           child: PageView.builder(
             controller: _pageViewController,
             onPageChanged: _handlePageChange,
-            itemCount: images.length,
+            itemCount: widget.images.length,
             itemBuilder: (context, index) {
-              return Image.asset(
-                images[index],
+              return CachedNetworkImage(
+                imageUrl: widget.images[index].imageUrl,
                 fit: BoxFit.cover,
               );
             },
           ),
         ),
         8.kH,
+        // Indicator
         Row(
           // mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(
-            images.length,
+            widget.images.length,
             (index) => Container(
-              margin: EdgeInsets.only(right: 4.0),
+              margin: const EdgeInsets.only(right: 4.0),
               width: 8,
               height: 8,
               decoration: BoxDecoration(

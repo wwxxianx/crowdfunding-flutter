@@ -4,13 +4,16 @@ import 'package:crowdfunding_flutter/common/constants/constants.dart';
 import 'package:crowdfunding_flutter/common/error/failure.dart';
 import 'package:crowdfunding_flutter/data/local/shared_preference.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
+import 'package:crowdfunding_flutter/data/network/payload/user/favourite_campaign/favourite_campaign_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/user/user_profile_payload.dart';
 import 'package:crowdfunding_flutter/data/network/retrofit_api.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
+import 'package:crowdfunding_flutter/domain/model/user/user_favourite_campaign.dart';
 import 'package:crowdfunding_flutter/domain/repository/user/user_repository.dart';
 import 'package:crowdfunding_flutter/domain/service/auth_service.dart';
 import 'package:dio/dio.dart';
 import 'package:fpdart/src/either.dart';
+import 'package:fpdart/src/unit.dart';
 import 'package:logger/logger.dart';
 
 class UserRepositoryImpl implements UserRepository {
@@ -29,10 +32,6 @@ class UserRepositoryImpl implements UserRepository {
       UserProfilePayload payload) async {
     var logger = Logger();
     try {
-      logger.w('favouriteCategoriesId: ${payload.favouriteCategoriesId}');
-      logger.w('fullName: ${payload.fullName}');
-      logger.w('isOnBoardingCompleted: ${payload.isOnBoardingCompleted}');
-      logger.w('profileImageFile: ${payload.profileImageFile}');
       final res = await api.updateUserProfile(
         favouriteCategoriesId: payload.favouriteCategoriesId,
         fullName: payload.fullName,
@@ -45,7 +44,6 @@ class UserRepositoryImpl implements UserRepository {
           data: jsonEncode(res), key: Constants.sharedPreferencesKey.user);
       return right(res);
     } on Exception catch (e) {
-      logger.w("error: ${e}");
       if (e is DioException) {
         final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
         return left(Failure(errorMessage));
@@ -61,5 +59,48 @@ class UserRepositoryImpl implements UserRepository {
       return left(Failure());
     }
     return right(user);
+  }
+
+  @override
+  Future<Either<Failure, UserFavouriteCampaign>> createFavouriteCampaign(
+      FavouriteCampaignPayload payload) async {
+    try {
+      final res = await api.createUserFavouriteCampaign(payload);
+      return right(res);
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException(error: e).errorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<UserFavouriteCampaign>>> getFavouriteCampaigns() async {
+    try {
+      final res = await api.getUserFavouriteCampaigns();
+      return right(res);
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException(error: e).errorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> deleteFavouriteCampaign(
+      FavouriteCampaignPayload payload) async {
+    try {
+      await api.deleteUserFavouriteCampaign(payload);
+      return right(unit);
+    } on DioException catch (e) {
+      final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+      return left(Failure(errorMessage));
+    } on Exception catch (e) {
+      return left(Failure(ErrorHandler.otherException(error: e).errorMessage));
+    }
   }
 }

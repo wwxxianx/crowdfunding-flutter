@@ -1,4 +1,5 @@
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
+import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 
@@ -7,7 +8,7 @@ bool hasTextOverflow(
   TextStyle? style, {
   double textScaleFactor = 1.0,
   double minWidth = 0,
-  double maxWidth = double.infinity,
+  double maxWidth = double.maxFinite,
   int maxLines = 2,
 }) {
   final TextPainter textPainter = TextPainter(
@@ -53,7 +54,8 @@ class _ExpandableTextState extends State<ExpandableText> {
           overflow: isExpanded ? null : TextOverflow.ellipsis,
           style: widget.style,
         ),
-        if (hasTextOverflow(widget.text, widget.style))
+        if (hasTextOverflow(widget.text, widget.style,
+            maxWidth: MediaQuery.of(context).size.width))
           InkWell(
             onTap: _handleExpandToggle,
             child: Row(
@@ -64,13 +66,14 @@ class _ExpandableTextState extends State<ExpandableText> {
                   isExpanded ? "See less" : "See more",
                   style: CustomFonts.labelMedium,
                 ),
-                const HeroIcon(
-                  HeroIcons.chevronDown,
+                HeroIcon(
+                  isExpanded ? HeroIcons.chevronUp : HeroIcons.chevronDown,
                   size: 16,
                 )
               ],
             ),
           ),
+        50.kH
       ],
     );
   }

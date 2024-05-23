@@ -1,7 +1,7 @@
 import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
-import 'package:crowdfunding_flutter/common/widgets/campaign_card.dart';
+import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_card.dart';
 import 'package:crowdfunding_flutter/presentation/create_campaign/create_campaign_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';

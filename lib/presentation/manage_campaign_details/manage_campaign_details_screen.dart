@@ -2,11 +2,11 @@ import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
-import 'package:crowdfunding_flutter/common/widgets/campaign_card.dart';
-import 'package:crowdfunding_flutter/common/widgets/campaign_category_tag.dart';
+import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_card.dart';
+import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_category_tag.dart';
+import 'package:crowdfunding_flutter/common/widgets/campaign/donation_progress_bar.dart';
 import 'package:crowdfunding_flutter/common/widgets/image_carousel.dart';
 import 'package:crowdfunding_flutter/presentation/campaign_details/widgets/protect_info_banner.dart';
-import 'package:crowdfunding_flutter/presentation/campaign_details/widgets/tab_view.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/create_campaign_update_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/widgets/reply_bottom_sheet.dart';
 import 'package:flutter/material.dart';
@@ -196,7 +196,7 @@ class _ManageCampaignDetailsScreenState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const ImageCarousel(),
+                // const ImageCarousel(),
                 24.kH,
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -217,18 +217,18 @@ class _ManageCampaignDetailsScreenState
                         height: 12.0,
                       ),
                       16.kH,
-                      const CampaignCategoryTag(),
+                      // const CampaignCategoryTag(),
                       12.kH,
                       const ProtectInfoBanner(),
                     ],
                   ),
                 ),
                 8.kH,
-                CampaignDetailsTabView(
-                  onReplyButtonPreesed: (commentID) {
-                    _handleOpenReplyBottomSheet();
-                  },
-                ),
+                // CampaignDetailsTabView(
+                //   onReplyButtonPreesed: (commentID) {
+                //     _handleOpenReplyBottomSheet();
+                //   },
+                // ),
               ],
             ),
           ),

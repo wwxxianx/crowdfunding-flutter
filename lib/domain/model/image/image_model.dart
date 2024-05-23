@@ -22,4 +22,22 @@ class ImageModel {
     imageUrl:
         "https://yyavkrjmlxoqxeeybxuc.supabase.co/storage/v1/object/public/campaign/thumbnail/larm-rmah-AEaTUnvneik-unsplash.jpg",
   );
+
+  static const samples = [
+    ImageModel(
+      id: 'sample-1',
+      imageUrl:
+          "https://yyavkrjmlxoqxeeybxuc.supabase.co/storage/v1/object/public/campaign/thumbnail/larm-rmah-AEaTUnvneik-unsplash.jpg",
+    ),
+    ImageModel(
+      id: 'sample-2',
+      imageUrl:
+          "https://yyavkrjmlxoqxeeybxuc.supabase.co/storage/v1/object/public/campaign/thumbnail/larm-rmah-AEaTUnvneik-unsplash.jpg",
+    ),
+    ImageModel(
+      id: 'sample-3',
+      imageUrl:
+          "https://yyavkrjmlxoqxeeybxuc.supabase.co/storage/v1/object/public/campaign/thumbnail/larm-rmah-AEaTUnvneik-unsplash.jpg",
+    ),
+  ];
 }
