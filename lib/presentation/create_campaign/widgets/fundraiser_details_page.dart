@@ -34,12 +34,12 @@ class _FundraiserDetailsFormPageState extends State<FundraiserDetailsFormPage> {
     super.initState();
     final targetAmount =
         context.read<CreateCampaignBloc>().state.targetAmountText;
-    if (targetAmount != null) {
+    if (targetAmount != null && targetAmount.isNotEmpty) {
       amountTextController.text = targetAmount;
     }
     final phoneNumber =
         context.read<CreateCampaignBloc>().state.phoneNumberText;
-    if (phoneNumber != null) {
+    if (phoneNumber != null && phoneNumber.isNotEmpty) {
       phoneTextController.text = phoneNumber;
     }
   }
@@ -119,8 +119,9 @@ class _FundraiserDetailsFormPageState extends State<FundraiserDetailsFormPage> {
                           onPressed: (campaignCategory) {
                             _handleSelectCategory(campaignCategory.id);
                           },
-                          selectedCategoryIds:
-                              List.from([state.selectedCategoryId]),
+                          selectedCategoryIds: state.selectedCategoryId != null
+                              ? List.from([state.selectedCategoryId])
+                              : [],
                         ),
                         28.kH,
                         const Text(

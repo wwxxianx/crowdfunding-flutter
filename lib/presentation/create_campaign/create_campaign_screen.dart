@@ -1,15 +1,14 @@
-import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
+import 'package:crowdfunding_flutter/common/widgets/container/step_indicator.dart';
 import 'package:crowdfunding_flutter/di/init_dependencies.dart';
-import 'package:crowdfunding_flutter/presentation/create_campaign/widgets/beneficiary_form.dart';
+import 'package:crowdfunding_flutter/presentation/create_campaign/widgets/beneficiary_page.dart';
 import 'package:crowdfunding_flutter/presentation/create_campaign/widgets/fundraiser_description_page.dart';
 import 'package:crowdfunding_flutter/presentation/create_campaign/widgets/fundraiser_details_page.dart';
 import 'package:crowdfunding_flutter/presentation/create_campaign/widgets/fundraiser_media_page.dart';
 import 'package:crowdfunding_flutter/state_management/create_campaign/create_campaign_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class CreateCampaignScreen extends StatefulWidget {
   static route() =>
@@ -82,46 +81,9 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
       appBar: AppBar(
         title: Row(
           children: [
-            Container(
-              width: 35,
-              height: 35,
-              decoration: BoxDecoration(
-                color: Colors.black,
-                border: Border.all(
-                  color: CustomColors.accentGreen,
-                  width: 1,
-                ),
-                shape: BoxShape.circle,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  RichText(
-                    text: TextSpan(
-                      text: "${currentPage + 1}",
-                      style: GoogleFonts.roboto(
-                        textStyle: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: CustomColors.primaryGreen,
-                        ),
-                      ),
-                      children: [
-                        TextSpan(
-                          text: "/4",
-                          style: GoogleFonts.roboto(
-                            textStyle: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+            StepIndicator(
+              currentStep: "${currentPage + 1}",
+              totalSteps: "4",
             ),
             8.kW,
             _buildStepTitle(),
@@ -141,7 +103,7 @@ class _CreateCampaignScreenState extends State<CreateCampaignScreen> {
               FundraiserDetailsFormPage(
                 onNextPage: _handleNextPage,
               ),
-              BeneficiaryForm(
+              BeneficiaryFormPage(
                 onNextPage: _handleNextPage,
                 onPreviousPage: _handlePreviousPage,
               ),

@@ -28,17 +28,22 @@ class _NavigationScreenState extends State<NavigationScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<HomeBloc>().add(FetchRecommendedCampaigns());
+    context.read<HomeBloc>().add(OnFetchRecommendedCampaigns());
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => FavouriteCampaignBloc(
-        createFavouriteCampaign: serviceLocator(),
-        getFavouriteCampaigns: serviceLocator(),
-        deleteFavouriteCampaign: serviceLocator(),
-      )..add(OnFetchFavouriteCampaigns()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => FavouriteCampaignBloc(
+            createFavouriteCampaign: serviceLocator(),
+            getFavouriteCampaigns: serviceLocator(),
+            deleteFavouriteCampaign: serviceLocator(),
+          )..add(OnFetchFavouriteCampaigns()),
+        ),
+        BlocProvider(create: (_) => NavigationCubit()),
+      ],
       child: SafeArea(
         child: Scaffold(
           bottomNavigationBar: HomeBottomNavigationBar(),

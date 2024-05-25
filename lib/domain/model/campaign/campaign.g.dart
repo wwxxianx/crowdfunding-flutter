@@ -48,6 +48,14 @@ Campaign _$CampaignFromJson(Map<String, dynamic> json) => Campaign(
               ?.map((e) => CampaignComment.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      topThreeDonations: (json['topThreeDonations'] as List<dynamic>?)
+              ?.map((e) => CampaignDonation.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      recentThreeDonations: (json['recentThreeDonations'] as List<dynamic>?)
+              ?.map((e) => CampaignDonation.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$CampaignToJson(Campaign instance) => <String, dynamic>{
@@ -76,6 +84,8 @@ Map<String, dynamic> _$CampaignToJson(Campaign instance) => <String, dynamic>{
       'donations': instance.donations,
       'campaignUpdates': instance.campaignUpdates,
       'comments': instance.comments,
+      'topThreeDonations': instance.topThreeDonations,
+      'recentThreeDonations': instance.recentThreeDonations,
     };
 
 const _$AgeGroupEnumMap = {

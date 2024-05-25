@@ -1,4 +1,6 @@
 import 'package:crowdfunding_flutter/presentation/campaign_details/campaign_details_screen.dart';
+import 'package:crowdfunding_flutter/presentation/manage_campaign_details/manage_campaign_details_screen.dart';
+import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/edit_campaign_screen.dart';
 import 'package:crowdfunding_flutter/presentation/splash/splash_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:crowdfunding_flutter/presentation/login/login_screen.dart';
@@ -11,6 +13,7 @@ class AppRouter {
   AppRouter(this.appUserCubit);
 
   GoRouter get router => GoRouter(
+        // initialLocation: EditCampaignScreen.generateRoute(campaignId: '123'),
         initialLocation: '/loading',
         routes: [
           GoRoute(
@@ -30,6 +33,17 @@ class AppRouter {
             builder: (context, state) => CampaignDetailsScreen(
               campaignId: state.pathParameters['campaignId'] ?? '',
             ),
+          ),
+          GoRoute(
+            path: ManageCampaignDetailsScreen.route,
+            builder: (context, state) => ManageCampaignDetailsScreen(
+              campaignId: state.pathParameters['campaignId'] ?? '',
+            ),
+          ),
+          GoRoute(
+            path: EditCampaignScreen.route,
+            builder: (context, state) => EditCampaignScreen(
+                campaignId: state.pathParameters['campaignId'] ?? ''),
           ),
         ],
       );

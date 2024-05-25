@@ -15,20 +15,20 @@ import 'package:crowdfunding_flutter/state_management/create_campaign/create_cam
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class BeneficiaryForm extends StatefulWidget {
+class BeneficiaryFormPage extends StatefulWidget {
   final VoidCallback onPreviousPage;
   final VoidCallback onNextPage;
-  const BeneficiaryForm({
+  const BeneficiaryFormPage({
     super.key,
     required this.onNextPage,
     required this.onPreviousPage,
   });
 
   @override
-  State<BeneficiaryForm> createState() => _BeneficiaryFormState();
+  State<BeneficiaryFormPage> createState() => _BeneficiaryFormPageState();
 }
 
-class _BeneficiaryFormState extends State<BeneficiaryForm> {
+class _BeneficiaryFormPageState extends State<BeneficiaryFormPage> {
   final beneficiaryNameTextController = TextEditingController();
   AgeGroup selectedAge = AgeGroup.baby;
 
@@ -103,7 +103,9 @@ class _BeneficiaryFormState extends State<BeneficiaryForm> {
                         ),
                         12.kH,
                         MediaPicker(
-                          preview: state.beneficiaryImageFile != null ? [state.beneficiaryImageFile!] : null,
+                          preview: state.beneficiaryImageFile != null
+                              ? [state.beneficiaryImageFile!]
+                              : null,
                           onSelected: (files) {
                             _handleBeneficiaryFileChanged(files[0]);
                           },

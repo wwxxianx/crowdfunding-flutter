@@ -3,6 +3,7 @@ import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
 import 'package:crowdfunding_flutter/presentation/campaign_details/tabs/about_tab.dart';
 import 'package:crowdfunding_flutter/presentation/campaign_details/tabs/comment_tab.dart';
+import 'package:crowdfunding_flutter/presentation/campaign_details/tabs/donation_tab.dart';
 import 'package:crowdfunding_flutter/presentation/campaign_details/tabs/update_tab.dart';
 import 'package:crowdfunding_flutter/state_management/campaign_details/campaign_details_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/campaign_details/campaign_details_event.dart';
@@ -73,7 +74,7 @@ class _CampaignDetailsTabViewState extends State<CampaignDetailsTabView>
       case 0:
         return CampaignAboutTabContent();
       case 1:
-        return Text("Donations");
+        return const DonationTab();
       case 2:
         final List<CampaignComment> comments =
             (campaignResult is ApiResultSuccess<Campaign>)

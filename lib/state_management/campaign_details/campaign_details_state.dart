@@ -10,6 +10,7 @@ final class CampaignDetailsState extends Equatable with InputValidator {
   final int currentTabIndex;
   final ApiResult<Campaign> campaignResult;
   final ApiResult<Void> createCommentResult;
+  final bool isShowingCommentBottomBar;
 
   // Reply
   final CampaignComment? selectedCommentToReply;
@@ -21,6 +22,7 @@ final class CampaignDetailsState extends Equatable with InputValidator {
     this.createCommentResult = const ApiResultInitial(),
     this.createReplyResult = const ApiResultInitial(),
     this.selectedCommentToReply,
+    this.isShowingCommentBottomBar = false,
   });
 
   const CampaignDetailsState.initial() : this._(currentTabIndex: 0);
@@ -46,6 +48,7 @@ final class CampaignDetailsState extends Equatable with InputValidator {
     ApiResult<Void>? createCommentResult,
     CampaignComment? selectedCommentToReply,
     ApiResult<Void>? createReplyResult,
+    bool? isShowingCommentBottomBar,
   }) {
     return CampaignDetailsState._(
       currentTabIndex: currentTabIndex ?? this.currentTabIndex,
@@ -53,6 +56,7 @@ final class CampaignDetailsState extends Equatable with InputValidator {
       createCommentResult: createCommentResult ?? this.createCommentResult,
       selectedCommentToReply: selectedCommentToReply,
       createReplyResult: createReplyResult ?? this.createReplyResult,
+      isShowingCommentBottomBar: isShowingCommentBottomBar ?? this.isShowingCommentBottomBar,
     );
   }
 
@@ -63,5 +67,6 @@ final class CampaignDetailsState extends Equatable with InputValidator {
         createCommentResult,
         selectedCommentToReply,
         createReplyResult,
+        isShowingCommentBottomBar,
       ];
 }

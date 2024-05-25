@@ -6,6 +6,8 @@ import 'package:crowdfunding_flutter/data/network/payload/auth/sign_up_payload.d
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_comment_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_reply_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/user/favourite_campaign/favourite_campaign_payload.dart';
+import 'package:crowdfunding_flutter/data/service/payment/create_payment_intent_payload.dart';
+import 'package:crowdfunding_flutter/data/service/payment/payment_intent_response.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_category.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
@@ -37,7 +39,8 @@ abstract class RestClient {
 
   // Campaign
   @GET("campaigns")
-  Future<List<Campaign>> getCampaigns();
+  Future<List<Campaign>> getCampaigns({@Query("userId") String? userId});
+
   @GET("campaigns/{id}")
   Future<Campaign> getCampaign(@Path('id') String campaignId);
 
@@ -47,13 +50,32 @@ abstract class RestClient {
     @Part(name: "title") required String title,
     @Part(name: "description") required String description,
     @Part(name: "targetAmount") required int targetAmount,
-    @Part(name: "titcategoryIdle") required String categoryId,
+    @Part(name: "categoryId") required String categoryId,
     @Part(name: "contactPhoneNumber") required String phoneNumber,
     @Part(name: "stateId") required String stateId,
     @Part(name: "beneficiaryName") required String beneficiaryName,
     @Part(name: "campaignImages") required List<File> campaignImageFiles,
     @Part(name: "campaignVideo") File? campaignVideoFile,
     @Part(name: "beneficiaryImage") File? beneficiaryImageFile,
+  });
+
+  @PATCH("campaigns/{id}")
+  @MultiPart()
+  Future<Campaign> updateCampaign({
+    @Path("id") required String campaignId,
+    @Part(name: "title") required String title,
+    @Part(name: "description") required String description,
+    @Part(name: "targetAmount") required int targetAmount,
+    @Part(name: "categoryId") required String categoryId,
+    @Part(name: "contactPhoneNumber") required String phoneNumber,
+    @Part(name: "stateId") required String stateId,
+    @Part(name: "beneficiaryName") required String beneficiaryName,
+    @Part(name: "campaignImages") required List<File> newCampaignImageFiles,
+    @Part(name: "campaignVideo") File? newCampaignVideoFile,
+    @Part(name: "beneficiaryImage") File? newBeneficiaryImageFile,
+    @Part(name: "oriCampaignImagesId") required List<String> oriCampaignImagesId,
+    @Part(name: "oriBeneficiaryImageUrl") String? oriBeneficiaryImageUrl,
+    // @Part(name: "oriCampaignVideo") oriCampaignImages,
   });
 
   // Campaign comment
@@ -70,6 +92,16 @@ abstract class RestClient {
   // Campaign categories
   @GET("campaign-categories")
   Future<List<CampaignCategory>> getCampaignCategories();
+
+  // Campaign updates
+  @POST('campaigns-update')
+  @MultiPart()
+  Future<void> createCampaignUpdates({
+    @Part(name: "title") required String title,
+    @Part(name: "description") required String description,
+    @Part(name: "campaignId") required String campaignId,
+    @Part(name: "images") required List<File> categoryId,
+  });
 
   // User Profile
   @PATCH("users")
@@ -97,5 +129,11 @@ abstract class RestClient {
   @DELETE("user-favourite-campaigns")
   Future<void> deleteUserFavouriteCampaign(
     @Body() FavouriteCampaignPayload payload,
+  );
+
+  // Payment sheet
+  @POST("payment/payment-intent")
+  Future<PaymentIntentResponse> createPaymentIntent(
+    @Body() CreatePaymentIntentPayload payload,
   );
 }

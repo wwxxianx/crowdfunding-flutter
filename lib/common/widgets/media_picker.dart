@@ -1,11 +1,58 @@
 import 'dart:io';
-import 'dart:typed_data';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crowdfunding_flutter/common/theme/color.dart';
+import 'package:crowdfunding_flutter/common/utils/show_snackbar.dart';
+import 'package:crowdfunding_flutter/domain/model/image/image_model.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:video_player/video_player.dart' as videoPlayer;
+// import 'package:video_thumbnail/video_thumbnail.dart';
+
+class VideoPlayer extends StatefulWidget {
+  final File videoFile;
+  const VideoPlayer({
+    super.key,
+    required this.videoFile,
+  });
+
+  @override
+  State<VideoPlayer> createState() => _VideoPlayerState();
+}
+
+class _VideoPlayerState extends State<VideoPlayer> {
+  late videoPlayer.VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = videoPlayer.VideoPlayerController.file(widget.videoFile)
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+      });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        width: 84,
+        height: 84,
+        child: _controller.value.isInitialized
+            ? AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                child: videoPlayer.VideoPlayer(_controller),
+              )
+            : Container());
+  }
+}
 
 class MediaPicker extends StatefulWidget {
   final bool isVideo;
@@ -13,6 +60,8 @@ class MediaPicker extends StatefulWidget {
   final int limit;
   final void Function(List<File>)? onSelected;
   final List<File>? preview;
+  final List<ImageModel> previewImageModels;
+  final void Function(ImageModel image)? onRemovePreviewImageModel;
 
   const MediaPicker({
     super.key,
@@ -20,6 +69,8 @@ class MediaPicker extends StatefulWidget {
     this.limit = 1,
     this.onSelected,
     this.preview,
+    this.previewImageModels = const [],
+    this.onRemovePreviewImageModel,
   });
 
   @override
@@ -29,7 +80,7 @@ class MediaPicker extends StatefulWidget {
 class _MediaPickerState<T> extends State<MediaPicker> {
   final picker = ImagePicker();
   List<File> selectedImages = [];
-  Uint8List? videoThumbnail;
+  File? videoThumbnail;
 
   @override
   void initState() {
@@ -40,6 +91,14 @@ class _MediaPickerState<T> extends State<MediaPicker> {
   }
 
   void _handlePickButtonPressed() async {
+    final hasExceedLimit =
+        (widget.previewImageModels.length + selectedImages.length) >=
+            widget.limit;
+    if (hasExceedLimit) {
+      context.showSnackBar(
+          "You can only select ${widget.limit} ${widget.isVideo ? 'video' : 'image'}${widget.limit > 1 ? 's' : ''}");
+      return;
+    }
     if (!widget.isVideo) {
       if (widget.limit == 1) {
         // Single image
@@ -57,9 +116,12 @@ class _MediaPickerState<T> extends State<MediaPicker> {
         // Pick multiple image
         List<XFile> images = await picker.pickMultiImage();
         if (images.isNotEmpty) {
-          if (images.length > widget.limit) {
-            // Get the last N elements
-            images = images.sublist(images.length - widget.limit);
+          // NOTE: The extra picked image from gallery will be discarded
+          // Preview ImageModel need to delete manually and won't be auto discarded
+          if ((images.length + widget.previewImageModels.length) >
+              widget.limit) {
+            images = images.sublist(images.length -
+                (widget.limit - widget.previewImageModels.length));
           }
           setState(() {
             selectedImages = images.map((e) => File(e.path)).toList();
@@ -73,18 +135,10 @@ class _MediaPickerState<T> extends State<MediaPicker> {
       // Pick video
       XFile? video = await picker.pickVideo(source: ImageSource.gallery);
       if (video != null) {
-        final thumbnail = await VideoThumbnail.thumbnailData(
-          video: video.path,
-          imageFormat: ImageFormat.JPEG,
-          maxWidth:
-              128, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
-          quality: 25,
-        );
         final videoFile = File(video.path);
         setState(
           () {
             selectedImages.add(videoFile);
-            videoThumbnail = thumbnail;
           },
         );
         if (widget.onSelected != null) {
@@ -94,72 +148,57 @@ class _MediaPickerState<T> extends State<MediaPicker> {
     }
   }
 
+  List<Widget> _buildPreview() {
+    if (widget.previewImageModels.isNotEmpty) {
+      return widget.previewImageModels.map((image) {
+        return ImagePreviewContainer(
+          onRemove: () {
+            if (widget.onRemovePreviewImageModel != null) {
+              widget.onRemovePreviewImageModel!(image);
+            }
+          },
+          imageUrl: image.imageUrl,
+        );
+      }).toList();
+    }
+    return [const SizedBox()];
+  }
+
   List<Widget> _buildContent() {
     if (selectedImages.isNotEmpty) {
       if (widget.isVideo) {
         return [
-          Container(
-            width: 84,
-            height: 84,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: CustomColors.containerBorderGrey,
-                width: 1,
-              ),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              child: Image.memory(
-                videoThumbnail!,
-              ),
-            ),
+          VideoPreviewContainer(
+            child: VideoPlayer(videoFile: selectedImages[0]),
+            onRemove: () {
+              setState(() {
+                selectedImages = [];
+              });
+            },
           ),
         ];
       }
       if (widget.limit == 1) {
         return [
-          Container(
-            width: 84,
-            height: 84,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: CustomColors.containerBorderGrey,
-                width: 1,
-              ),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              child: Image.file(
-                selectedImages[0],
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
+          ImagePreviewContainer(
+              onRemove: () {
+                setState(() {
+                  selectedImages = [];
+                });
+              },
+              file: selectedImages[0]),
         ];
       } else {
         // multiple images
-        return selectedImages
-            .map((image) => Container(
-                  width: 84,
-                  height: 84,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: CustomColors.containerBorderGrey,
-                      width: 1,
-                    ),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Image.file(
-                      image,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ))
-            .toList();
+        return selectedImages.map((image) {
+          return ImagePreviewContainer(
+              onRemove: () {
+                setState(() {
+                  selectedImages.remove(image);
+                });
+              },
+              file: image);
+        }).toList();
       }
     } else {
       return [
@@ -191,6 +230,7 @@ class _MediaPickerState<T> extends State<MediaPicker> {
       runSpacing: 12.0,
       direction: Axis.horizontal,
       children: [
+        if (widget.previewImageModels.isNotEmpty) ..._buildPreview(),
         ..._buildContent(),
         InkWell(
           onTap: _handlePickButtonPressed,
@@ -209,6 +249,132 @@ class _MediaPickerState<T> extends State<MediaPicker> {
               style: HeroIconStyle.solid,
               size: 38,
               color: CustomColors.containerBorderGrey,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class VideoPreviewContainer extends StatelessWidget {
+  final Widget child;
+  final VoidCallback? onRemove;
+  const VideoPreviewContainer({
+    super.key,
+    required this.child,
+    this.onRemove,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.topRight,
+      children: [
+        Container(
+          width: 84,
+          height: 84,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: CustomColors.containerBorderGrey,
+              width: 1,
+            ),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8.0),
+            child: child,
+          ),
+        ),
+        Positioned(
+          right: -5,
+          top: -5,
+          child: GestureDetector(
+            onTap: onRemove,
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+                border: Border.all(color: Color(0xFFFEFEFE)),
+                boxShadow: CustomColors.cardShadow,
+              ),
+              padding: const EdgeInsets.all(4.0),
+              child: const HeroIcon(
+                HeroIcons.xMark,
+                style: HeroIconStyle.mini,
+                color: Color(0xFFAEAEAE),
+                size: 16.0,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class ImagePreviewContainer extends StatelessWidget {
+  final String? imageUrl;
+  final File? file;
+  final VoidCallback onRemove;
+  const ImagePreviewContainer({
+    super.key,
+    this.imageUrl,
+    required this.onRemove,
+    this.file,
+  });
+
+  Widget _buildImage() {
+    if (imageUrl != null && imageUrl!.isNotEmpty) {
+      return CachedNetworkImage(imageUrl: imageUrl!, fit: BoxFit.cover);
+    }
+    return Image.file(
+      file!,
+      fit: BoxFit.cover,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.topRight,
+      children: [
+        Container(
+          width: 84,
+          height: 84,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: CustomColors.containerBorderGrey,
+              width: 1,
+            ),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8.0),
+            child: _buildImage(),
+          ),
+        ),
+        Positioned(
+          right: -5,
+          top: -5,
+          child: GestureDetector(
+            onTap: onRemove,
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+                border: Border.all(color: Color(0xFFFEFEFE)),
+                boxShadow: CustomColors.cardShadow,
+              ),
+              padding: const EdgeInsets.all(4.0),
+              child: const HeroIcon(
+                HeroIcons.xMark,
+                style: HeroIconStyle.mini,
+                color: Color(0xFFAEAEAE),
+                size: 16.0,
+              ),
             ),
           ),
         ),

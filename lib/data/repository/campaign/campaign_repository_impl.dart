@@ -7,11 +7,13 @@ import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_comment_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_reply_payload.dart';
+import 'package:crowdfunding_flutter/data/network/payload/campaign/update_campaign_payload.dart';
 import 'package:crowdfunding_flutter/data/network/retrofit_api.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_category.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
 import 'package:crowdfunding_flutter/domain/repository/campaign/campaign_repository.dart';
+import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaigns.dart';
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:fpdart/src/either.dart';
@@ -26,9 +28,10 @@ class CampaignRepositoryImpl implements CampaignRepository {
   });
 
   @override
-  Future<Either<Failure, List<Campaign>>> getCampaigns() async {
+  Future<Either<Failure, List<Campaign>>> getCampaigns(
+      FetchCampaignsPayload payload) async {
     try {
-      final campaignsRes = await api.getCampaigns();
+      final campaignsRes = await api.getCampaigns(userId: payload.userId);
       return right(campaignsRes);
     } on Exception catch (e) {
       if (e is DioException) {
@@ -136,6 +139,33 @@ class CampaignRepositoryImpl implements CampaignRepository {
       CreateCampaignReplyPayload payload) async {
     try {
       final res = await api.createCampaignReply(payload);
+      return right(res);
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException().errorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Campaign>> updateCampaign(
+      UpdateCampaignPayload payload) async {
+    try {
+      final res = await api.updateCampaign(
+        campaignId: payload.campaignId,
+        title: payload.title,
+        description: payload.description,
+        targetAmount: payload.targetAmount,
+        categoryId: payload.categoryId,
+        phoneNumber: payload.phoneNumber,
+        stateId: payload.stateId,
+        beneficiaryName: payload.beneficiaryName,
+        newCampaignImageFiles: payload.newCampaignImageFiles,
+        oriCampaignImagesId: payload.oriCampaignImagesId,
+        oriBeneficiaryImageUrl: payload.oriBeneficiaryImageUrl,
+      );
       return right(res);
     } on Exception catch (e) {
       if (e is DioException) {

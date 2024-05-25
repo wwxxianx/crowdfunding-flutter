@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:crowdfunding_flutter/app_router.dart';
+import 'package:crowdfunding_flutter/common/constants/constants.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/di/init_dependencies.dart';
 import 'package:crowdfunding_flutter/presentation/login/login_screen.dart';
@@ -13,19 +16,20 @@ import 'package:crowdfunding_flutter/state_management/sign_up/sign_up_bloc.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:crowdfunding_flutter/common/theme/color.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:go_router/go_router.dart';
 import 'package:crowdfunding_flutter/presentation/splash/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initDependencies();
+  Stripe.publishableKey = Constants.stripePublishableKey;
 
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => serviceLocator<AppUserCubit>()),
         BlocProvider(create: (_) => serviceLocator<SignUpBloc>()),
-        BlocProvider(create: (_) => serviceLocator<NavigationCubit>()),
         BlocProvider(create: (_) => serviceLocator<ExploreCampaignsBloc>()),
         BlocProvider(create: (_) => serviceLocator<HomeBloc>()),
       ],
@@ -67,6 +71,17 @@ class _MyAppState extends State<MyApp> {
         ),
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.white,
+        ),
+        bottomSheetTheme: const BottomSheetThemeData(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          shadowColor: Colors.white,
+          modalBackgroundColor: Colors.white,
+          modalBarrierColor: Colors.white,
+          dragHandleColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.zero),
+          ),
         ),
       ),
       // home: SplashScreen(),

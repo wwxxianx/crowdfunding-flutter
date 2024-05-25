@@ -6,6 +6,7 @@ import 'package:crowdfunding_flutter/data/repository/campaign/campaign_repositor
 import 'package:crowdfunding_flutter/data/repository/constant_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/repository/user/user_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/service/auth_service_impl.dart';
+import 'package:crowdfunding_flutter/data/service/payment/payment_service.dart';
 import 'package:crowdfunding_flutter/domain/repository/auth_repository.dart';
 import 'package:crowdfunding_flutter/domain/repository/campaign/campaign_repository.dart';
 import 'package:crowdfunding_flutter/domain/repository/constant_repository.dart';
@@ -21,6 +22,7 @@ import 'package:crowdfunding_flutter/domain/usecases/campaign/create_campaign.da
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaign.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaigns.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaign_categories.dart';
+import 'package:crowdfunding_flutter/domain/usecases/campaign/update_campaign.dart';
 import 'package:crowdfunding_flutter/domain/usecases/fetch_state_and_regions.dart';
 import 'package:crowdfunding_flutter/domain/usecases/user/favourite_campaign/create_favourite_campaign.dart';
 import 'package:crowdfunding_flutter/domain/usecases/user/favourite_campaign/delete_favourite_campaign.dart';
@@ -60,6 +62,7 @@ Future<void> initDependencies() async {
   _initCampaign();
   _initConstant();
   _initUser();
+  _initPayment();
 }
 
 void _initExploreCampaigns() {
@@ -107,6 +110,8 @@ void _initCampaign() {
     ..registerFactory(
         () => CreateCampaign(campaignRepository: serviceLocator()))
     ..registerFactory(
+        () => UpdateCampaign(campaignRepository: serviceLocator()))
+    ..registerFactory(
         () => CreateCampaignComment(campaignRepository: serviceLocator()))
     ..registerFactory(
         () => CreateCampaignReply(campaignRepository: serviceLocator()))
@@ -139,4 +144,9 @@ void _initUser() {
         () => CreateFavouriteCampaign(userRepository: serviceLocator()))
     ..registerFactory(
         () => DeleteFavouriteCampaign(userRepository: serviceLocator()));
+}
+
+void _initPayment() {
+  serviceLocator.registerFactory<PaymentService>(
+      () => PaymentService(api: serviceLocator()));
 }

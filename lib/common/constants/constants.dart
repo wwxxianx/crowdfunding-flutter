@@ -2,7 +2,9 @@ class Constants {
   Constants._();
   static const sharedPreferencesKey = SharedPreferencesKey();
   static const apiUrl =
-      "https://2f35-2001-f40-987-516-e8bb-4157-bc82-df6b.ngrok-free.app/";
+      "https://494f-2001-f40-987-516-8df-ddf7-9222-2c24.ngrok-free.app/";
+
+  static const stripePublishableKey = "pk_test_51OmSFdIGtvkAiXyxrpvC4ohbIbN4COdgvxZlihCNKSE0j0AR8gg4hXvYcj9MQKUxSS4J7LjMGHUDTA5fG2ynSFQs00EODoklrH";
 }
 
 class SharedPreferencesKey {

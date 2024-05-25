@@ -37,7 +37,15 @@ class CampaignDetailsBloc
       final OnClearSelectedCommentToReply e =>
         _onClearSelectedCommentToReply(e, emit),
       final OnSubmitReply e => _onSubmitReply(e, emit),
+      final OnToggleCommentBottomBar e => _onToggleCommentBottomBar(e, emit),
     };
+  }
+
+  void _onToggleCommentBottomBar(
+    OnToggleCommentBottomBar event,
+    Emitter emit,
+  ) {
+    emit(state.copyWith(isShowingCommentBottomBar: event.isShow));
   }
 
   Future<void> _onSubmitReply(
@@ -87,7 +95,10 @@ class CampaignDetailsBloc
     OnSelectCommentToReply event,
     Emitter emit,
   ) {
-    emit(state.copyWith(selectedCommentToReply: event.campaignComment));
+    emit(state.copyWith(
+      selectedCommentToReply: event.campaignComment,
+      isShowingCommentBottomBar: true,
+    ));
   }
 
   String _generateReplyContent(String commentText) {

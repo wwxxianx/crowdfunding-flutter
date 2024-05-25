@@ -22,17 +22,15 @@ class CustomListTile extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Ink(
-        child: Container(
-          padding: padding,
-          child: Row(
-            children: [
-              if (leading != null) leading!,
-              if (leading != null) 8.kW,
-              if (title != null) title!,
-              const Spacer(),
-              if (trailing != null) trailing!,
-            ],
-          ),
+        padding: padding,
+        child: Row(
+          children: [
+            if (leading != null) leading!,
+            if (leading != null) 8.kW,
+            if (title != null) title!,
+            const Spacer(),
+            if (trailing != null) trailing!,
+          ],
         ),
       ),
     );

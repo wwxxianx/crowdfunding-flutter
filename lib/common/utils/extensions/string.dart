@@ -15,8 +15,7 @@ extension StringExtensions on String {
 
   String toTimeAgo() {
     DateTime dateTime = DateTime.parse(this);
-    String timeAgo =
-        timeago.format(dateTime, locale: 'en_short', allowFromNow: true);
+    String timeAgo = timeago.format(dateTime, allowFromNow: true);
 
     return timeAgo;
   }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 @immutable
-sealed class HomeEvent {}
+sealed class HomeEvent {
+  const HomeEvent();
+}
 
-final class FetchRecommendedCampaigns extends HomeEvent {}
+final class OnFetchRecommendedCampaigns extends HomeEvent {}

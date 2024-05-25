@@ -35,4 +35,16 @@ class CustomColors {
       color: Colors.black.withOpacity(0.08),
     ),
   ];
+  static final cardShadow = [
+    BoxShadow(
+      blurRadius: 2.0,
+      offset: Offset(0, 1),
+      color: Colors.black.withOpacity(0.3),
+    ),
+    BoxShadow(
+      blurRadius: 3.0,
+      offset: Offset(0, 1),
+      color: Colors.black.withOpacity(0.15),
+    )
+  ];
 }

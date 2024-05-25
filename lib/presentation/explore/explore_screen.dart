@@ -31,7 +31,7 @@ class _ExploreScreenState extends State<ExploreScreen>
   final _searchTextController = TextEditingController();
   bool isSearching = false;
   bool isShowingMask = false;
-  bool isGridView = true;
+  bool isGridView = false;
 
   @override
   void initState() {

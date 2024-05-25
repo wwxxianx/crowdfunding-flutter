@@ -14,7 +14,7 @@ class _RestClient implements RestClient {
     this.baseUrl,
   }) {
     baseUrl ??=
-        'https://2f35-2001-f40-987-516-e8bb-4157-bc82-df6b.ngrok-free.app/';
+        'https://494f-2001-f40-987-516-8df-ddf7-9222-2c24.ngrok-free.app/';
   }
 
   final Dio _dio;
@@ -134,9 +134,10 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<List<Campaign>> getCampaigns() async {
+  Future<List<Campaign>> getCampaigns({String? userId}) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'userId': userId};
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     final Map<String, dynamic>? _data = null;
     final _result =
@@ -220,7 +221,7 @@ class _RestClient implements RestClient {
       targetAmount.toString(),
     ));
     _data.fields.add(MapEntry(
-      'titcategoryIdle',
+      'categoryId',
       categoryId,
     ));
     _data.fields.add(MapEntry(
@@ -277,6 +278,112 @@ class _RestClient implements RestClient {
           _dio.options.baseUrl,
           baseUrl,
         ))));
+  }
+
+  @override
+  Future<Campaign> updateCampaign({
+    required String campaignId,
+    required String title,
+    required String description,
+    required int targetAmount,
+    required String categoryId,
+    required String phoneNumber,
+    required String stateId,
+    required String beneficiaryName,
+    required List<File> newCampaignImageFiles,
+    File? newCampaignVideoFile,
+    File? newBeneficiaryImageFile,
+    required List<String> oriCampaignImagesId,
+    String? oriBeneficiaryImageUrl,
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    final _data = FormData();
+    _data.fields.add(MapEntry(
+      'title',
+      title,
+    ));
+    _data.fields.add(MapEntry(
+      'description',
+      description,
+    ));
+    _data.fields.add(MapEntry(
+      'targetAmount',
+      targetAmount.toString(),
+    ));
+    _data.fields.add(MapEntry(
+      'categoryId',
+      categoryId,
+    ));
+    _data.fields.add(MapEntry(
+      'contactPhoneNumber',
+      phoneNumber,
+    ));
+    _data.fields.add(MapEntry(
+      'stateId',
+      stateId,
+    ));
+    _data.fields.add(MapEntry(
+      'beneficiaryName',
+      beneficiaryName,
+    ));
+    _data.files.addAll(newCampaignImageFiles.map((i) => MapEntry(
+        'campaignImages',
+        MultipartFile.fromFileSync(
+          i.path,
+          filename: i.path.split(Platform.pathSeparator).last,
+        ))));
+    if (newCampaignVideoFile != null) {
+      _data.files.add(MapEntry(
+        'campaignVideo',
+        MultipartFile.fromFileSync(
+          newCampaignVideoFile.path,
+          filename:
+              newCampaignVideoFile.path.split(Platform.pathSeparator).last,
+        ),
+      ));
+    }
+    if (newBeneficiaryImageFile != null) {
+      _data.files.add(MapEntry(
+        'beneficiaryImage',
+        MultipartFile.fromFileSync(
+          newBeneficiaryImageFile.path,
+          filename:
+              newBeneficiaryImageFile.path.split(Platform.pathSeparator).last,
+        ),
+      ));
+    }
+    oriCampaignImagesId.forEach((i) {
+      _data.fields.add(MapEntry('oriCampaignImagesId', i));
+    });
+    if (oriBeneficiaryImageUrl != null) {
+      _data.fields.add(MapEntry(
+        'oriBeneficiaryImageUrl',
+        oriBeneficiaryImageUrl,
+      ));
+    }
+    final _result =
+        await _dio.fetch<Map<String, dynamic>>(_setStreamType<Campaign>(Options(
+      method: 'PATCH',
+      headers: _headers,
+      extra: _extra,
+      contentType: 'multipart/form-data',
+    )
+            .compose(
+              _dio.options,
+              'campaigns/${campaignId}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = Campaign.fromJson(_result.data!);
+    return value;
   }
 
   @override
@@ -365,6 +472,54 @@ class _RestClient implements RestClient {
             (dynamic i) => CampaignCategory.fromJson(i as Map<String, dynamic>))
         .toList();
     return value;
+  }
+
+  @override
+  Future<void> createCampaignUpdates({
+    required String title,
+    required String description,
+    required String campaignId,
+    required List<File> categoryId,
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = FormData();
+    _data.fields.add(MapEntry(
+      'title',
+      title,
+    ));
+    _data.fields.add(MapEntry(
+      'description',
+      description,
+    ));
+    _data.fields.add(MapEntry(
+      'campaignId',
+      campaignId,
+    ));
+    _data.files.addAll(categoryId.map((i) => MapEntry(
+        'images',
+        MultipartFile.fromFileSync(
+          i.path,
+          filename: i.path.split(Platform.pathSeparator).last,
+        ))));
+    await _dio.fetch<void>(_setStreamType<void>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: 'multipart/form-data',
+    )
+        .compose(
+          _dio.options,
+          'campaigns-update',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        ))));
   }
 
   @override
@@ -540,6 +695,35 @@ class _RestClient implements RestClient {
           _dio.options.baseUrl,
           baseUrl,
         ))));
+  }
+
+  @override
+  Future<PaymentIntentResponse> createPaymentIntent(
+      CreatePaymentIntentPayload payload) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(payload.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<PaymentIntentResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'payment/payment-intent',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = PaymentIntentResponse.fromJson(_result.data!);
+    return value;
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {

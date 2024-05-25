@@ -38,6 +38,8 @@ class Campaign {
   final List<CampaignDonation> donations;
   final List<CampaignUpdate> campaignUpdates;
   final List<CampaignComment> comments;
+  final List<CampaignDonation> topThreeDonations;
+  final List<CampaignDonation> recentThreeDonations;
 
   const Campaign({
     required this.id,
@@ -65,6 +67,8 @@ class Campaign {
     this.donations = const [],
     this.campaignUpdates = const [],
     this.comments = const [],
+    this.topThreeDonations = const [],
+    this.recentThreeDonations = const [],
   });
 
   factory Campaign.fromJson(Map<String, dynamic> json) =>
@@ -98,6 +102,8 @@ class Campaign {
     List<CampaignDonation>? donations,
     List<CampaignUpdate>? campaignUpdates,
     List<CampaignComment>? comments,
+    List<CampaignDonation>? topThreeDonations,
+    List<CampaignDonation>? recentThreeDonations,
   }) {
     return Campaign(
       id: id ?? this.id,
@@ -125,6 +131,8 @@ class Campaign {
       donations: donations ?? this.donations,
       campaignUpdates: campaignUpdates ?? this.campaignUpdates,
       comments: comments ?? this.comments,
+      topThreeDonations: topThreeDonations ?? this.topThreeDonations,
+      recentThreeDonations: recentThreeDonations ?? this.recentThreeDonations,
     );
   }
 
@@ -153,4 +161,12 @@ class Campaign {
     numOfLikes: 0,
     numOfUpdates: 0,
   );
+
+//   @override
+//   String toString() {
+//     // TODO: implement toString
+//     return """
+
+// """;
+//   }
 }

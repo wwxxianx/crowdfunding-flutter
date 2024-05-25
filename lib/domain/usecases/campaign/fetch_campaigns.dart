@@ -4,13 +4,22 @@ import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/repository/campaign/campaign_repository.dart';
 import 'package:fpdart/src/either.dart';
 
-class FetchCampaigns implements UseCase<List<Campaign>, NoPayload> {
+class FetchCampaignsPayload {
+  final String? userId;
+
+  const FetchCampaignsPayload({
+    this.userId,
+  });
+}
+
+class FetchCampaigns implements UseCase<List<Campaign>, FetchCampaignsPayload> {
   final CampaignRepository campaignRepository;
 
   const FetchCampaigns({required this.campaignRepository});
 
   @override
-  Future<Either<Failure, List<Campaign>>> call(NoPayload payload) async {
-    return await campaignRepository.getCampaigns();
+  Future<Either<Failure, List<Campaign>>> call(
+      FetchCampaignsPayload payload) async {
+    return await campaignRepository.getCampaigns(payload);
   }
 }

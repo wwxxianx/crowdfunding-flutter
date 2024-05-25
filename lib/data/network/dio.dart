@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:crowdfunding_flutter/common/constants/constants.dart';
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
 
 class DioNetwork {
   // static const baseUrl = "https://fixed-elisabeth-ngustudio.koyeb.app/";
@@ -27,6 +28,10 @@ class AppInterceptors extends Interceptor {
       RequestOptions options, RequestInterceptorHandler handler) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     var accessToken = sp.get(Constants.sharedPreferencesKey.accessToken);
+    var refreshToken =
+        sp.getString(Constants.sharedPreferencesKey.refreshToken);
+    var logger = Logger();
+    logger.w("refreshToken: $refreshToken");
     if (accessToken != null) {
       options.headers['Authorization'] = 'Bearer $accessToken';
     }
@@ -41,7 +46,7 @@ class AppInterceptors extends Interceptor {
       SharedPreferences sp = await SharedPreferences.getInstance();
       var refreshToken =
           sp.getString(Constants.sharedPreferencesKey.refreshToken);
-      
+
       // NOTE:
       // Use HTTP package as the Dio onRequest method is override to use accessToken
       // everytime, so the refreshToken will be overwritten everytime.
