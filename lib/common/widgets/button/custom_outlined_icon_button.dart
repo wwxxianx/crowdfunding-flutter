@@ -10,12 +10,14 @@ class CustomOutlinedIconButton extends StatelessWidget {
   final Widget icon;
   final VoidCallback onPressed;
   final IconButtonStyle style;
+  final Border? border;
 
   const CustomOutlinedIconButton({
     super.key,
     required this.icon,
     required this.onPressed,
     this.style = IconButtonStyle.gradientGreen,
+    this.border,
   });
 
   Color _getBackgroundColor() {
@@ -40,7 +42,7 @@ class CustomOutlinedIconButton extends StatelessWidget {
               ? CustomColors.primaryGreenGradient
               : null,
           borderRadius: BorderRadius.circular(6.0),
-          border: Border.all(
+          border: border ?? Border.all(
             color: Colors.black,
             width: 1.5,
           ),

@@ -10,6 +10,7 @@ import 'package:crowdfunding_flutter/presentation/onboarding/widgets/onboarding_
 import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_state.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_bloc.dart';
+import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_event.dart';
 import 'package:crowdfunding_flutter/state_management/home/home_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/navigation/navigation_cubit.dart';
 import 'package:crowdfunding_flutter/state_management/sign_up/sign_up_bloc.dart';
@@ -30,7 +31,10 @@ void main() async {
       providers: [
         BlocProvider(create: (_) => serviceLocator<AppUserCubit>()),
         BlocProvider(create: (_) => serviceLocator<SignUpBloc>()),
-        BlocProvider(create: (_) => serviceLocator<ExploreCampaignsBloc>()),
+        BlocProvider(
+          create: (_) => ExploreCampaignsBloc(fetchCampaigns: serviceLocator())
+            ..add(OnFetchCampaigns()),
+        ),
         BlocProvider(create: (_) => serviceLocator<HomeBloc>()),
       ],
       child: const MyApp(),

@@ -1,12 +1,12 @@
 import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
-import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomBottomSheet extends StatelessWidget {
   final EdgeInsetsGeometry padding;
   final Widget child;
+  final Widget? bottomAction;
   const CustomBottomSheet({
     super.key,
     this.padding = const EdgeInsets.only(
@@ -15,6 +15,7 @@ class CustomBottomSheet extends StatelessWidget {
       right: 20,
     ),
     required this.child,
+    this.bottomAction,
   });
 
   @override
@@ -49,27 +50,23 @@ class CustomBottomSheet extends StatelessWidget {
                   "assets/icons/bottom-sheet-top-close-indicator.svg"),
             ),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                vertical: 10.0,
-                horizontal: 20,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border(
-                  top: BorderSide(color: CustomColors.divider),
+          if (bottomAction != null)
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 10.0,
+                  horizontal: 20,
                 ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  CustomButton(onPressed: () {}, child: Text("Apply filter"))
-                ],
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border(
+                    top: BorderSide(color: CustomColors.divider),
+                  ),
+                ),
+                child: bottomAction,
               ),
             ),
-          ),
         ],
       ),
     );

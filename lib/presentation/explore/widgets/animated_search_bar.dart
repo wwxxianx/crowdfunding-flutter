@@ -179,25 +179,30 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar>
                         try {
                           ///trying to execute the onSuffixTap function
                           widget.onSuffixTap();
-
+                          unfocusKeyboard();
+                          setState(() {
+                            toggle = 0;
+                          });
+                          _con.reverse();
+                          widget.textController.clear();
                           // * if field empty then the user trying to close bar
-                          if (textFieldValue.isEmpty) {
-                            unfocusKeyboard();
-                            setState(() {
-                              toggle = 0;
-                            });
+                          // if (textFieldValue.isEmpty) {
+                          //   unfocusKeyboard();
+                          //   setState(() {
+                          //     toggle = 0;
+                          //   });
 
-                            ///reverse = close
-                            _con.reverse();
-                          }
+                          //   ///reverse = close
+                          //   _con.reverse();
+                          // }
 
-                          ///closeSearchOnSuffixTap will execute if it's true
-                          if (widget.closeSearchOnSuffixTap) {
-                            unfocusKeyboard();
-                            setState(() {
-                              toggle = 0;
-                            });
-                          }
+                          // ///closeSearchOnSuffixTap will execute if it's true
+                          // if (widget.closeSearchOnSuffixTap) {
+                          //   unfocusKeyboard();
+                          //   setState(() {
+                          //     toggle = 0;
+                          //   });
+                          // }
                         } catch (e) {
                           ///print the error if the try block fails
                           print(e);
@@ -256,7 +261,6 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar>
                       setState(() {
                         toggle = 0;
                       }),
-                      widget.textController.clear(),
                     },
                     onEditingComplete: () {
                       /// on editing complete the keyboard will be closed and the search bar will be closed

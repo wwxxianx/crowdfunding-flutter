@@ -134,9 +134,19 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<List<Campaign>> getCampaigns({String? userId}) async {
+  Future<List<Campaign>> getCampaigns({
+    String? userId,
+    List<String> categoryIds = const [],
+    List<String> stateIds = const [],
+    String? searchQuery,
+  }) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'userId': userId};
+    final queryParameters = <String, dynamic>{
+      r'userId': userId,
+      r'categoryIds': categoryIds,
+      r'stateIds': stateIds,
+      r'searchQuery': searchQuery,
+    };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     final Map<String, dynamic>? _data = null;

@@ -1,21 +1,27 @@
 import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
+import 'package:crowdfunding_flutter/common/widgets/badge.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_outlined_icon_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_card.dart';
+import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_loading_card.dart';
 import 'package:crowdfunding_flutter/common/widgets/scaffold_mask.dart';
 import 'package:crowdfunding_flutter/common/widgets/tab/custom_tab_button.dart';
+import 'package:crowdfunding_flutter/data/network/api_result.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/presentation/explore/widgets/animated_search_bar.dart';
 import 'package:crowdfunding_flutter/presentation/explore/widgets/animated_search_result_container.dart';
 import 'package:crowdfunding_flutter/presentation/explore/widgets/filter_bottom_sheet.dart';
 import 'package:crowdfunding_flutter/presentation/home/widgets/header.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_bloc.dart';
+import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_event.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:badges/badges.dart' as badges;
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
@@ -51,7 +57,7 @@ class _ExploreScreenState extends State<ExploreScreen>
     });
   }
 
-  void _hideContainer() {
+  void _hideSearchResultContainer() {
     _searchResultContainerController.reverse();
   }
 
@@ -73,7 +79,14 @@ class _ExploreScreenState extends State<ExploreScreen>
     });
   }
 
-  Widget _buildCampaignsContentLayout() {
+  void _handleSearch(BuildContext context, String value) {
+    context.read<ExploreCampaignsBloc>()
+      ..add(OnSearchQueryChanged(searchQuery: value))
+      ..add(OnFetchCampaigns());
+  }
+
+  Widget _buildCampaignsContentLayout(ExploreCampaignsState state) {
+    final campaignsResult = state.campaignsResult;
     if (isGridView) {
       return AnimationLimiter(
         key: ValueKey<bool>(isGridView),
@@ -105,32 +118,68 @@ class _ExploreScreenState extends State<ExploreScreen>
         ),
       );
     } else {
-      return AnimationLimiter(
-        key: ValueKey<bool>(isGridView),
-        child: ListView.builder(
-          padding: const EdgeInsets.symmetric(
-            horizontal: Dimensions.screenHorizontalPadding,
-          ),
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: 20,
-          itemBuilder: (BuildContext context, int index) {
-            return AnimationConfiguration.staggeredList(
-              position: index,
-              duration: const Duration(milliseconds: 375),
-              delay: const Duration(milliseconds: 200),
-              child: SlideAnimation(
-                verticalOffset: 50.0,
-                child: FadeInAnimation(
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 12.0),
-                    child: const CampaignCard(),
+      if (campaignsResult is ApiResultSuccess<List<Campaign>>) {
+        if (campaignsResult.data.isNotEmpty) {
+          return AnimationLimiter(
+            key: ValueKey<bool>(isGridView),
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(
+                horizontal: Dimensions.screenHorizontalPadding,
+              ),
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: campaignsResult.data.length,
+              itemBuilder: (BuildContext context, int index) {
+                return AnimationConfiguration.staggeredList(
+                  position: index,
+                  duration: const Duration(milliseconds: 375),
+                  delay: const Duration(milliseconds: 200),
+                  child: SlideAnimation(
+                    verticalOffset: 50.0,
+                    child: FadeInAnimation(
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 12.0),
+                        child: CampaignCard(
+                          campaign: campaignsResult.data[index],
+                        ),
+                      ),
+                    ),
                   ),
+                );
+              },
+            ),
+          );
+        }
+        return Text("Can't find any campaigns. Please try again");
+      }
+
+      if (campaignsResult is ApiResultFailure) {
+        return Text("Something went wrong...");
+      }
+      // Loading
+      return ListView.builder(
+        padding: const EdgeInsets.symmetric(
+          horizontal: Dimensions.screenHorizontalPadding,
+        ),
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: 3,
+        itemBuilder: (BuildContext context, int index) {
+          return AnimationConfiguration.staggeredList(
+            position: index,
+            duration: const Duration(milliseconds: 375),
+            delay: const Duration(milliseconds: 200),
+            child: const SlideAnimation(
+              verticalOffset: 50.0,
+              child: FadeInAnimation(
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 12.0),
+                  child: CampaignLoadingCard(),
                 ),
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       );
     }
   }
@@ -150,9 +199,11 @@ class _ExploreScreenState extends State<ExploreScreen>
       ),
       child: BlocBuilder<ExploreCampaignsBloc, ExploreCampaignsState>(
         builder: (context, state) {
+          final isFilterEmpty = state.selectedCategoryIds.isEmpty ||
+              state.selectedCategoryIds.isEmpty;
           return Scaffold(
             bottomSheet: Container(
-              margin: const EdgeInsets.only(bottom: 8.0, right: 10.0),
+              margin: const EdgeInsets.only(bottom: 8.0, right: 16.0),
               color: Colors.transparent,
               child: Row(
                 mainAxisSize: MainAxisSize.max,
@@ -162,23 +213,45 @@ class _ExploreScreenState extends State<ExploreScreen>
                     alignment: Alignment.bottomRight,
                     children: [
                       // Filter button
-                      Container(
-                        margin: EdgeInsets.only(right: 68),
-                        child: CustomOutlinedIconButton(
-                          onPressed: () {
-                            showModalBottomSheet<void>(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return CampaignsFilterBottomSheet();
-                              },
-                            );
-                          },
-                          icon: HeroIcon(
-                            HeroIcons.adjustmentsHorizontal,
-                            size: 35.0,
+                      CustomBadge(
+                        badgeText:
+                            "${state.selectedCategoryIds.length + state.selectedStateIds.length}",
+                        showBadge: !isFilterEmpty,
+                        position: badges.BadgePosition.topEnd(
+                            end: isFilterEmpty ? 60 : 66),
+                        child: Container(
+                          margin:
+                              EdgeInsets.only(right: isFilterEmpty ? 68 : 74),
+                          child: CustomOutlinedIconButton(
+                            border: Border.all(
+                              color: CustomColors.containerBorderGreen,
+                              width: 1.5,
+                            ),
+                            onPressed: () {
+                              showModalBottomSheet<void>(
+                                constraints: BoxConstraints(
+                                  maxHeight: MediaQuery.of(context)
+                                          .size
+                                          .height -
+                                      MediaQuery.of(context).viewPadding.top -
+                                      120,
+                                ),
+                                useSafeArea: true,
+                                isScrollControlled: true,
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CampaignsFilterBottomSheet();
+                                },
+                              );
+                            },
+                            icon: const HeroIcon(
+                              HeroIcons.adjustmentsHorizontal,
+                              size: 35.0,
+                            ),
                           ),
                         ),
                       ),
+
                       Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.end,
@@ -188,25 +261,30 @@ class _ExploreScreenState extends State<ExploreScreen>
                             scaleAnimation: _searchResultContainerAnimation,
                           ),
                           12.kH,
-                          AnimatedSearchBar(
-                            autoFocus: true,
-                            textController: _searchTextController,
-                            width: MediaQuery.of(context).size.width -
-                                Dimensions.screenHorizontalPadding,
-                            onSubmitted: (string) {
-                              _handleHideMask();
-                              _hideContainer();
-                            },
-                            onSuffixTap: () {
-                              _handleHideMask();
-                              _hideContainer();
-                              print("isSearching: $isSearching");
-                            },
-                            searchBarOpen: (integer) {
-                              _handleShowMask();
-                              _showSearchResultContainer();
-                              print("isSearching: $isSearching");
-                            },
+                          CustomBadge(
+                            showBadge: state.searchQuery != null &&
+                                state.searchQuery!.isNotEmpty,
+                            badgeText: "1",
+                            child: AnimatedSearchBar(
+                              autoFocus: true,
+                              textInputAction: TextInputAction.search,
+                              textController: _searchTextController,
+                              width: MediaQuery.of(context).size.width -
+                                  Dimensions.screenHorizontalPadding,
+                              onSubmitted: (string) {
+                                _handleHideMask();
+                                _hideSearchResultContainer();
+                                _handleSearch(context, string);
+                              },
+                              onSuffixTap: () {
+                                _handleHideMask();
+                                _hideSearchResultContainer();
+                              },
+                              searchBarOpen: (integer) {
+                                _handleShowMask();
+                                _showSearchResultContainer();
+                              },
+                            ),
                           ),
                         ],
                       ),
@@ -229,6 +307,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                         ),
                         title: "Let's help!",
                         action: CustomTab(
+                          initialIndex: 1,
                           onTabItemChange: (tabIndex) {
                             switch (tabIndex) {
                               case 0:
@@ -239,7 +318,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                                 break;
                             }
                           },
-                          tabs: [
+                          tabs: const <Widget>[
                             TabItem(
                               title: 'Grid',
                               prefixIcon: Icon(
@@ -261,7 +340,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                         ),
                       ),
                       20.kH,
-                      _buildCampaignsContentLayout(),
+                      _buildCampaignsContentLayout(state),
                     ],
                   ),
                 ),

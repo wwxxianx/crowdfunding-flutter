@@ -67,7 +67,9 @@ Future<void> initDependencies() async {
 }
 
 void _initExploreCampaigns() {
-  serviceLocator.registerLazySingleton(() => ExploreCampaignsBloc());
+  serviceLocator.registerLazySingleton(() => ExploreCampaignsBloc(
+        fetchCampaigns: serviceLocator(),
+      ));
 }
 
 void _initAuth() {

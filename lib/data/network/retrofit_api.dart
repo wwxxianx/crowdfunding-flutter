@@ -40,7 +40,12 @@ abstract class RestClient {
 
   // Campaign
   @GET("campaigns")
-  Future<List<Campaign>> getCampaigns({@Query("userId") String? userId});
+  Future<List<Campaign>> getCampaigns({
+    @Query("userId") String? userId,
+    @Query("categoryIds") List<String> categoryIds = const [],
+    @Query("stateIds") List<String> stateIds = const [],
+    @Query("searchQuery") String? searchQuery,
+  });
 
   @GET("campaigns/{id}")
   Future<Campaign> getCampaign(@Path('id') String campaignId);
@@ -74,7 +79,8 @@ abstract class RestClient {
     @Part(name: "campaignImages") required List<File> newCampaignImageFiles,
     @Part(name: "campaignVideo") File? newCampaignVideoFile,
     @Part(name: "beneficiaryImage") File? newBeneficiaryImageFile,
-    @Part(name: "oriCampaignImagesId") required List<String> oriCampaignImagesId,
+    @Part(name: "oriCampaignImagesId")
+    required List<String> oriCampaignImagesId,
     @Part(name: "oriBeneficiaryImageUrl") String? oriBeneficiaryImageUrl,
     // @Part(name: "oriCampaignVideo") oriCampaignImages,
   });

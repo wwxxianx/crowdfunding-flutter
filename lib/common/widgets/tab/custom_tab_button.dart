@@ -3,10 +3,12 @@ import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension
 import 'package:flutter/material.dart';
 
 class CustomTab extends StatelessWidget {
+  final int initialIndex;
   final List<Widget> tabs;
   final void Function(int)? onTabItemChange;
   const CustomTab({
     super.key,
+    this.initialIndex = 0,
     required this.tabs,
     required this.onTabItemChange,
   });
@@ -14,6 +16,7 @@ class CustomTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
+      initialIndex: initialIndex,
       length: 2,
       child: PreferredSize(
         preferredSize: const Size.fromHeight(40),

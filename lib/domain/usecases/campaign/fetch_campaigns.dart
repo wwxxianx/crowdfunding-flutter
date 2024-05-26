@@ -6,9 +6,15 @@ import 'package:fpdart/src/either.dart';
 
 class FetchCampaignsPayload {
   final String? userId;
+  final List<String> categoryIds;
+  final List<String> stateIds;
+  final String? searchQuery;
 
   const FetchCampaignsPayload({
     this.userId,
+    this.categoryIds = const [],
+    this.stateIds = const [],
+    this.searchQuery,
   });
 }
 

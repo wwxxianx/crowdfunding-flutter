@@ -23,7 +23,7 @@ class StateAndRegionsCubit extends Cubit<ApiResult<List<StateAndRegion>>> {
   }
 }
 
-class StateAndRegionsDropdownMenu extends StatefulWidget {
+class StateAndRegionsDropdownMenu extends StatelessWidget {
   final void Function(String)? onSelected;
   final String? initialSelection;
   final String? errorText;
@@ -34,13 +34,6 @@ class StateAndRegionsDropdownMenu extends StatefulWidget {
     this.errorText,
   });
 
-  @override
-  State<StateAndRegionsDropdownMenu> createState() =>
-      _StateAndRegionsDropdownMenuState();
-}
-
-class _StateAndRegionsDropdownMenuState
-    extends State<StateAndRegionsDropdownMenu> {
   List<DropdownMenuEntry<String>> _buildDropdownMenuItems(
       ApiResult<List<StateAndRegion>> stateAndRegions) {
     if (stateAndRegions is ApiResultLoading ||
@@ -68,12 +61,12 @@ class _StateAndRegionsDropdownMenuState
             return Text("error...");
           } else if (state is ApiResultSuccess) {
             return CustomDropdownMenu(
-              errorText: widget.errorText,
-              initialSelection: widget.initialSelection,
+              errorText: errorText,
+              initialSelection: initialSelection,
               dropdownMenuEntries: _buildDropdownMenuItems(state),
               onSelected: (stateId) {
-                if (widget.onSelected != null && stateId != null) {
-                  widget.onSelected!(stateId);
+                if (onSelected != null && stateId != null) {
+                  onSelected!(stateId);
                 }
               },
             );

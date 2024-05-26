@@ -22,6 +22,7 @@ class CustomColors {
   static const pink = Color(0xFFFFDADD);
 
   static const containerBorderGrey = Color(0xFFE2E2EA);
+  static const containerBorderGreen = Color(0xFF235600);
 
   static final containerLightShadow = [
     BoxShadow(

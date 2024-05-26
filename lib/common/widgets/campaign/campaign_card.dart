@@ -74,7 +74,6 @@ class CampaignCard extends StatelessWidget {
                                   const Skeleton(
                                 radius: 0,
                               ),
-
                               fit: BoxFit.cover,
                               // errorWidget: (context, url, error) => Icon(Icons.error),
                             ),
@@ -90,7 +89,7 @@ class CampaignCard extends StatelessWidget {
                                 size: 16.0,
                                 color: Color(0xFF2F2F2F),
                               ),
-                              label: campaign.stateAndRegion.name,
+                              label: campaign.stateAndRegion.name.toTitleCase(),
                             ),
                           ),
                       ],

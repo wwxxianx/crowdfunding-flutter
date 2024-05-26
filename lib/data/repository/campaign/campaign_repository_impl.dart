@@ -33,7 +33,12 @@ class CampaignRepositoryImpl implements CampaignRepository {
   Future<Either<Failure, List<Campaign>>> getCampaigns(
       FetchCampaignsPayload payload) async {
     try {
-      final campaignsRes = await api.getCampaigns(userId: payload.userId);
+      final campaignsRes = await api.getCampaigns(
+        userId: payload.userId,
+        categoryIds: payload.categoryIds,
+        stateIds: payload.stateIds,
+        searchQuery: payload.searchQuery,
+      );
       return right(campaignsRes);
     } on Exception catch (e) {
       if (e is DioException) {
@@ -179,7 +184,8 @@ class CampaignRepositoryImpl implements CampaignRepository {
   }
 
   @override
-  Future<Either<Failure, CampaignUpdate>> createCampaignUpdatePost(CreateCampaignUpdatePayload payload) async {
+  Future<Either<Failure, CampaignUpdate>> createCampaignUpdatePost(
+      CreateCampaignUpdatePayload payload) async {
     try {
       final res = await api.createCampaignUpdates(
         campaignId: payload.campaignId,

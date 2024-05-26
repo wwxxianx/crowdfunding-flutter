@@ -20,6 +20,9 @@ class AnimatedSearchResultContainer extends StatefulWidget {
 class _AnimatedSearchResultContainerState
     extends State<AnimatedSearchResultContainer>
     with SingleTickerProviderStateMixin {
+
+
+
   @override
   Widget build(BuildContext context) {
     return ScaleTransition(
@@ -27,7 +30,7 @@ class _AnimatedSearchResultContainerState
       child: Container(
         width: MediaQuery.of(context).size.width -
             (Dimensions.screenHorizontalPadding),
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           horizontal: 12,
           vertical: 16,
         ),
@@ -41,69 +44,83 @@ class _AnimatedSearchResultContainerState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //Default
-            Row(
-              children: [
-                const HeroIcon(
-                  HeroIcons.sparkles,
-                  style: HeroIconStyle.solid,
-                  size: 20,
-                  color: CustomColors.textGrey,
-                ),
-                4.kW,
-                Text(
-                  "Recommendation:",
-                  style: CustomFonts.labelMedium.copyWith(
-                    color: CustomColors.textGrey,
-                  ),
-                ),
-              ],
+            CampaignSearchRecommendation(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CampaignSearchRecommendation extends StatelessWidget {
+  const CampaignSearchRecommendation({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const HeroIcon(
+              HeroIcons.sparkles,
+              style: HeroIconStyle.solid,
+              size: 20,
+              color: CustomColors.textGrey,
             ),
-            8.kH,
+            4.kW,
             Text(
-              "Search by campaign title:",
-              style: CustomFonts.bodyMedium.copyWith(
+              "Recommendation:",
+              style: CustomFonts.labelMedium.copyWith(
                 color: CustomColors.textGrey,
-              ),
-            ),
-            Text(
-              "E.g.,  Green initiative / Help kelvin survive",
-              style: CustomFonts.bodyMedium.copyWith(
-                color: CustomColors.textGrey,
-              ),
-            ),
-            18.kH,
-            Text(
-              "Search by campaign organizer:",
-              style: CustomFonts.bodyMedium.copyWith(
-                color: CustomColors.textGrey,
-              ),
-            ),
-            Text(
-              "E.g.,  Bill Gates Foundation",
-              style: CustomFonts.bodyMedium.copyWith(
-                color: CustomColors.textGrey,
-              ),
-            ),
-            18.kH,
-            RichText(
-              text: TextSpan(
-                text: "Tips: Use the filter to search by ",
-                style: CustomFonts.bodyMedium.copyWith(
-                  color: CustomColors.textGrey,
-                ),
-                children: [
-                  TextSpan(
-                    text: "location / category",
-                    style: CustomFonts.titleMedium.copyWith(
-                      color: CustomColors.textGrey,
-                    ),
-                  )
-                ],
               ),
             ),
           ],
         ),
-      ),
+        8.kH,
+        Text(
+          "Search by campaign title:",
+          style: CustomFonts.bodyMedium.copyWith(
+            color: CustomColors.textGrey,
+          ),
+        ),
+        Text(
+          "E.g.,  Green initiative / Help kelvin survive",
+          style: CustomFonts.bodyMedium.copyWith(
+            color: CustomColors.textGrey,
+          ),
+        ),
+        18.kH,
+        Text(
+          "Search by campaign organizer:",
+          style: CustomFonts.bodyMedium.copyWith(
+            color: CustomColors.textGrey,
+          ),
+        ),
+        Text(
+          "E.g.,  Bill Gates Foundation",
+          style: CustomFonts.bodyMedium.copyWith(
+            color: CustomColors.textGrey,
+          ),
+        ),
+        18.kH,
+        RichText(
+          text: TextSpan(
+            text: "Tips: Use the filter to search by ",
+            style: CustomFonts.bodyMedium.copyWith(
+              color: CustomColors.textGrey,
+            ),
+            children: [
+              TextSpan(
+                text: "location / category",
+                style: CustomFonts.titleMedium.copyWith(
+                  color: CustomColors.textGrey,
+                ),
+              )
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

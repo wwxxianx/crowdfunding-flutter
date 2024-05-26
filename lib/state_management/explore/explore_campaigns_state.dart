@@ -1,12 +1,49 @@
-import 'package:flutter/material.dart';
+import 'package:crowdfunding_flutter/data/network/api_result.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
+import 'package:equatable/equatable.dart';
 
-@immutable
-sealed class ExploreCampaignsState {
-  const ExploreCampaignsState();
+final class ExploreCampaignsState extends Equatable {
+  final bool isGridView;
+  final ApiResult<List<Campaign>> campaignsResult;
+  final List<String> selectedStateIds;
+  final List<String> selectedCategoryIds;
+  final String? searchQuery;
+
+  const ExploreCampaignsState._({
+    this.isGridView = false,
+    required this.campaignsResult,
+    this.selectedStateIds = const [],
+    this.selectedCategoryIds = const [],
+    this.searchQuery,
+  });
+
+  const ExploreCampaignsState.initial()
+      : this._(
+          campaignsResult: const ApiResultLoading(),
+        );
+
+  ExploreCampaignsState copyWith({
+    bool? isGridView,
+    ApiResult<List<Campaign>>? campaignsResult,
+    List<String>? selectedStateIds,
+    List<String>? selectedCategoryIds,
+    String? searchQuery,
+  }) {
+    return ExploreCampaignsState._(
+      isGridView: isGridView ?? this.isGridView,
+      campaignsResult: campaignsResult ?? this.campaignsResult,
+      selectedStateIds: selectedStateIds ?? this.selectedStateIds,
+      selectedCategoryIds: selectedCategoryIds ?? this.selectedCategoryIds,
+      searchQuery: searchQuery ?? this.searchQuery,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        isGridView,
+        campaignsResult,
+        selectedStateIds,
+        selectedCategoryIds,
+        searchQuery,
+      ];
 }
-
-final class ExploreCampaignsInitial extends ExploreCampaignsState {}
-
-final class ExploreCampaignsGridView extends ExploreCampaignsState {}
-
-final class ExploreCampaignsListView extends ExploreCampaignsState {}
