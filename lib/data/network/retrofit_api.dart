@@ -11,6 +11,7 @@ import 'package:crowdfunding_flutter/data/service/payment/payment_intent_respons
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_category.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update.dart';
 import 'package:crowdfunding_flutter/domain/model/state/state_region.dart';
 import 'package:crowdfunding_flutter/domain/model/tokens_response.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
@@ -94,13 +95,13 @@ abstract class RestClient {
   Future<List<CampaignCategory>> getCampaignCategories();
 
   // Campaign updates
-  @POST('campaigns-update')
+  @POST('campaign-updates')
   @MultiPart()
-  Future<void> createCampaignUpdates({
+  Future<CampaignUpdate> createCampaignUpdates({
     @Part(name: "title") required String title,
     @Part(name: "description") required String description,
     @Part(name: "campaignId") required String campaignId,
-    @Part(name: "images") required List<File> categoryId,
+    @Part(name: "imageFiles") required List<File> imageFiles,
   });
 
   // User Profile

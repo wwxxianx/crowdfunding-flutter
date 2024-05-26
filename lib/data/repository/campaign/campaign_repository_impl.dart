@@ -4,6 +4,7 @@ import 'package:crowdfunding_flutter/common/constants/constants.dart';
 import 'package:crowdfunding_flutter/common/error/failure.dart';
 import 'package:crowdfunding_flutter/data/local/shared_preference.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
+import 'package:crowdfunding_flutter/data/network/payload/campaign/campaign_update/create_campaign_update_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_comment_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_reply_payload.dart';
@@ -12,6 +13,7 @@ import 'package:crowdfunding_flutter/data/network/retrofit_api.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_category.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update.dart';
 import 'package:crowdfunding_flutter/domain/repository/campaign/campaign_repository.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaigns.dart';
 import 'package:dio/dio.dart';
@@ -165,6 +167,25 @@ class CampaignRepositoryImpl implements CampaignRepository {
         newCampaignImageFiles: payload.newCampaignImageFiles,
         oriCampaignImagesId: payload.oriCampaignImagesId,
         oriBeneficiaryImageUrl: payload.oriBeneficiaryImageUrl,
+      );
+      return right(res);
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException().errorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, CampaignUpdate>> createCampaignUpdatePost(CreateCampaignUpdatePayload payload) async {
+    try {
+      final res = await api.createCampaignUpdates(
+        campaignId: payload.campaignId,
+        title: payload.title,
+        description: payload.description,
+        imageFiles: payload.imageFiles,
       );
       return right(res);
     } on Exception catch (e) {

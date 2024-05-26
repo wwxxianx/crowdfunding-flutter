@@ -3,67 +3,128 @@ import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
+import 'package:crowdfunding_flutter/common/utils/extensions/string.dart';
 import 'package:crowdfunding_flutter/common/widgets/image/gallery_photo_viewer.dart';
+import 'package:crowdfunding_flutter/common/widgets/skeleton.dart';
 import 'package:crowdfunding_flutter/common/widgets/text/expandable_text.dart';
+import 'package:crowdfunding_flutter/data/network/api_result.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update.dart';
 import 'package:crowdfunding_flutter/domain/model/image/image_model.dart';
+import 'package:crowdfunding_flutter/state_management/campaign_details/campaign_details_bloc.dart';
+import 'package:crowdfunding_flutter/state_management/campaign_details/campaign_details_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CampaignUpdateTabContent extends StatelessWidget {
   const CampaignUpdateTabContent({super.key});
 
+  Widget _buildContent(CampaignDetailsState state) {
+    final campaignResult = state.campaignResult;
+    if (campaignResult is ApiResultSuccess<Campaign>) {
+      if (campaignResult.data.campaignUpdates.isEmpty) {
+        return const Text("Empty");
+      }
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ...campaignResult.data.campaignUpdates.map((campaignUpdate) {
+            return CampaignUpdateItem(campaignUpdate: campaignUpdate);
+          }).toList(),
+        ],
+      );
+    }
+    if (campaignResult is ApiResultFailure) {
+      return const Text("Something went wrong");
+    }
+    // Loading
+    return Column(
+      children: [
+        const Skeleton(
+          radius: 6,
+          width: double.maxFinite,
+          height: 200,
+        ),
+        12.kH,
+        const Skeleton(
+          height: Dimensions.loadingBodyHeight,
+          width: 200,
+        ),
+        8.kH,
+        const Skeleton(
+          height: Dimensions.loadingTitleHeight,
+          width: double.maxFinite,
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: Dimensions.screenHorizontalPadding,
-        vertical: Dimensions.screenHorizontalPadding,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CampaignUpdateItem(
-            images: ImageModel.samples,
-          )
-        ],
-      ),
+    return BlocBuilder<CampaignDetailsBloc, CampaignDetailsState>(
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: Dimensions.screenHorizontalPadding,
+            vertical: 16,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              _buildContent(state),
+            ],
+          ),
+        );
+      },
     );
   }
 }
 
 class CampaignUpdateItem extends StatelessWidget {
-  final List<ImageModel> images;
+  final CampaignUpdate campaignUpdate;
   const CampaignUpdateItem({
     super.key,
-    required this.images,
+    required this.campaignUpdate,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ImageCarouselWithNumberIndicator(
-          images: images,
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: CustomColors.containerBorderGrey),
         ),
-        8.kH,
-        Text(
-          "2023/09/27 - 08:00",
-          style: CustomFonts.bodySmall.copyWith(color: CustomColors.textGrey),
-        ),
-        4.kH,
-        Text(
-          "Travelling as a way of self-discovery and progress",
-          style: CustomFonts.labelMedium,
-        ),
-        4.kH,
-        ExpandableText(
-          text:
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-          maxLines: 3,
-        ),
-      ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (campaignUpdate.images != null &&
+              campaignUpdate.images!.isNotEmpty)
+            ImageCarouselWithNumberIndicator(
+              images: campaignUpdate.images!,
+            ),
+          if (campaignUpdate.images != null &&
+              campaignUpdate.images!.isNotEmpty)
+            8.kH,
+          Text(
+            "${campaignUpdate.createdAt.toISODate()} - ${campaignUpdate.createdAt.toTime()}",
+            style: CustomFonts.bodySmall.copyWith(color: CustomColors.textGrey),
+          ),
+          4.kH,
+          Text(
+            campaignUpdate.title,
+            style: CustomFonts.labelMedium,
+          ),
+          4.kH,
+          ExpandableText(
+            text: campaignUpdate.description,
+            maxLines: 3,
+          ),
+        ],
+      ),
     );
   }
 }

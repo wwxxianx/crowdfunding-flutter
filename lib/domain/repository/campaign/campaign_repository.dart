@@ -1,4 +1,5 @@
 import 'package:crowdfunding_flutter/common/error/failure.dart';
+import 'package:crowdfunding_flutter/data/network/payload/campaign/campaign_update/create_campaign_update_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_comment_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_reply_payload.dart';
@@ -6,6 +7,7 @@ import 'package:crowdfunding_flutter/data/network/payload/campaign/update_campai
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_category.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaigns.dart';
 import 'package:fpdart/fpdart.dart';
 
@@ -30,5 +32,10 @@ abstract interface class CampaignRepository {
 
   Future<Either<Failure, Campaign>> updateCampaign(
     UpdateCampaignPayload payload,
+  );
+
+  // Campaign update
+  Future<Either<Failure, CampaignUpdate>> createCampaignUpdatePost(
+    CreateCampaignUpdatePayload payload,
   );
 }

@@ -7,6 +7,7 @@ import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_list_tile.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/custom_card.dart';
 import 'package:crowdfunding_flutter/common/widgets/text/text_bg_gradient_shape.dart';
+import 'package:crowdfunding_flutter/presentation/account/screens/saved_campaigns_screen.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,7 +18,7 @@ import 'package:heroicons/heroicons.dart';
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
 
-  void handleSignOut(BuildContext context) {
+  void _handleSignOut(BuildContext context) {
     context.read<AppUserCubit>().signOut(onSuccess: () {
       context.go('/login');
     });
@@ -128,7 +129,9 @@ class AccountScreen extends StatelessWidget {
                       ),
                     ),
                     CustomListTile(
-                      onTap: () {},
+                      onTap: () {
+                        context.push(SavedCampaignsScreen.route);
+                      },
                       leading: SvgPicture.asset("assets/icons/hearts.svg"),
                       title: Text(
                         "Saved",
@@ -215,7 +218,7 @@ class AccountScreen extends StatelessWidget {
               CustomButton(
                 style: CustomButtonStyle.white,
                 onPressed: () {
-                  handleSignOut(context);
+                  _handleSignOut(context);
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize.min,

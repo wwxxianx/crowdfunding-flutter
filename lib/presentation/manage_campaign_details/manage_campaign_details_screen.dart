@@ -57,7 +57,8 @@ class _ManageCampaignDetailsScreenState
   }
 
   void _navigateToNewUpdate() {
-    Navigator.push(context, CreateCampaignUpdateScreen.route());
+    context.push(CreateCampaignUpdateScreen.generateRoute(
+        campaignId: widget.campaignId));
   }
 
   void _navigateToEditScreen() {
@@ -156,7 +157,7 @@ class _ManageCampaignDetailsScreenState
                                     ),
                                     8.kH,
                                     const Text(
-                                      "Details",
+                                      "New Update",
                                       style: CustomFonts.titleSmall,
                                     ),
                                   ],
@@ -213,7 +214,9 @@ class _ManageCampaignDetailsScreenState
                     Colors.white.withOpacity(0.87),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  context.pop();
+                },
                 icon: const HeroIcon(
                   HeroIcons.chevronLeft,
                   color: Colors.black,

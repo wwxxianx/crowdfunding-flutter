@@ -5,6 +5,7 @@ import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension
 import 'package:crowdfunding_flutter/common/utils/extensions/string.dart';
 import 'package:crowdfunding_flutter/common/widgets/avatar/avatar.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
+import 'package:crowdfunding_flutter/common/widgets/skeleton.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dart';
@@ -17,12 +18,61 @@ import 'package:material_symbols_icons/symbols.dart';
 class DonationTab extends StatelessWidget {
   const DonationTab({super.key});
 
+  Widget _buildDonationContent(CampaignDetailsState state) {
+    final campaignResult = state.campaignResult;
+    if (campaignResult is ApiResultSuccess<Campaign>) {
+      if (campaignResult.data.donations.isEmpty) {
+        return Text("Empty");
+      }
+      return Column(
+        children: [
+        // Recent donation
+          Row(
+            children: [
+              const Icon(
+                Symbols.nest_clock_farsight_analog_rounded,
+              ),
+              4.kW,
+              const Text(
+                "Recent donations",
+                style: CustomFonts.labelLarge,
+              ),
+            ],
+          ),
+          6.kH,
+          _buildDonationList(campaignResult.data.recentThreeDonations),
+          20.kH,
+          Row(
+            children: [
+              const Icon(
+                Symbols.trophy_rounded,
+              ),
+              4.kW,
+              const Text(
+                "Top donations",
+                style: CustomFonts.labelLarge,
+              ),
+            ],
+          ),
+          6.kH,
+          _buildDonationList(campaignResult.data.topThreeDonations),
+        ],
+      );
+    }
+    if (campaignResult is ApiResultFailure) {
+      return Text("Something went wrong");
+    }
+    // Loading
+    return Skeleton();
+  }
+
   Widget _buildDonationList(List<CampaignDonation> donations) {
     return Column(
       children: donations.map((donation) {
         return Container(
-            margin: const EdgeInsets.only(bottom: 12.0),
-            child: DonationItem(donation: donation),);
+          margin: const EdgeInsets.only(bottom: 12.0),
+          child: DonationItem(donation: donation),
+        );
       }).toList(),
     );
   }
@@ -31,46 +81,14 @@ class DonationTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CampaignDetailsBloc, CampaignDetailsState>(
       builder: (context, state) {
-        final campaignResult = state.campaignResult;
         return Padding(
           padding: const EdgeInsets.symmetric(
-              horizontal: Dimensions.screenHorizontalPadding,
-              vertical: 16.0,
-              ),
+            horizontal: Dimensions.screenHorizontalPadding,
+            vertical: 16.0,
+          ),
           child: Column(
             children: [
-              // Recent donation
-              Row(
-                children: [
-                  const Icon(
-                    Symbols.nest_clock_farsight_analog_rounded,
-                  ),
-                  4.kW,
-                  const Text(
-                    "Recent donations",
-                    style: CustomFonts.labelLarge,
-                  ),
-                ],
-              ),
-              6.kH,
-              if (campaignResult is ApiResultSuccess<Campaign>)
-                _buildDonationList(campaignResult.data.recentThreeDonations),
-              20.kH,
-              Row(
-                children: [
-                  const Icon(
-                    Symbols.trophy_rounded,
-                  ),
-                  4.kW,
-                  const Text(
-                    "Top donations",
-                    style: CustomFonts.labelLarge,
-                  ),
-                ],
-              ),
-              6.kH,
-              if (campaignResult is ApiResultSuccess<Campaign>)
-                _buildDonationList(campaignResult.data.topThreeDonations),
+              _buildDonationContent(state),
             ],
           ),
         );

@@ -34,6 +34,15 @@ extension StringExtensions on String {
       return DateFormat('yyyy MMMM d').format(dateTime);
     }
   }
+
+  String toTime() {
+  DateTime dateTime = DateTime.parse(this);
+
+  // Format the DateTime object to the desired time format (HH:mm)
+  String formattedTime = DateFormat('HH:mm').format(dateTime);
+
+  return formattedTime;
+  }
 }
 
 extension OptionalStringExtension on String? {

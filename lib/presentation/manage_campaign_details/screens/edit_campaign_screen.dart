@@ -9,7 +9,6 @@ import 'package:crowdfunding_flutter/presentation/manage_campaign_details/widget
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/widgets/edit_fundraiser_description.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/widgets/edit_fundraiser_details_form.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/widgets/edit_fundraiser_medias.dart';
-import 'package:crowdfunding_flutter/state_management/create_campaign/create_campaign_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/edit_campaign/edit_campaign_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/edit_campaign/edit_campaign_event.dart';
 import 'package:crowdfunding_flutter/state_management/edit_campaign/edit_campaign_state.dart';

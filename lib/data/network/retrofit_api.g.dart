@@ -14,7 +14,7 @@ class _RestClient implements RestClient {
     this.baseUrl,
   }) {
     baseUrl ??=
-        'https://494f-2001-f40-987-516-8df-ddf7-9222-2c24.ngrok-free.app/';
+        'https://48f6-2001-f40-987-516-a0db-314d-1a20-c8a0.ngrok-free.app/';
   }
 
   final Dio _dio;
@@ -475,11 +475,11 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<void> createCampaignUpdates({
+  Future<CampaignUpdate> createCampaignUpdates({
     required String title,
     required String description,
     required String campaignId,
-    required List<File> categoryId,
+    required List<File> imageFiles,
   }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -497,29 +497,32 @@ class _RestClient implements RestClient {
       'campaignId',
       campaignId,
     ));
-    _data.files.addAll(categoryId.map((i) => MapEntry(
-        'images',
+    _data.files.addAll(imageFiles.map((i) => MapEntry(
+        'imageFiles',
         MultipartFile.fromFileSync(
           i.path,
           filename: i.path.split(Platform.pathSeparator).last,
         ))));
-    await _dio.fetch<void>(_setStreamType<void>(Options(
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<CampaignUpdate>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
       contentType: 'multipart/form-data',
     )
-        .compose(
-          _dio.options,
-          'campaigns-update',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        ))));
+            .compose(
+              _dio.options,
+              'campaign-updates',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = CampaignUpdate.fromJson(_result.data!);
+    return value;
   }
 
   @override

@@ -123,12 +123,22 @@ class _MediaPickerState<T> extends State<MediaPicker> {
             images = images.sublist(images.length -
                 (widget.limit - widget.previewImageModels.length));
           }
-          setState(() {
-            selectedImages = images.map((e) => File(e.path)).toList();
-            if (widget.onSelected != null) {
-              widget.onSelected!(selectedImages);
-            }
-          });
+          if (images.length + selectedImages.length <= widget.limit) {
+            // Enough space, append all selected image
+            setState(() {
+              selectedImages.addAll(images.map((e) => File(e.path)));
+              if (widget.onSelected != null) {
+                widget.onSelected!(selectedImages);
+              }
+            });
+          } else {
+            setState(() {
+              selectedImages = images.map((e) => File(e.path)).toList();
+              if (widget.onSelected != null) {
+                widget.onSelected!(selectedImages);
+              }
+            });
+          }
         }
       }
     } else {

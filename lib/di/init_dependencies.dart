@@ -18,6 +18,7 @@ import 'package:crowdfunding_flutter/domain/usecases/auth/sign_out.dart';
 import 'package:crowdfunding_flutter/domain/usecases/auth/sign_up.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/campaign_comment/create_campaign_comment.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/campaign_comment/create_campaign_reply.dart';
+import 'package:crowdfunding_flutter/domain/usecases/campaign/campaign_update/create_campaign_update.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/create_campaign.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaign.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaigns.dart';
@@ -115,6 +116,8 @@ void _initCampaign() {
         () => CreateCampaignComment(campaignRepository: serviceLocator()))
     ..registerFactory(
         () => CreateCampaignReply(campaignRepository: serviceLocator()))
+    ..registerFactory(
+        () => CreateCampaignUpdate(campaignRepository: serviceLocator()))
     // Bloc
     ..registerLazySingleton(() => HomeBloc(fetchCampaign: serviceLocator()));
 }

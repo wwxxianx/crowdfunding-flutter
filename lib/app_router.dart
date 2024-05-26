@@ -1,5 +1,7 @@
+import 'package:crowdfunding_flutter/presentation/account/screens/saved_campaigns_screen.dart';
 import 'package:crowdfunding_flutter/presentation/campaign_details/campaign_details_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/manage_campaign_details_screen.dart';
+import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/create_campaign_update_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/edit_campaign_screen.dart';
 import 'package:crowdfunding_flutter/presentation/splash/splash_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -44,6 +46,15 @@ class AppRouter {
             path: EditCampaignScreen.route,
             builder: (context, state) => EditCampaignScreen(
                 campaignId: state.pathParameters['campaignId'] ?? ''),
+          ),
+          GoRoute(
+            path: CreateCampaignUpdateScreen.route,
+            builder: (context, state) => CreateCampaignUpdateScreen(
+                campaignId: state.pathParameters['campaignId'] ?? ''),
+          ),
+          GoRoute(
+            path: SavedCampaignsScreen.route,
+            builder: (context, state) => SavedCampaignsScreen(),
           ),
         ],
       );

@@ -28,10 +28,6 @@ class AppInterceptors extends Interceptor {
       RequestOptions options, RequestInterceptorHandler handler) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     var accessToken = sp.get(Constants.sharedPreferencesKey.accessToken);
-    var refreshToken =
-        sp.getString(Constants.sharedPreferencesKey.refreshToken);
-    var logger = Logger();
-    logger.w("refreshToken: $refreshToken");
     if (accessToken != null) {
       options.headers['Authorization'] = 'Bearer $accessToken';
     }

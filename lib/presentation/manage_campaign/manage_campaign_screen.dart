@@ -29,7 +29,7 @@ class ManageCampaignScreen extends StatelessWidget {
       return CampaignLoadingCard();
     }
     if (myCampaignResult is ApiResultSuccess<List<Campaign>>) {
-      if (myCampaignResult.data.isEmpty) {
+    if (myCampaignResult.data.isEmpty) {
         // Empty state
         return Text("Empty");
       }
@@ -38,12 +38,15 @@ class ManageCampaignScreen extends StatelessWidget {
         shrinkWrap: true,
         itemCount: myCampaignResult.data.length,
         itemBuilder: (context, index) {
-          return CampaignCard(
-            campaign: myCampaignResult.data[index],
-            onPressed: () {
-              context.push(ManageCampaignDetailsScreen.generateRoute(
-                  campaignId: myCampaignResult.data[index].id));
-            },
+          return Container(
+            margin: const EdgeInsets.only(bottom: 20),
+            child: CampaignCard(
+              campaign: myCampaignResult.data[index],
+              onPressed: () {
+                context.push(ManageCampaignDetailsScreen.generateRoute(
+                    campaignId: myCampaignResult.data[index].id));
+              },
+            ),
           );
         },
       );
