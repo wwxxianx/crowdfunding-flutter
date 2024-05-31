@@ -104,8 +104,8 @@ class CommentItem extends StatelessWidget {
                         ),
                       ),
                       4.kW,
-                      if (state is AppUserLoggedIn &&
-                          state.user.id != comment.user.id)
+                      if (state.currentUser != null &&
+                          state.currentUser!.id != comment.user.id)
                         InkWell(
                           onTap: () {
                             onReplyButtonPressed(comment);

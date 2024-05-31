@@ -27,10 +27,14 @@ extension StringExtensions on String {
   }
 
   String toTimeAgo() {
-    DateTime dateTime = DateTime.parse(this);
-    String timeAgo = timeago.format(dateTime, allowFromNow: true);
+    try {
+      DateTime dateTime = DateTime.parse(this);
+      String timeAgo = timeago.format(dateTime, allowFromNow: true);
 
-    return timeAgo;
+      return timeAgo;
+    } on Exception catch (_) {
+      return this;
+    }
   }
 
   String toCommentDate() {
@@ -49,12 +53,12 @@ extension StringExtensions on String {
   }
 
   String toTime() {
-  DateTime dateTime = DateTime.parse(this);
+    DateTime dateTime = DateTime.parse(this);
 
-  // Format the DateTime object to the desired time format (HH:mm)
-  String formattedTime = DateFormat('HH:mm').format(dateTime);
+    // Format the DateTime object to the desired time format (HH:mm)
+    String formattedTime = DateFormat('HH:mm').format(dateTime);
 
-  return formattedTime;
+    return formattedTime;
   }
 }
 

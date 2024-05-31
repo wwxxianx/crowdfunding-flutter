@@ -1,25 +1,31 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
+import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_card.dart';
+import 'package:crowdfunding_flutter/common/widgets/image/gallery_photo_viewer.dart';
 import 'package:crowdfunding_flutter/domain/model/image/image_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fpdart/fpdart.dart' as fpdart;
 
-class ImageCarousel extends StatefulWidget {
+class MediaCarousel extends StatefulWidget {
   final double? height;
   final double? width;
   final List<ImageModel> images;
-  const ImageCarousel({
+  final List<String> videoUrls;
+  const MediaCarousel({
     super.key,
     this.height,
     this.width,
     required this.images,
+    this.videoUrls = const [],
   });
 
   @override
-  State<ImageCarousel> createState() => _ImageCarouselState();
+  State<MediaCarousel> createState() => _MediaCarouselState();
 }
 
-class _ImageCarouselState extends State<ImageCarousel> {
+class _MediaCarouselState extends State<MediaCarousel> {
   late PageController _pageViewController;
   int _currentPage = 0;
 
@@ -41,26 +47,77 @@ class _ImageCarouselState extends State<ImageCarousel> {
     });
   }
 
-  // late PageController _pageViewController;
+  void _handleExpandImage(int index) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GalleryPhotoViewWrapper(
+          galleryItems: widget.images,
+          backgroundDecoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.4),
+          ),
+          initialIndex: index,
+          scrollDirection: Axis.horizontal,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
-      // mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(
           width: widget.width ?? MediaQuery.of(context).size.width,
           height: widget.height ?? MediaQuery.of(context).size.height / 2.75,
-          child: PageView.builder(
+          child: PageView(
             controller: _pageViewController,
             onPageChanged: _handlePageChange,
-            itemCount: widget.images.length,
-            itemBuilder: (context, index) {
-              return CachedNetworkImage(
-                imageUrl: widget.images[index].imageUrl,
-                fit: BoxFit.cover,
-              );
-            },
+            children: [
+              if (widget.videoUrls.isNotEmpty)
+                ...widget.videoUrls.map((url) {
+                  return AutoPlayVisibleVideoPlayer(
+                    videoUrl: url,
+                    isInteractive: true,
+                  );
+                }).toList(),
+              ...widget.images.mapWithIndex((image, index) {
+                return Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl: image.imageUrl,
+                      fit: BoxFit.cover,
+                    ),
+                    Positioned(
+                      bottom: 10,
+                      right: 10,
+                      child: GestureDetector(
+                        onTap: () {
+                          _handleExpandImage(index);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            color: Colors.black.withOpacity(0.4),
+                            border: Border.all(
+                              color: const Color(0xFFD2CFCF),
+                              width: 1,
+                            ),
+                          ),
+                          child: SvgPicture.asset(
+                            "assets/icons/expand.svg",
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }).toList(),
+            ],
           ),
         ),
         8.kH,
@@ -69,7 +126,7 @@ class _ImageCarouselState extends State<ImageCarousel> {
           // mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(
-            widget.images.length,
+            (widget.images.length + widget.videoUrls.length),
             (index) => Container(
               margin: const EdgeInsets.only(right: 4.0),
               width: 8,

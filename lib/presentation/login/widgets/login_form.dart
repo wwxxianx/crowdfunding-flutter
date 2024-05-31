@@ -134,8 +134,8 @@ class _LoginFormState extends State<LoginForm> with InputValidator {
                     final state = context.read<AppUserCubit>().state;
                     var logger = Logger();
                     logger.w(state);
-                    if (state is AppUserLoggedIn) {
-                      logger.w(state.user.isOnboardingCompleted);
+                    if (state.currentUser != null) {
+                      logger.w(state.currentUser!.isOnboardingCompleted);
                     }
                   },
                   child: Row(

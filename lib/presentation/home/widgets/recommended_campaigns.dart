@@ -4,6 +4,7 @@ import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_card.dart'
 import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_loading_card.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
+import 'package:crowdfunding_flutter/presentation/campaign_details/campaign_details_screen.dart';
 import 'package:crowdfunding_flutter/state_management/home/home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,9 +36,8 @@ class RecommendedCampaigns extends StatelessWidget {
                   height: 550,
                   campaign: campaign,
                   onPressed: () {
-                    // Navigator.push(
-                    //     context, CampaignDetailsScreen.route());
-                    context.push('/campaign-details/${campaign.id}');
+                    context.push(CampaignDetailsScreen.generateRoute(
+                        campaignId: campaign.id));
                   },
                 ),
                 12.kW,

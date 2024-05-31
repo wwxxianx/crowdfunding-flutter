@@ -12,17 +12,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/dialog.dart';
 
-class HomePage extends StatefulWidget {
-  static route() => MaterialPageRoute(
-        builder: (context) => const HomePage(),
-      );
-  const HomePage({super.key});
+class HomeScreen extends StatefulWidget {
+  static const route = "/home";
+  // static route() => MaterialPageRoute(
+  //       builder: (context) => const HomeScreen(),
+  //     );
+  const HomeScreen({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeScreenState extends State<HomeScreen> {
   final _focusNode = FocusNode();
   bool showText = false;
   @override
@@ -100,6 +101,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
+                
                 SloganBanner(),
                 RecommendedCampaigns(),
                 20.kH,

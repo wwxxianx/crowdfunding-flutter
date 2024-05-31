@@ -23,4 +23,15 @@ class CampaignDonation {
       _$CampaignDonationFromJson(json);
 
   Map<String, dynamic> toJson() => _$CampaignDonationToJson(this);
+
+  @override
+  String toString() {
+    return """"
+    id: $id,
+    user: $user,
+    amount: $amount,
+    createdAt: $createdAt,
+    isAnonymous: $isAnonymous,
+    """;
+  }
 }

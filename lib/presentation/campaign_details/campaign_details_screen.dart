@@ -1,10 +1,8 @@
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
-import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_category_tag.dart';
 import 'package:crowdfunding_flutter/common/widgets/campaign/donation_progress_bar.dart';
-import 'package:crowdfunding_flutter/common/widgets/container/custom_bottom_sheet.dart';
 import 'package:crowdfunding_flutter/common/widgets/image_carousel.dart';
 import 'package:crowdfunding_flutter/common/widgets/skeleton.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
@@ -23,9 +21,9 @@ import 'package:heroicons/heroicons.dart';
 
 class CampaignDetailsScreen extends StatefulWidget {
   final String campaignId;
-  static route({required String campaignId}) => MaterialPageRoute(
-        builder: (context) => CampaignDetailsScreen(campaignId: campaignId),
-      );
+  static const route = '/campaign-details/:campaignId';
+  static generateRoute({required String campaignId}) =>
+      '/campaign-details/$campaignId';
   const CampaignDetailsScreen({
     super.key,
     required this.campaignId,
@@ -94,8 +92,11 @@ class _CampaignDetailsScreenState extends State<CampaignDetailsScreen> {
                       height: MediaQuery.of(context).size.height / 2.75,
                     ),
                   if (campaignResult is ApiResultSuccess<Campaign>)
-                    ImageCarousel(
+                    MediaCarousel(
                       images: campaignResult.data.images,
+                      videoUrls: campaignResult.data.videoUrl != null
+                          ? [campaignResult.data.videoUrl!]
+                          : [],
                     ),
                   24.kH,
                   Padding(

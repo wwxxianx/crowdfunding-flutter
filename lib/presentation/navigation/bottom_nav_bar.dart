@@ -1,100 +1,122 @@
+import 'package:crowdfunding_flutter/presentation/account/account_screen.dart';
+import 'package:crowdfunding_flutter/presentation/explore/explore_screen.dart';
+import 'package:crowdfunding_flutter/presentation/home/home_screen.dart';
+import 'package:crowdfunding_flutter/presentation/manage_campaign/manage_campaign_screen.dart';
+import 'package:crowdfunding_flutter/presentation/navigation/widgets/badge_icon.dart';
+import 'package:crowdfunding_flutter/presentation/notification/notification_screen.dart';
+import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
+import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/navigation/navigation_cubit.dart';
 import 'package:crowdfunding_flutter/state_management/navigation/navigation_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:logger/logger.dart';
 
-class HomeBottomNavigationBar extends StatelessWidget {
+class HomeBottomNavigationBar extends StatefulWidget {
   const HomeBottomNavigationBar({super.key});
 
-  int _getCurrentIndex(NavigationState state) {
-    switch (state) {
-      case NavigationState.home:
-        return 0;
-      case NavigationState.explore:
-        return 1;
-      case NavigationState.notification:
-        return 2;
-      case NavigationState.manage:
-        return 3;
-      case NavigationState.account:
-        return 4;
+  @override
+  State<HomeBottomNavigationBar> createState() =>
+      _HomeBottomNavigationBarState();
+}
+
+class _HomeBottomNavigationBarState extends State<HomeBottomNavigationBar> {
+  var logger = Logger();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  static int _getCurrentIndex(BuildContext context) {
+    final String location = GoRouterState.of(context).uri.path;
+    if (location.startsWith(HomeScreen.route)) {
+      return 0;
+    }
+    if (location.startsWith(ExploreScreen.route)) {
+      return 1;
+    }
+    if (location.startsWith(NotificationScreen.route)) {
+      return 2;
+    }
+    if (location.startsWith(ManageCampaignScreen.route)) {
+      return 3;
+    }
+    if (location.startsWith(AccountScreen.route)) {
+      return 4;
+    }
+    return 0;
+  }
+
+  void _onItemTapped(int index, BuildContext context) {
+    switch (index) {
+      case 0:
+        GoRouter.of(context).go(HomeScreen.route);
+      case 1:
+        GoRouter.of(context).go(ExploreScreen.route);
+      case 2:
+        GoRouter.of(context).go(NotificationScreen.route);
+      case 3:
+        GoRouter.of(context).go(ManageCampaignScreen.route);
+      case 4:
+        GoRouter.of(context).go(AccountScreen.route);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<NavigationCubit, NavigationState>(
-      builder: (context, state) {
-        return BottomNavigationBar(
-          backgroundColor: Colors.white,
-          type: BottomNavigationBarType.fixed,
-          showUnselectedLabels: true,
-          selectedItemColor: Colors.black,
-          unselectedItemColor: Colors.black,
-          selectedFontSize: 12.0,
-          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
-          unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
-          items: [
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset("assets/icons/home.svg"),
-              activeIcon: SvgPicture.asset("assets/icons/home-active.svg"),
-              label: "Home",
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset("assets/icons/globe.svg"),
-              activeIcon: SvgPicture.asset("assets/icons/globe-active.svg"),
-              label: "Explore",
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset("assets/icons/bell.svg"),
-              activeIcon: SvgPicture.asset("assets/icons/bell-active.svg"),
-              label: "Notification",
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset("assets/icons/document-chart-bar.svg"),
-              activeIcon: SvgPicture.asset(
-                  "assets/icons/document-chart-bar-active.svg"),
-              label: "Manage",
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset("assets/icons/user-circle.svg"),
-              activeIcon:
-                  SvgPicture.asset("assets/icons/user-circle-active.svg"),
-              label: "Account",
-            ),
-          ],
-          currentIndex: _getCurrentIndex(state),
-          onTap: (index) {
-            switch (index) {
-              case 0:
-                context
-                    .read<NavigationCubit>()
-                    .onNavigateTo(NavigationState.home);
-                break;
-              case 1:
-                context
-                    .read<NavigationCubit>()
-                    .onNavigateTo(NavigationState.explore);
-                break;
-              case 2:
-                context
-                    .read<NavigationCubit>()
-                    .onNavigateTo(NavigationState.notification);
-                break;
-              case 3:
-                context
-                    .read<NavigationCubit>()
-                    .onNavigateTo(NavigationState.manage);
-                break;
-              case 4:
-                context
-                    .read<NavigationCubit>()
-                    .onNavigateTo(NavigationState.account);
-                break;
-            }
-          },
-        );
+    final giftCardState = context.watch<GiftCardBloc>().state;
+    final hasUnusedGiftCard = giftCardState.receivedGiftCards.isNotEmpty &&
+        giftCardState.receivedGiftCards
+            .any((giftCard) => giftCard.campaignDonation == null);
+    return BottomNavigationBar(
+      backgroundColor: Colors.white,
+      type: BottomNavigationBarType.fixed,
+      showUnselectedLabels: true,
+      selectedItemColor: Colors.black,
+      unselectedItemColor: Colors.black,
+      selectedFontSize: 12.0,
+      selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
+      unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
+      items: [
+        BottomNavigationBarItem(
+          icon: SvgPicture.asset("assets/icons/home.svg"),
+          activeIcon: SvgPicture.asset("assets/icons/home-active.svg"),
+          label: "Home",
+        ),
+        BottomNavigationBarItem(
+          icon: SvgPicture.asset("assets/icons/globe.svg"),
+          activeIcon: SvgPicture.asset("assets/icons/globe-active.svg"),
+          label: "Explore",
+        ),
+        BottomNavigationBarItem(
+          icon: SvgPicture.asset("assets/icons/bell.svg"),
+          activeIcon: SvgPicture.asset("assets/icons/bell-active.svg"),
+          label: "Notification",
+        ),
+        BottomNavigationBarItem(
+          icon: SvgPicture.asset("assets/icons/document-chart-bar.svg"),
+          activeIcon:
+              SvgPicture.asset("assets/icons/document-chart-bar-active.svg"),
+          label: "Manage",
+        ),
+        BottomNavigationBarItem(
+          icon: IconWithBadge(
+            showBadge: hasUnusedGiftCard,
+            icon: SvgPicture.asset("assets/icons/user-circle.svg"),
+          ),
+          activeIcon: IconWithBadge(
+            showBadge: hasUnusedGiftCard,
+            icon: SvgPicture.asset("assets/icons/user-circle-active.svg"),
+          ),
+          label: "Account",
+        ),
+      ],
+      currentIndex: _getCurrentIndex(context),
+      onTap: (value) {
+        _onItemTapped(value, context);
       },
     );
   }

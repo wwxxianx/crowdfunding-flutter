@@ -6,12 +6,15 @@ import 'package:crowdfunding_flutter/data/network/payload/auth/sign_up_payload.d
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_comment_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_reply_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/user/favourite_campaign/favourite_campaign_payload.dart';
-import 'package:crowdfunding_flutter/data/service/payment/create_payment_intent_payload.dart';
+import 'package:crowdfunding_flutter/data/service/payment/campaign_donation/create_campaign_donation_payment_intent_payload.dart';
+import 'package:crowdfunding_flutter/data/service/payment/gift_card/create_gift_card_payment_intent_payload.dart';
 import 'package:crowdfunding_flutter/data/service/payment/payment_intent_response.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_category.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update.dart';
+import 'package:crowdfunding_flutter/domain/model/gift_card/gift_cards_response.dart';
+import 'package:crowdfunding_flutter/domain/model/gift_card/num_gift_card_response.dart';
 import 'package:crowdfunding_flutter/domain/model/state/state_region.dart';
 import 'package:crowdfunding_flutter/domain/model/tokens_response.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
@@ -121,8 +124,21 @@ abstract class RestClient {
     @Part(name: "isOnboardingCompleted") bool? isOnboardingCompleted,
   });
 
-  @GET("users")
+  @GET("users/profile")
   Future<UserModel> getUserProfile();
+
+  @GET("users")
+  Future<List<UserModel>> getUsers({
+    @Query("userName") String? userName,
+    @Query("email") String? email,
+  });
+
+  // Users gift card
+  @GET("users/received-gift-card-num")
+  Future<NumOfGiftCardsResponse> getNumOfReceivedUnusedGiftCards();
+
+  @GET("users/gift-cards")
+  Future<GiftCardsResponse> getAllGiftCards();
 
   // User favourite campaigns
   @GET("user-favourite-campaigns")
@@ -139,8 +155,13 @@ abstract class RestClient {
   );
 
   // Payment sheet
-  @POST("payment/payment-intent")
-  Future<PaymentIntentResponse> createPaymentIntent(
-    @Body() CreatePaymentIntentPayload payload,
+  @POST("payment/payment-intent/campaign-donation")
+  Future<PaymentIntentResponse> createCampaignDonationPaymentIntent(
+    @Body() CreateCampaignDonationPaymentIntentPayload payload,
+  );
+
+  @POST("payment/payment-intent/gift-card")
+  Future<PaymentIntentResponse> createGiftCardPaymentIntent(
+    @Body() CreateGiftCardPaymentIntentPayload payload,
   );
 }

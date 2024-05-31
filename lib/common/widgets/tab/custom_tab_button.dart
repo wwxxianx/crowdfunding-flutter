@@ -3,6 +3,7 @@ import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension
 import 'package:flutter/material.dart';
 
 class CustomTab extends StatelessWidget {
+  final double? width;
   final int initialIndex;
   final List<Widget> tabs;
   final void Function(int)? onTabItemChange;
@@ -11,6 +12,7 @@ class CustomTab extends StatelessWidget {
     this.initialIndex = 0,
     required this.tabs,
     required this.onTabItemChange,
+    this.width,
   });
 
   @override
@@ -24,6 +26,7 @@ class CustomTab extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(6)),
           child: IntrinsicWidth(
             child: Container(
+              width: width,
               height: 40,
               padding: const EdgeInsets.all(4.0),
               decoration: const BoxDecoration(

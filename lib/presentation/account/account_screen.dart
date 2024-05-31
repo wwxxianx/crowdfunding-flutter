@@ -7,8 +7,10 @@ import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_list_tile.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/custom_card.dart';
 import 'package:crowdfunding_flutter/common/widgets/text/text_bg_gradient_shape.dart';
-import 'package:crowdfunding_flutter/presentation/account/screens/saved_campaigns_screen.dart';
+import 'package:crowdfunding_flutter/presentation/account_gift_card/charity_gift_card_screen.dart';
+import 'package:crowdfunding_flutter/presentation/account_saved_campaigns/saved_campaigns_screen.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
+import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,6 +18,7 @@ import 'package:go_router/go_router.dart';
 import 'package:heroicons/heroicons.dart';
 
 class AccountScreen extends StatelessWidget {
+  static const route = '/account';
   const AccountScreen({super.key});
 
   void _handleSignOut(BuildContext context) {
@@ -182,7 +185,27 @@ class AccountScreen extends StatelessWidget {
                         HeroIcons.chevronRight,
                         size: 16.0,
                       ),
-                    )
+                    ),
+                    Builder(builder: (context) {
+                      final giftCardState = context.watch<GiftCardBloc>().state;
+                      final hasUnusedGiftCards = giftCardState.receivedGiftCards
+                          .any((giftCard) => giftCard.campaignDonation == null);
+                      return CustomListTile(
+                        showBadge: hasUnusedGiftCards,
+                        onTap: () {
+                          context.push(GiftCardScreen.route);
+                        },
+                        leading: SvgPicture.asset("assets/icons/gift.svg"),
+                        title: const Text(
+                          "Gift Card",
+                          style: CustomFonts.labelSmall,
+                        ),
+                        trailing: const HeroIcon(
+                          HeroIcons.chevronRight,
+                          size: 16.0,
+                        ),
+                      );
+                    }),
                   ],
                 ),
               ),
@@ -203,7 +226,7 @@ class AccountScreen extends StatelessWidget {
                       onTap: () {},
                       leading: SvgPicture.asset("assets/icons/smile-heart.svg"),
                       title: Text(
-                        "My Donations",
+                        "My Preferences",
                         style: CustomFonts.labelSmall,
                       ),
                       trailing: HeroIcon(

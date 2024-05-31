@@ -5,8 +5,11 @@ import 'package:crowdfunding_flutter/common/error/failure.dart';
 import 'package:crowdfunding_flutter/data/local/shared_preference.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/data/network/payload/user/favourite_campaign/favourite_campaign_payload.dart';
+import 'package:crowdfunding_flutter/data/network/payload/user/get_users_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/user/user_profile_payload.dart';
 import 'package:crowdfunding_flutter/data/network/retrofit_api.dart';
+import 'package:crowdfunding_flutter/domain/model/gift_card/gift_cards_response.dart';
+import 'package:crowdfunding_flutter/domain/model/gift_card/num_gift_card_response.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user_favourite_campaign.dart';
 import 'package:crowdfunding_flutter/domain/repository/user/user_repository.dart';
@@ -77,7 +80,8 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Failure, List<UserFavouriteCampaign>>> getFavouriteCampaigns() async {
+  Future<Either<Failure, List<UserFavouriteCampaign>>>
+      getFavouriteCampaigns() async {
     try {
       final res = await api.getUserFavouriteCampaigns();
       return right(res);
@@ -100,6 +104,49 @@ class UserRepositoryImpl implements UserRepository {
       final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
       return left(Failure(errorMessage));
     } on Exception catch (e) {
+      return left(Failure(ErrorHandler.otherException(error: e).errorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<UserModel>>> getUsers(
+      GetUsersPayload payload) async {
+    try {
+      final res = await api.getUsers(userName: payload.userName, email: payload.email,);
+      return right(res);
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException(error: e).errorMessage));
+    }
+  }
+  
+  @override
+  Future<Either<Failure, NumOfGiftCardsResponse>> getNumOfReceivedUnusedGiftCards() async {
+    try {
+      final res = await api.getNumOfReceivedUnusedGiftCards();
+      return right(res);
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException(error: e).errorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, GiftCardsResponse>> getAllGiftCards() async {
+    try {
+      final res = await api.getAllGiftCards();
+      return right(res);
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
       return left(Failure(ErrorHandler.otherException(error: e).errorMessage));
     }
   }

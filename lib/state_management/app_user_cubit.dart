@@ -2,25 +2,32 @@ import 'package:crowdfunding_flutter/common/usecase/usecase.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:crowdfunding_flutter/domain/usecases/auth/get_current_user.dart';
 import 'package:crowdfunding_flutter/domain/usecases/auth/sign_out.dart';
+import 'package:crowdfunding_flutter/domain/usecases/user/gift_card/fetch_num_received_unused_gift_card.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 
 class AppUserCubit extends Cubit<AppUserState> {
+  final logger = Logger();
   final GetCurrentUser _getCurrentUser;
   final SignOut _signOut;
+  final FetchNumOfReceivedUnusedGiftCards _fetchNumOfReceivedUnusedGiftCards;
   AppUserCubit({
     required GetCurrentUser getCurrentUser,
     required SignOut signOut,
+    required FetchNumOfReceivedUnusedGiftCards
+        fetchNumOfReceivedUnusedGiftCards,
   })  : _getCurrentUser = getCurrentUser,
         _signOut = signOut,
-        super(AppUserInitial());
+        _fetchNumOfReceivedUnusedGiftCards = fetchNumOfReceivedUnusedGiftCards,
+        super(const AppUserState.initial());
 
   void updateUser(UserModel? user) {
     if (user == null) {
-      emit(AppUserInitial());
+      emit(const AppUserState.initial());
     } else {
-      emit(AppUserLoggedIn(user));
+      emit(state.copyWith(currentUser: user));
     }
   }
 
@@ -28,8 +35,8 @@ class AppUserCubit extends Cubit<AppUserState> {
     final res = await _getCurrentUser(NoPayload());
 
     res.fold(
-      (l) => emit(AppUserInitial()),
-      (r) => emit(AppUserLoggedIn(r)),
+      (failure) => emit(const AppUserState.initial()),
+      (user) => emit(state.copyWith(currentUser: user)),
     );
   }
 
@@ -41,5 +48,19 @@ class AppUserCubit extends Cubit<AppUserState> {
     if (onSuccess != null) {
       onSuccess();
     }
+  }
+
+  Future<void> initNumOfReceivedUnusedGiftCards() async {
+    final res = await _fetchNumOfReceivedUnusedGiftCards.call(NoPayload());
+    res.fold(
+      (l) {
+        logger.w("Error: ${l.errorMessage}");
+      },
+      (numRes) {
+        logger.w("Received num: ${numRes.numOfGiftCards}");
+        emit(state.copyWith(
+            numOfReceivedUnusedGiftCards: numRes.numOfGiftCards));
+      },
+    );
   }
 }

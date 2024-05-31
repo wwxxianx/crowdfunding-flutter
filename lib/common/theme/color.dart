@@ -8,9 +8,11 @@ class CustomColors {
     Color(0xFFE6FF82),
   ]);
   static const containerLightGreen = Color(0xFFF5FFF4);
+  static const informationContainerGreen = Color(0xFFECFFEA);
 
   static const textBlack = Color(0xFF232323);
   static const textGrey = Color(0xFF8D8D8D);
+  static const textDarkGreen = Color(0xFF1A3E01);
 
   static const inputBorder = Color(0xFFC0C4C3);
 
@@ -46,6 +48,13 @@ class CustomColors {
       blurRadius: 3.0,
       offset: Offset(0, 1),
       color: Colors.black.withOpacity(0.15),
+    )
+  ];
+  static const containerGreenShadow = [
+     BoxShadow(
+      blurRadius: 7.5,
+      offset: Offset(0, 2),
+      color: CustomColors.primaryGreen,
     )
   ];
 }

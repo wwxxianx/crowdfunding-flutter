@@ -31,10 +31,10 @@ class HomePageHeader extends StatelessWidget {
           padding: padding,
           child: Row(
             children: [
-              if (state is AppUserLoggedIn)
+              if (state.currentUser != null)
                 Avatar(
-                  imageUrl: state.user.profileImageUrl,
-                  placeholder: state.user.fullName[0],
+                  imageUrl: state.currentUser!.profileImageUrl,
+                  placeholder: state.currentUser!.fullName[0],
                 ),
               8.kW,
               Column(
@@ -44,9 +44,9 @@ class HomePageHeader extends StatelessWidget {
                     title,
                     style: CustomFonts.titleSmall,
                   ),
-                  if (state is AppUserLoggedIn)
+                  if (state.currentUser != null)
                     Text(
-                      state.user.fullName,
+                      state.currentUser!.fullName,
                       style: CustomFonts.labelSmall
                           .copyWith(color: CustomColors.textGrey),
                     ),

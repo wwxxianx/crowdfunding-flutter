@@ -12,6 +12,7 @@ extension ShowDialogExtension on BuildContext {
       right: 20.0,
     ),
     required Widget child,
+    VoidCallback? onClose,
   }) {
     showDialog<String>(
       context: this,
@@ -35,6 +36,7 @@ extension ShowDialogExtension on BuildContext {
                   padding: padding,
                   child: child,
                 ),
+                // Close button
                 Align(
                   alignment: Alignment.topRight,
                   child: Row(
@@ -42,6 +44,9 @@ extension ShowDialogExtension on BuildContext {
                     children: [
                       IconButton(
                         onPressed: () {
+                          if (onClose != null) {
+                            onClose();
+                          }
                           Navigator.pop(context);
                         },
                         icon: HeroIcon(

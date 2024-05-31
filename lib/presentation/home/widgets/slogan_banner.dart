@@ -6,7 +6,9 @@ import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/text/gradient_text.dart';
+import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SloganBanner extends StatelessWidget {
@@ -71,7 +73,13 @@ class SloganBanner extends StatelessWidget {
                       style: CustomButtonStyle.black,
                       borderRadius: BorderRadius.circular(6.0),
                       height: 40.0,
-                      onPressed: () {},
+                      onPressed: () {
+                        final numver = context
+                            .read<AppUserCubit>()
+                            .state
+                            .numOfReceivedUnusedGiftCards;
+                        print(numver);
+                      },
                       textStyle: CustomFonts.titleSmall,
                       child: const GradientText(
                         text: "Donate now!",

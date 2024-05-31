@@ -10,18 +10,18 @@ import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart' as videoPlayer;
 // import 'package:video_thumbnail/video_thumbnail.dart';
 
-class VideoPlayer extends StatefulWidget {
+class VideoThumbnail extends StatefulWidget {
   final File videoFile;
-  const VideoPlayer({
+  const VideoThumbnail({
     super.key,
     required this.videoFile,
   });
 
   @override
-  State<VideoPlayer> createState() => _VideoPlayerState();
+  State<VideoThumbnail> createState() => _VideoThumbnailState();
 }
 
-class _VideoPlayerState extends State<VideoPlayer> {
+class _VideoThumbnailState extends State<VideoThumbnail> {
   late videoPlayer.VideoPlayerController _controller;
 
   @override
@@ -179,7 +179,7 @@ class _MediaPickerState<T> extends State<MediaPicker> {
       if (widget.isVideo) {
         return [
           VideoPreviewContainer(
-            child: VideoPlayer(videoFile: selectedImages[0]),
+            child: VideoThumbnail(videoFile: selectedImages[0]),
             onRemove: () {
               setState(() {
                 selectedImages = [];

@@ -1,4 +1,4 @@
-import 'package:crowdfunding_flutter/data/service/payment/create_payment_intent_payload.dart';
+import 'package:crowdfunding_flutter/data/service/payment/campaign_donation/create_campaign_donation_payment_intent_payload.dart';
 import 'package:crowdfunding_flutter/data/service/payment/payment_service.dart';
 import 'package:crowdfunding_flutter/state_management/donate/donate_event.dart';
 import 'package:crowdfunding_flutter/state_management/donate/donate_state.dart';
@@ -28,17 +28,23 @@ class DonateBloc extends Bloc<DonateEvent, DonateState> {
     Emitter<DonateState> emit,
   ) async {
     emit(state.copyWith(isCreatingDonation: true));
-    final payload = CreatePaymentIntentPayload(
+    final payload = CreateCampaignDonationPaymentIntentPayload(
       amount: event.amount,
       campaignId: event.campaignId,
       isAnonymous: event.isAnonymous,
+      giftCardId: event.giftCardId,
     );
-    final res = await _paymentService.initPaymentSheet(event.context, payload);
-    res.fold(
-      (l) => null,
-      (r) async {
-        await _paymentService.presentPaymentSheet().whenComplete(
-            () => emit(state.copyWith(isCreatingDonation: false)));
+    final paymentIntentRes =
+        await _paymentService.initCampaignDonationPaymentSheet(payload);
+    paymentIntentRes.fold(
+      (failure) {},
+      (unit) async {
+        final paymentRes = await _paymentService.presentPaymentSheet();
+        paymentRes.fold((l) {if (emit.isDone) return;
+          emit(state.copyWith(isCreatingDonation: false));}, (r) {
+          if (emit.isDone) return;
+          emit(state.copyWith(isCreatingDonation: false));
+        },);
       },
     );
   }

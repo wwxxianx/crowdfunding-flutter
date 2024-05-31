@@ -1,11 +1,11 @@
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
-import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
-import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_card.dart';
-import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_loading_card.dart';
-import 'package:crowdfunding_flutter/common/widgets/skeleton.dart';
+import 'package:crowdfunding_flutter/presentation/home/home_screen.dart';
 import 'package:crowdfunding_flutter/presentation/splash/splash_bg_shape.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
-import 'package:crowdfunding_flutter/state_management/app_user_state.dart';
+import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_bloc.dart';
+import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_event.dart';
+import 'package:crowdfunding_flutter/state_management/home/home_bloc.dart';
+import 'package:crowdfunding_flutter/state_management/home/home_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -58,9 +58,9 @@ class _SplashScreenState extends State<SplashScreen>
     final state = appUserCubit.state;
     Future.delayed(const Duration(milliseconds: 300), () {
       animationController.forward().then((value) {
-        if (state is AppUserLoggedIn) {
-          if (state.user.isOnboardingCompleted) {
-            destination = '/main';
+        if (state.currentUser != null) {
+          if (state.currentUser!.isOnboardingCompleted) {
+            destination = HomeScreen.route;
           } else {
             destination = '/login';
           }
@@ -73,6 +73,13 @@ class _SplashScreenState extends State<SplashScreen>
         }
       });
     });
+
+    if (!mounted) return;
+    if (state.currentUser != null) {
+      // Init app state
+      context.read<GiftCardBloc>().add(OnFetchAllGiftCards());
+      context.read<HomeBloc>().add(OnFetchRecommendedCampaigns());
+    }
   }
 
   @override

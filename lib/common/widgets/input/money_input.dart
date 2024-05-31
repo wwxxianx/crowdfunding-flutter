@@ -4,23 +4,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class MoneyTextField extends StatelessWidget {
-  final String label;
+  final FocusNode? focusNode;
+  final String? label;
   final String? errorText;
   final String? initialValue;
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final void Function(String)? onChanged;
+  final TextInputAction? textInputAction;
+  final bool readOnly;
   const MoneyTextField({
     super.key,
-    required this.controller,
-    this.label = "Donation amount",
+    this.controller,
+    this.label,
     this.onChanged,
     this.initialValue,
     this.errorText,
+    this.focusNode,
+    this.textInputAction,
+    this.readOnly = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return CustomOutlinedTextfield(
+      readOnly: readOnly,
+      textInputAction: textInputAction,
+      focusNode: focusNode,
       errorText: errorText,
       initialValue: initialValue,
       onChanged: onChanged,

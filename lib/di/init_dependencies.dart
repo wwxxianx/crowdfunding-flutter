@@ -28,9 +28,13 @@ import 'package:crowdfunding_flutter/domain/usecases/fetch_state_and_regions.dar
 import 'package:crowdfunding_flutter/domain/usecases/user/favourite_campaign/create_favourite_campaign.dart';
 import 'package:crowdfunding_flutter/domain/usecases/user/favourite_campaign/delete_favourite_campaign.dart';
 import 'package:crowdfunding_flutter/domain/usecases/user/favourite_campaign/fetch_favourite_campaigns.dart';
+import 'package:crowdfunding_flutter/domain/usecases/user/fetch_users.dart';
+import 'package:crowdfunding_flutter/domain/usecases/user/gift_card/fetch_all_gift_cards.dart';
+import 'package:crowdfunding_flutter/domain/usecases/user/gift_card/fetch_num_received_unused_gift_card.dart';
 import 'package:crowdfunding_flutter/domain/usecases/user/update_user_profile.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_bloc.dart';
+import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/home/home_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/navigation/navigation_cubit.dart';
 import 'package:crowdfunding_flutter/state_management/sign_up/sign_up_bloc.dart';
@@ -52,6 +56,7 @@ Future<void> initDependencies() async {
     ..registerLazySingleton(() => AppUserCubit(
           getCurrentUser: serviceLocator(),
           signOut: serviceLocator(),
+          fetchNumOfReceivedUnusedGiftCards: serviceLocator(),
         ))
     ..registerLazySingleton(() => NavigationCubit())
     ..registerLazySingleton(() => DioNetwork.provideDio())
@@ -64,6 +69,7 @@ Future<void> initDependencies() async {
   _initConstant();
   _initUser();
   _initPayment();
+  _initGiftCard();
 }
 
 void _initExploreCampaigns() {
@@ -148,10 +154,23 @@ void _initUser() {
     ..registerFactory(
         () => CreateFavouriteCampaign(userRepository: serviceLocator()))
     ..registerFactory(
-        () => DeleteFavouriteCampaign(userRepository: serviceLocator()));
+        () => DeleteFavouriteCampaign(userRepository: serviceLocator()))
+    ..registerFactory(() => FetchUsers(userRepository: serviceLocator()))
+    ..registerFactory(() =>
+        FetchNumOfReceivedUnusedGiftCards(userRepository: serviceLocator()));
 }
 
 void _initPayment() {
   serviceLocator.registerFactory<PaymentService>(
       () => PaymentService(api: serviceLocator()));
+}
+
+void _initGiftCard() {
+  serviceLocator
+    // Bloc
+    ..registerLazySingleton(
+        () => GiftCardBloc(fetchAllGiftCards: serviceLocator()))
+    // Usecase
+    ..registerFactory(
+        () => FetchAllGiftCards(userRepository: serviceLocator()));
 }

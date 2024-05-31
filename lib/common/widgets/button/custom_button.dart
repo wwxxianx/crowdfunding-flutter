@@ -7,6 +7,7 @@ enum CustomButtonStyle {
   flatGreen,
   gradientGreen,
   white,
+  grey,
 }
 
 class CustomButton extends StatelessWidget {
@@ -41,6 +42,8 @@ class CustomButton extends StatelessWidget {
 
   Color? _getBackgroundColor() {
     switch (style) {
+      case CustomButtonStyle.grey:
+        return const Color(0xFFF0F0F0);
       case CustomButtonStyle.flatGreen:
         return CustomColors.primaryGreen;
       case CustomButtonStyle.white:
@@ -56,6 +59,8 @@ class CustomButton extends StatelessWidget {
 
   Color _getForegroundColor() {
     switch (style) {
+      case CustomButtonStyle.grey:
+        return const Color(0xFF6C6C6C);
       case CustomButtonStyle.black:
         return CustomColors.primaryGreen;
       default:
@@ -75,22 +80,12 @@ class CustomButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: _getBackgroundColor(),
           gradient: _bgGradient,
-          border: Border.all(width: 1, color: Colors.black),
+          border: style == CustomButtonStyle.grey ? null : Border.all(width: 1, color: Colors.black),
           borderRadius: borderRadius,
           boxShadow: boxShadow,
         ),
         child: FilledButton(
           onPressed: enabled ? onPressed : null,
-          child: isLoading
-              ? SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 3.0,
-                    color: CustomColors.accentGreen,
-                  ),
-                )
-              : child,
           style: ButtonStyle(
             foregroundColor: MaterialStateProperty.all(_getForegroundColor()),
             backgroundColor: MaterialStateProperty.all(Colors.transparent),
@@ -104,6 +99,16 @@ class CustomButton extends StatelessWidget {
             ),
             textStyle: MaterialStateProperty.all(textStyle),
           ),
+          child: isLoading
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 3.0,
+                    color: CustomColors.accentGreen,
+                  ),
+                )
+              : child,
         ),
       ),
     );

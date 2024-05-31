@@ -1,3 +1,4 @@
+import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +8,7 @@ class CustomListTile extends StatelessWidget {
   final Widget? trailing;
   final VoidCallback onTap;
   final EdgeInsetsGeometry padding;
+  final bool showBadge;
 
   const CustomListTile({
     super.key,
@@ -15,6 +17,7 @@ class CustomListTile extends StatelessWidget {
     required this.trailing,
     required this.onTap,
     this.padding = const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+    this.showBadge = false,
   });
 
   @override
@@ -28,6 +31,17 @@ class CustomListTile extends StatelessWidget {
             if (leading != null) leading!,
             if (leading != null) 8.kW,
             if (title != null) title!,
+            if (showBadge) 4.kW,
+            if (showBadge)
+              Container(
+                width: 10,
+                height: 10,
+                decoration: BoxDecoration(
+                  color: CustomColors.accentGreen,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white),
+                ),
+              ),
             const Spacer(),
             if (trailing != null) trailing!,
           ],

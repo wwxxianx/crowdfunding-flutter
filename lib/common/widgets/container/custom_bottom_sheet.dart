@@ -42,10 +42,12 @@ class CustomBottomSheet extends StatelessWidget {
               ),
             ),
           ),
+          // Drag handler indicator
           Align(
             alignment: Alignment.topCenter,
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
+            child: Container(
+              width: double.maxFinite,
+              padding: const EdgeInsets.symmetric(vertical: 8),
               child: SvgPicture.asset(
                   "assets/icons/bottom-sheet-top-close-indicator.svg"),
             ),

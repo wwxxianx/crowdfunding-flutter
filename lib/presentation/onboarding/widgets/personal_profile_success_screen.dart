@@ -21,8 +21,8 @@ class OnboardingProfileSuccessScreen extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: CustomButton(
-                      onPressed: NavigationScreen.route(),
+                    child: CustomButton( 
+                      onPressed: () {},
                       child: const Text("OK"),
                     ),
                   )

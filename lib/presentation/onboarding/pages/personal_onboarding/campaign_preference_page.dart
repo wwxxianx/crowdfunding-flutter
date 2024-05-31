@@ -4,6 +4,7 @@ import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension
 import 'package:crowdfunding_flutter/common/utils/show_snackbar.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/campaign_category_toggle_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
+import 'package:crowdfunding_flutter/presentation/home/home_screen.dart';
 import 'package:crowdfunding_flutter/presentation/navigation/navigation_screen.dart';
 import 'package:crowdfunding_flutter/state_management/onboarding/personal_onboarding_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/onboarding/personal_onboarding_event.dart';
@@ -11,6 +12,7 @@ import 'package:crowdfunding_flutter/state_management/onboarding/personal_onboar
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class OnboardingCampaignPreferencePage extends StatefulWidget {
   final VoidCallback onPreviousPage;
@@ -34,11 +36,12 @@ class _OnboardingCampaignPreferencePageState
 
   void _handleUpdateProfile() {
     context.read<PersonalOnboardingBloc>().add(OnUpdateProfile(onSuccess: () {
-      Navigator.pushAndRemoveUntil(
-        context,
-        NavigationScreen.route(),
-        (route) => false,
-      );
+      // Navigator.pushAndRemoveUntil(
+      //   context,
+      //   NavigationScreen.route(),
+      //   (route) => false,
+      // );
+      context.go(HomeScreen.route);
     }));
   }
 

@@ -5,6 +5,12 @@ class CustomFonts {
   static const fontFamily = "Satoshi";
 
   //Body
+  static const bodyExtraSmall = TextStyle(
+    fontSize: 12.0,
+    fontWeight: FontWeight.normal,
+    fontFamily: fontFamily,
+    color: CustomColors.textBlack,
+  );
   static const bodySmall = TextStyle(
     fontSize: 14.0,
     fontWeight: FontWeight.normal,

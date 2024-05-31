@@ -10,7 +10,6 @@ import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/presentation/create_campaign/create_campaign_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/manage_campaign_details_screen.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
-import 'package:crowdfunding_flutter/state_management/app_user_state.dart';
 import 'package:crowdfunding_flutter/state_management/my_campaign/my_campaign_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/my_campaign/my_campaign_event.dart';
 import 'package:crowdfunding_flutter/state_management/my_campaign/my_campaign_state.dart';
@@ -63,8 +62,8 @@ class ManageCampaignScreen extends StatelessWidget {
       create: (context) {
         final appUserState = context.read<AppUserCubit>().state;
         String userId = '';
-        if (appUserState is AppUserLoggedIn) {
-          userId = appUserState.user.id;
+        if (appUserState.currentUser != null) {
+          userId = appUserState.currentUser!.id;
         }
         return MyCampaignBloc(fetchCampaigns: serviceLocator())
           ..add(OnFetchMyCampaign(userId));

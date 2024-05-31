@@ -10,7 +10,6 @@ import 'package:crowdfunding_flutter/common/widgets/media_picker.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/di/init_dependencies.dart';
 import 'package:crowdfunding_flutter/state_management/create_campaign_update/create_campaign_update_bloc.dart';
-import 'package:crowdfunding_flutter/state_management/create_campaign_update/create_campaign_update_event.dart';
 import 'package:crowdfunding_flutter/state_management/create_campaign_update/create_campaign_update_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

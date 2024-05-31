@@ -16,9 +16,12 @@ import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class CampaignsFilterBottomSheet extends StatelessWidget {
-  const CampaignsFilterBottomSheet({super.key});
+  const CampaignsFilterBottomSheet({
+    super.key,
+  });
 
   void _handleSelectCategory(
       BuildContext context, CampaignCategory campaignCategory) {
@@ -34,9 +37,8 @@ class CampaignsFilterBottomSheet extends StatelessWidget {
   }
 
   void _handleApplyFilter(BuildContext context) {
-    // Close filter bottom sheet
-    Navigator.of(context).pop();
     context.read<ExploreCampaignsBloc>().add(OnFetchCampaigns());
+    context.pop();
   }
 
   @override

@@ -3,8 +3,10 @@ import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/avatar/avatar.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
+import 'package:crowdfunding_flutter/presentation/home/home_screen.dart';
 import 'package:crowdfunding_flutter/presentation/navigation/navigation_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 
 class JoinSuccessPage extends StatelessWidget {
@@ -42,7 +44,7 @@ class JoinSuccessPage extends StatelessWidget {
                   Expanded(
                     child: CustomButton(
                       onPressed: () {
-                        Navigator.push(context, NavigationScreen.route());
+                        context.go(HomeScreen.route);
                       },
                       child: const Text("OK"),
                     ),

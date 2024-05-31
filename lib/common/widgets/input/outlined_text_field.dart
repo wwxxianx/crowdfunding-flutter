@@ -9,11 +9,11 @@ class CustomOutlinedTextfield extends StatefulWidget {
   final FocusNode? focusNode;
   final String? label;
   final String? hintText;
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final bool isObscureText;
   final String? Function(String?)? validator;
   final Widget? prefixIcon;
-  final TextInputAction textInputAction;
+  final TextInputAction? textInputAction;
   final TextInputType keyboardType;
   final void Function(String)? onFieldSubmitted;
   final List<TextInputFormatter>? inputFormatters;
@@ -23,15 +23,18 @@ class CustomOutlinedTextfield extends StatefulWidget {
   final Widget? suffixIcon;
   final EdgeInsetsGeometry? contentPadding;
   final void Function(String)? onChanged;
+  final VoidCallback? onTap;
+  final void Function(PointerDownEvent)? onTapOutside;
   final String? initialValue;
   final String? errorText;
+  final bool readOnly;
 
   const CustomOutlinedTextfield({
     super.key,
     this.focusNode,
     this.label,
     this.hintText,
-    required this.controller,
+    this.controller,
     this.isObscureText = false,
     this.validator,
     this.prefixIcon,
@@ -45,8 +48,11 @@ class CustomOutlinedTextfield extends StatefulWidget {
     this.contentPadding,
     this.suffixIcon,
     this.onChanged,
+    this.onTap,
+    this.onTapOutside,
     this.initialValue,
     this.errorText,
+    this.readOnly = false,
   });
 
   @override
@@ -78,8 +84,11 @@ class _CustomOutlinedTextfieldState extends State<CustomOutlinedTextfield> {
           Text(widget.label!, style: CustomFonts.labelSmall),
         if (widget.label != null && widget.label!.isNotEmpty) 4.kH,
         TextFormField(
+          readOnly: widget.readOnly,
           initialValue: widget.initialValue,
           onChanged: widget.onChanged,
+          onTapOutside: widget.onTapOutside,
+          onTap: widget.onTap,
           textAlign: widget.textAlign,
           maxLines: widget.maxLines,
           inputFormatters: widget.inputFormatters,

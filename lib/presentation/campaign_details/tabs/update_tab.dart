@@ -93,7 +93,7 @@ class CampaignUpdateItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         border: Border(
           bottom: BorderSide(color: CustomColors.containerBorderGrey),
         ),
@@ -189,7 +189,6 @@ class _ImageCarouselWithNumberIndicatorState
       ),
       child: Stack(
         alignment: Alignment.topRight,
-        // fit: StackFit.expand,
         children: [
           AspectRatio(
             aspectRatio: 1.25 / 1,

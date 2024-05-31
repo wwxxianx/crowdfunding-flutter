@@ -92,7 +92,7 @@ mixin InputValidator {
 
   InputValidationResult validateStringWithMinMaxLength(
       {required String title,
-      String? value,
+      required String? value,
       int minLength = 3,
       int maxLength = 50}) {
     if (value == null || value.isEmpty) {

@@ -14,6 +14,95 @@ import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:video_player/video_player.dart';
+import 'package:visibility_detector/visibility_detector.dart';
+import 'package:video_player/video_player.dart' as videoPlayer;
+import 'package:appinio_video_player/appinio_video_player.dart';
+
+class AutoPlayVisibleVideoPlayer extends StatefulWidget {
+  final String videoUrl;
+  final bool isInteractive;
+  const AutoPlayVisibleVideoPlayer({
+    super.key,
+    required this.videoUrl,
+    this.isInteractive = false,
+  });
+
+  @override
+  State<AutoPlayVisibleVideoPlayer> createState() =>
+      _AutoPlayVisibleVideoPlayerState();
+}
+
+class _AutoPlayVisibleVideoPlayerState
+    extends State<AutoPlayVisibleVideoPlayer> {
+  late VideoPlayerController _controller;
+  late CustomVideoPlayerController _customVideoPlayerController;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
+      ..initialize().then((_) {
+        setState(() {});
+      })
+      ..setLooping(true);
+    _customVideoPlayerController = CustomVideoPlayerController(
+      context: context,
+      videoPlayerController: _controller,
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _handleVisibilityChanged(VisibilityInfo info) {
+    if (!mounted) return;
+    if (info.visibleFraction == 1.0) {
+      // Video is fully visible, play the video
+      _controller.play();
+    } else if (info.visibleFraction < 0.7) {
+      // Video is less than 50% visible, pause the video
+      _controller.pause();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.isInteractive) {
+      return VisibilityDetector(
+        key: Key(widget.videoUrl),
+        onVisibilityChanged: _handleVisibilityChanged,
+        child: Container(
+          color: Colors.black,
+          child: _controller.value.isInitialized
+              ? AspectRatio(
+                  aspectRatio: _controller.value.aspectRatio,
+                  child: CustomVideoPlayer(
+                      customVideoPlayerController:
+                          _customVideoPlayerController),
+                )
+              : const Center(child: CircularProgressIndicator()),
+        ),
+      );
+    }
+    return VisibilityDetector(
+      key: Key(widget.videoUrl),
+      onVisibilityChanged: _handleVisibilityChanged,
+      child: Container(
+        color: Colors.black,
+        child: _controller.value.isInitialized
+            ? AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                child: videoPlayer.VideoPlayer(_controller),
+              )
+            : const Center(child: CircularProgressIndicator()),
+      ),
+    );
+  }
+}
 
 class CampaignCard extends StatelessWidget {
   final double? height;
@@ -27,6 +116,25 @@ class CampaignCard extends StatelessWidget {
     this.onPressed,
     this.height,
   });
+
+  Widget _buildMedia() {
+    if (campaign.videoUrl != null && campaign.videoUrl!.isNotEmpty) {
+      return AutoPlayVisibleVideoPlayer(
+        videoUrl: campaign.videoUrl!,
+      );
+    }
+    return CachedNetworkImage(
+      imageUrl: campaign.thumbnailUrl,
+      placeholder: (context, url) => const Skeleton(
+        radius: 0,
+      ),
+      errorWidget: (context, url, error) => const Skeleton(
+        radius: 0,
+      ),
+      fit: BoxFit.cover,
+      // errorWidget: (context, url, error) => Icon(Icons.error),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,18 +173,7 @@ class CampaignCard extends StatelessWidget {
                               topLeft: Radius.circular(5.0),
                               topRight: Radius.circular(5.0),
                             ),
-                            child: CachedNetworkImage(
-                              imageUrl: campaign.thumbnailUrl,
-                              placeholder: (context, url) => const Skeleton(
-                                radius: 0,
-                              ),
-                              errorWidget: (context, url, error) =>
-                                  const Skeleton(
-                                radius: 0,
-                              ),
-                              fit: BoxFit.cover,
-                              // errorWidget: (context, url, error) => Icon(Icons.error),
-                            ),
+                            child: _buildMedia(),
                           ),
                         ),
                         if (!isSmall)

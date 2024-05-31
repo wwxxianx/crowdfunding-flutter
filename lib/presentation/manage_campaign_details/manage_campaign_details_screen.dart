@@ -239,7 +239,7 @@ class _ManageCampaignDetailsScreenState
                           height: MediaQuery.of(context).size.height / 2.75,
                         ),
                       if (campaignResult is ApiResultSuccess<Campaign>)
-                        ImageCarousel(
+                        MediaCarousel(
                           images: campaignResult.data.images,
                         ),
                       24.kH,

@@ -14,7 +14,7 @@ class _RestClient implements RestClient {
     this.baseUrl,
   }) {
     baseUrl ??=
-        'https://48f6-2001-f40-987-516-a0db-314d-1a20-c8a0.ngrok-free.app/';
+        'https://a50e-2001-f40-987-516-e80b-9d50-1a10-1e98.ngrok-free.app/';
   }
 
   final Dio _dio;
@@ -612,7 +612,7 @@ class _RestClient implements RestClient {
     )
             .compose(
               _dio.options,
-              'users',
+              'users/profile',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -622,6 +622,96 @@ class _RestClient implements RestClient {
               baseUrl,
             ))));
     final value = UserModel.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<List<UserModel>> getUsers({
+    String? userName,
+    String? email,
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'userName': userName,
+      r'email': email,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result =
+        await _dio.fetch<List<dynamic>>(_setStreamType<List<UserModel>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'users',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    var value = _result.data!
+        .map((dynamic i) => UserModel.fromJson(i as Map<String, dynamic>))
+        .toList();
+    return value;
+  }
+
+  @override
+  Future<NumOfGiftCardsResponse> getNumOfReceivedUnusedGiftCards() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<NumOfGiftCardsResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'users/received-gift-card-num',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = NumOfGiftCardsResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<GiftCardsResponse> getAllGiftCards() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<GiftCardsResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'users/gift-cards',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = GiftCardsResponse.fromJson(_result.data!);
     return value;
   }
 
@@ -711,8 +801,8 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<PaymentIntentResponse> createPaymentIntent(
-      CreatePaymentIntentPayload payload) async {
+  Future<PaymentIntentResponse> createCampaignDonationPaymentIntent(
+      CreateCampaignDonationPaymentIntentPayload payload) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -726,7 +816,36 @@ class _RestClient implements RestClient {
     )
             .compose(
               _dio.options,
-              'payment/payment-intent',
+              'payment/payment-intent/campaign-donation',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = PaymentIntentResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<PaymentIntentResponse> createGiftCardPaymentIntent(
+      CreateGiftCardPaymentIntentPayload payload) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(payload.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<PaymentIntentResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'payment/payment-intent/gift-card',
               queryParameters: queryParameters,
               data: _data,
             )
