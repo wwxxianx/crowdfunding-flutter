@@ -15,10 +15,7 @@ import 'package:crowdfunding_flutter/common/widgets/container/dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
-  static const route = "/home";
-  // static route() => MaterialPageRoute(
-  //       builder: (context) => const HomeScreen(),
-  //     );
+  static const route = "home";
   const HomeScreen({super.key});
 
   @override
@@ -28,10 +25,17 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _focusNode = FocusNode();
   bool showText = false;
+
   @override
   void dispose() {
     _focusNode.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    context.read<HomeBloc>().add(OnInitData()); // Trigger the event here
   }
 
   @override

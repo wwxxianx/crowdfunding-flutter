@@ -17,7 +17,11 @@ import 'package:heroicons/heroicons.dart';
 import 'package:logger/logger.dart';
 
 class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+  final String? redirectPath;
+  const LoginForm({
+    super.key,
+    this.redirectPath,
+  });
 
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -37,6 +41,11 @@ class _LoginFormState extends State<LoginForm> with InputValidator {
             password: _passwordController.text,
             onSuccess: (user) {
               appUserCubit.updateUser(user);
+              // Brings user directly back where they landed on
+              if (widget.redirectPath != null) {
+                context.go(widget.redirectPath!);
+                return;
+              }
               if (user.isOnboardingCompleted) {
                 context.go(HomeScreen.route);
               } else {

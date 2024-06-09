@@ -7,11 +7,15 @@ import 'package:crowdfunding_flutter/presentation/sign_up/sign_up_screen.dart';
 import 'package:crowdfunding_flutter/state_management/login/login_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatelessWidget {
-  static route() =>
-      MaterialPageRoute(builder: (context) => const LoginScreen());
-  const LoginScreen({super.key});
+  static const route = '/login';
+  final String? fromPath;
+  const LoginScreen({
+    super.key,
+    this.fromPath,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +49,9 @@ class LoginScreen extends StatelessWidget {
                   style: CustomFonts.titleExtraLarge,
                 ),
                 24.kH,
-                const LoginForm(),
+                LoginForm(
+                  redirectPath: fromPath,
+                ),
                 24.kH,
                 Row(
                   children: [
@@ -55,7 +61,8 @@ class LoginScreen extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        Navigator.push(context, SignUpScreen.route());
+                        context.goNamed('sign-up',
+                            queryParameters: {'from': fromPath});
                       },
                       child: Ink(
                         child: Text(

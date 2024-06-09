@@ -41,7 +41,7 @@ class UserRepositoryImpl implements UserRepository {
         profileImageFile: payload.profileImageFile,
         phoneNumber: "11209129",
       );
-      // Cache user
+      // Update Cached user
       sp.saveData(
         data: jsonEncode(res),
         key: Constants.sharedPreferencesKey.user,
@@ -58,22 +58,16 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<Either<Failure, UserModel>> getUserProfile() async {
-    final user = await authService.getCurrentUser();
-      if (user != null) {
-        return right(user);
-      }
-      // Get from backend
-      final res = await api.getUserProfile();
-      return right(res);
     try {
       // Get from local cache
       final user = await authService.getCurrentUser();
       if (user != null) {
         return right(user);
       }
+      return left(Failure('Failed to get user details'));
       // Get from backend
-      final res = await api.getUserProfile();
-      return right(res);
+      // final res = await api.getUserProfile();
+      // return right(res);
     } catch (e) {
       return left(Failure('Failed to get user details'));
     }

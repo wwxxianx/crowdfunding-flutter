@@ -8,6 +8,7 @@ import 'package:crowdfunding_flutter/common/widgets/button/custom_list_tile.dart
 import 'package:crowdfunding_flutter/common/widgets/container/custom_card.dart';
 import 'package:crowdfunding_flutter/common/widgets/text/text_bg_gradient_shape.dart';
 import 'package:crowdfunding_flutter/presentation/account_gift_card/charity_gift_card_screen.dart';
+import 'package:crowdfunding_flutter/presentation/account_preferences/account_preferences_screen.dart';
 import 'package:crowdfunding_flutter/presentation/account_saved_campaigns/saved_campaigns_screen.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_bloc.dart';
@@ -18,7 +19,7 @@ import 'package:go_router/go_router.dart';
 import 'package:heroicons/heroicons.dart';
 
 class AccountScreen extends StatelessWidget {
-  static const route = '/account';
+  static const route = 'account';
   const AccountScreen({super.key});
 
   void _handleSignOut(BuildContext context) {
@@ -32,9 +33,7 @@ class AccountScreen extends StatelessWidget {
     final currentUser = context.watch<AppUserCubit>().state.currentUser;
     if (currentUser == null) {
       return Scaffold(
-        body: Center(
-          child: Column()
-        ),
+        body: Center(child: Column()),
       );
     }
     return Scaffold(
@@ -89,33 +88,33 @@ class AccountScreen extends StatelessWidget {
               ),
               24.kH,
               if (currentUser.organization != null)
-              CustomCard(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const TextWithGradientBGShape(
-                      text: Text(
-                        "My Team",
-                        style: CustomFonts.titleMedium,
+                CustomCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const TextWithGradientBGShape(
+                        text: Text(
+                          "My Team",
+                          style: CustomFonts.titleMedium,
+                        ),
+                        width: 80,
                       ),
-                      width: 80,
-                    ),
-                    4.kH,
-                    CustomListTile(
-                      onTap: () {},
-                      leading: SvgPicture.asset("assets/icons/building.svg"),
-                      title: Text(
-                        currentUser.organization!.name,
-                        style: CustomFonts.labelSmall,
-                      ),
-                      trailing: const HeroIcon(
-                        HeroIcons.chevronRight,
-                        size: 16.0,
-                      ),
-                    )
-                  ],
+                      4.kH,
+                      CustomListTile(
+                        onTap: () {},
+                        leading: SvgPicture.asset("assets/icons/building.svg"),
+                        title: Text(
+                          currentUser.organization!.name,
+                          style: CustomFonts.labelSmall,
+                        ),
+                        trailing: const HeroIcon(
+                          HeroIcons.chevronRight,
+                          size: 16.0,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
               20.kH,
               CustomCard(
                 child: Column(
@@ -234,7 +233,7 @@ class AccountScreen extends StatelessWidget {
                     4.kH,
                     CustomListTile(
                       onTap: () {
-                        
+                        context.push(AccountPreferencesScreen.route);
                       },
                       leading: SvgPicture.asset("assets/icons/smile-heart.svg"),
                       title: Text(

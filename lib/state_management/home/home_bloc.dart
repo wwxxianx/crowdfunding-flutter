@@ -1,5 +1,6 @@
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/data/service/payment/payment_service.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaigns.dart';
 import 'package:crowdfunding_flutter/state_management/home/home_event.dart';
 import 'package:crowdfunding_flutter/state_management/home/home_state.dart';
@@ -15,6 +16,28 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         _paymentService = paymentService,
         super(const HomeState.initial()) {
     on<HomeEvent>(_onEvent);
+  }
+
+  Future<void> _onEvent(
+    HomeEvent event,
+    Emitter<HomeState> emit,
+  ) async {
+    return switch (event) {
+      final OnInitData e => _onInitData(e, emit),
+      final OnFetchRecommendedCampaigns e =>
+        _onFetchRecommendedCampaigns(e, emit),
+      final TestPayment e => testPayment(e, emit),
+    };
+  }
+
+  Future<void> _onInitData(
+    OnInitData event,
+    Emitter<HomeState> emit,
+  ) async {
+    final recommendedCampaignsResult = state.recommendedCampaignsResult;
+    if (recommendedCampaignsResult is! ApiResultSuccess<List<Campaign>>) {
+      await _onFetchRecommendedCampaigns(OnFetchRecommendedCampaigns(), emit);
+    }
   }
 
   Future<void> testPayment(
@@ -37,17 +60,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         );
       },
     );
-  }
-
-  Future<void> _onEvent(
-    HomeEvent event,
-    Emitter<HomeState> emit,
-  ) async {
-    return switch (event) {
-      final OnFetchRecommendedCampaigns e =>
-        _onFetchRecommendedCampaigns(e, emit),
-      final TestPayment e => testPayment(e, emit),
-    };
   }
 
   Future<void> _onFetchRecommendedCampaigns(

@@ -32,19 +32,19 @@ class _HomeBottomNavigationBarState extends State<HomeBottomNavigationBar> {
 
   static int _getCurrentIndex(BuildContext context) {
     final String location = GoRouterState.of(context).uri.path;
-    if (location.startsWith(HomeScreen.route)) {
+    if (location.startsWith('/home')) {
       return 0;
     }
-    if (location.startsWith(ExploreScreen.route)) {
+    if (location.startsWith('/explore')) {
       return 1;
     }
-    if (location.startsWith(NotificationScreen.route)) {
+    if (location.startsWith('/notification')) {
       return 2;
     }
-    if (location.startsWith(ManageCampaignScreen.route)) {
+    if (location.startsWith('/manage-campaigns')) {
       return 3;
     }
-    if (location.startsWith(AccountScreen.route)) {
+    if (location.startsWith('/account')) {
       return 4;
     }
     return 0;
@@ -53,15 +53,15 @@ class _HomeBottomNavigationBarState extends State<HomeBottomNavigationBar> {
   void _onItemTapped(int index, BuildContext context) {
     switch (index) {
       case 0:
-        GoRouter.of(context).go(HomeScreen.route);
+        GoRouter.of(context).go('/home');
       case 1:
-        GoRouter.of(context).go(ExploreScreen.route);
+        GoRouter.of(context).go('/explore');
       case 2:
-        GoRouter.of(context).go(NotificationScreen.route);
+        GoRouter.of(context).go('/notification');
       case 3:
-        GoRouter.of(context).go(ManageCampaignScreen.route);
+        GoRouter.of(context).go('/manage-campaigns');
       case 4:
-        GoRouter.of(context).go(AccountScreen.route);
+        GoRouter.of(context).go('/account');
     }
   }
 

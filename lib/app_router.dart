@@ -1,9 +1,12 @@
+import 'package:crowdfunding_flutter/common/theme/typography.dart';
+import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/domain/model/gift_card/gift_card.dart';
 import 'package:crowdfunding_flutter/domain/model/organization/organization.dart';
 import 'package:crowdfunding_flutter/presentation/account/account_screen.dart';
 import 'package:crowdfunding_flutter/presentation/account_gift_card/charity_gift_card_screen.dart';
 import 'package:crowdfunding_flutter/presentation/account_gift_card/screens/open_gift_card_screen.dart';
 import 'package:crowdfunding_flutter/presentation/account_join_team/account_join_team_screen.dart';
+import 'package:crowdfunding_flutter/presentation/account_preferences/account_preferences_screen.dart';
 import 'package:crowdfunding_flutter/presentation/account_saved_campaigns/saved_campaigns_screen.dart';
 import 'package:crowdfunding_flutter/presentation/campaign_details/campaign_details_screen.dart';
 import 'package:crowdfunding_flutter/presentation/create_campaign/create_campaign_screen.dart';
@@ -24,12 +27,17 @@ import 'package:crowdfunding_flutter/presentation/onboarding/widgets/onboarding_
 import 'package:crowdfunding_flutter/presentation/onboarding/widgets/onboarding_select_npo_join_method_screen.dart';
 import 'package:crowdfunding_flutter/presentation/onboarding/widgets/personal_account_page_view.dart';
 import 'package:crowdfunding_flutter/presentation/organization_profile/organization_profile_screen.dart';
+import 'package:crowdfunding_flutter/presentation/sign_up/sign_up_screen.dart';
 import 'package:crowdfunding_flutter/presentation/splash/splash_screen.dart';
 import 'package:crowdfunding_flutter/presentation/testing/test_screen.dart';
+import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:crowdfunding_flutter/presentation/login/login_screen.dart';
 import 'package:crowdfunding_flutter/presentation/navigation/navigation_screen.dart';
+import 'package:logger/logger.dart';
+import 'package:toastification/toastification.dart';
 
 class AppRouter {
   final GlobalKey<NavigatorState> _rootNavigatorKey =
@@ -42,35 +50,128 @@ class AppRouter {
         // initialLocation: EditCampaignScreen.generateRoute(campaignId: '123'),
         // initialLocation:
         //     OrganizationProfileScreen.generateRoute(organizationId: 'asd'),
-        initialLocation: '/loading',
+        initialLocation: '/data',
         routes: [
-          ShellRoute(
-            navigatorKey: _shellNavigatorKey,
-            builder: (BuildContext context, GoRouterState state, Widget child) {
-              return NavigationScreen(
-                child: child,
+          GoRoute(
+            path: '/',
+            routes: [
+              ShellRoute(
+                navigatorKey: _shellNavigatorKey,
+                builder:
+                    (BuildContext context, GoRouterState state, Widget child) {
+                  return NavigationScreen(
+                    child: child,
+                  );
+                },
+                routes: [
+                  GoRoute(
+                    path: 'home',
+                    builder: (context, state) => const HomeScreen(),
+                  ),
+                  GoRoute(
+                    path: 'explore',
+                    builder: (context, state) => const ExploreScreen(),
+                    routes: [
+                      GoRoute(
+                        parentNavigatorKey: _rootNavigatorKey,
+                        path: CampaignDetailsScreen.route,
+                        builder: (context, state) => CampaignDetailsScreen(
+                          campaignId: state.pathParameters['campaignId'] ?? '',
+                        ),
+                      ),
+                    ],
+                  ),
+                  GoRoute(
+                    path: 'notification',
+                    builder: (context, state) => const NotificationScreen(),
+                  ),
+                  GoRoute(
+                    path: 'manage-campaigns',
+                    builder: (context, state) => const ManageCampaignScreen(),
+                  ),
+                  GoRoute(
+                    path: 'account',
+                    builder: (context, state) => const AccountScreen(),
+                  ),
+                ],
+              ),
+            ],
+            redirect: (context, state) async {
+              final currentUser =
+                  context.read<AppUserCubit>().state.currentUser;
+              if (currentUser == null) {
+                final userIsLoggedIn =
+                    await context.read<AppUserCubit>().checkUserLoggedIn();
+                if (!userIsLoggedIn) {
+                  return '/login?from=${state.uri}';
+                }
+              }
+              return null;
+            },
+          ),
+          // ShellRoute(
+          //   navigatorKey: _shellNavigatorKey,
+          //   builder: (BuildContext context, GoRouterState state, Widget child) {
+          //     return NavigationScreen(
+          //       child: child,
+          //     );
+          //   },
+          //   routes: [
+          //     GoRoute(
+          //       path: HomeScreen.route,
+          //       builder: (context, state) => const HomeScreen(),
+          //     ),
+          //     GoRoute(
+          //       path: ExploreScreen.route,
+          //       builder: (context, state) => const ExploreScreen(),
+          //       routes: [
+          //         GoRoute(
+          //           path: CampaignDetailsScreen.route,
+          //           builder: (context, state) => CampaignDetailsScreen(
+          //             campaignId: state.pathParameters['campaignId'] ?? '',
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //     GoRoute(
+          //       path: NotificationScreen.route,
+          //       builder: (context, state) => const NotificationScreen(),
+          //     ),
+          //     GoRoute(
+          //       path: ManageCampaignScreen.route,
+          //       builder: (context, state) => const ManageCampaignScreen(),
+          //     ),
+          //     GoRoute(
+          //       path: AccountScreen.route,
+          //       builder: (context, state) => const AccountScreen(),
+          //     ),
+          //   ],
+          // ),
+          GoRoute(
+            path: '/data',
+            builder: (context, state) {
+              return Scaffold(
+                appBar: AppBar(title: Text('Data All')),
+                body: CustomButton(
+                  onPressed: () {
+                    context.push(
+                      '/data/details',
+                    );
+                  },
+                  child: Text('Go details'),
+                ),
               );
             },
             routes: [
               GoRoute(
-                path: HomeScreen.route,
-                builder: (context, state) => const HomeScreen(),
-              ),
-              GoRoute(
-                path: ExploreScreen.route,
-                builder: (context, state) => const ExploreScreen(),
-              ),
-              GoRoute(
-                path: NotificationScreen.route,
-                builder: (context, state) => const NotificationScreen(),
-              ),
-              GoRoute(
-                path: ManageCampaignScreen.route,
-                builder: (context, state) => const ManageCampaignScreen(),
-              ),
-              GoRoute(
-                path: AccountScreen.route,
-                builder: (context, state) => const AccountScreen(),
+                path: 'details',
+                builder: (context, state) {
+                  return Scaffold(
+                    appBar: AppBar(
+                      title: Text('Details'),
+                    ),
+                  );
+                },
               ),
             ],
           ),
@@ -87,14 +188,24 @@ class AppRouter {
             builder: (context, state) => const SplashScreen(), //
           ),
           GoRoute(
-            path: '/login',
-            builder: (context, state) => const LoginScreen(),
+            name: 'login',
+            path: LoginScreen.route,
+            builder: (context, state) {
+              final fromPath = state.uri.queryParameters['from'];
+              return LoginScreen(
+                fromPath: fromPath,
+              );
+            },
           ),
           GoRoute(
-            path: CampaignDetailsScreen.route,
-            builder: (context, state) => CampaignDetailsScreen(
-              campaignId: state.pathParameters['campaignId'] ?? '',
-            ),
+            name: 'sign-up',
+            path: SignUpScreen.route,
+            builder: (context, state) {
+              final fromPath = state.uri.queryParameters['from'];
+              return SignUpScreen(
+                fromPath: fromPath,
+              );
+            },
           ),
           GoRoute(
             path: DonateScreen.route,
@@ -112,6 +223,12 @@ class AppRouter {
             path: AccountJoinTeamScreen.route,
             builder: (context, state) {
               return AccountJoinTeamScreen();
+            },
+          ),
+          GoRoute(
+            path: AccountPreferencesScreen.route,
+            builder: (context, state) {
+              return AccountPreferencesScreen();
             },
           ),
           GoRoute(

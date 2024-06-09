@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:crowdfunding_flutter/domain/model/notification/notification.dart';
 
 class NotificationScreen extends StatelessWidget {
-  static const route = '/notification';
+  static const route = 'notification';
   const NotificationScreen({super.key});
 
   @override

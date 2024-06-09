@@ -4,11 +4,12 @@ import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension
 import 'package:crowdfunding_flutter/presentation/login/login_screen.dart';
 import 'package:crowdfunding_flutter/presentation/sign_up/widgets/sign_up_form.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SignUpScreen extends StatelessWidget {
-  static route() =>
-      MaterialPageRoute(builder: (context) => const SignUpScreen());
-  const SignUpScreen({super.key});
+  static const route = '/sign-up';
+  final String? fromPath;
+  const SignUpScreen({super.key, this.fromPath, });
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,7 @@ class SignUpScreen extends StatelessWidget {
                   style: CustomFonts.titleExtraLarge,
                 ),
                 24.kH,
-                const SignUpForm(),
+                SignUpForm(redirectPath: fromPath),
                 24.kH,
                 Row(
                   children: [
@@ -51,7 +52,7 @@ class SignUpScreen extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        Navigator.push(context, LoginScreen.route());
+                        context.go(LoginScreen.route);
                       },
                       child: Ink(
                         child: Text(

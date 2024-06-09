@@ -61,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen>
       animationController.forward().then((value) {
         if (state.currentUser != null) {
           if (state.currentUser!.isOnboardingCompleted) {
-            destination = HomeScreen.route;
+            destination = '/home';
           } else {
             destination = OnboardingSelectAccountScreen.route;
           }

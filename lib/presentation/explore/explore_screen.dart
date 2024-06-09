@@ -33,7 +33,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:badges/badges.dart' as badges;
 
 class ExploreScreen extends StatefulWidget {
-  static const String route = '/explore';
+  static const String route = 'explore';
   const ExploreScreen({super.key});
 
   @override

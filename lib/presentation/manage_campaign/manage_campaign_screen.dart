@@ -19,7 +19,7 @@ import 'package:go_router/go_router.dart';
 import 'package:heroicons/heroicons.dart';
 
 class ManageCampaignScreen extends StatelessWidget {
-  static const route = '/manage-campaigns';
+  static const route = 'manage-campaigns';
   const ManageCampaignScreen({super.key});
 
   Widget _buildContent(ApiResult<List<Campaign>> myCampaignResult) {

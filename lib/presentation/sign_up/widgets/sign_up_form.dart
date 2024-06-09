@@ -14,7 +14,11 @@ import 'package:go_router/go_router.dart';
 import 'package:heroicons/heroicons.dart';
 
 class SignUpForm extends StatefulWidget {
-  const SignUpForm({super.key});
+  final String? redirectPath;
+  const SignUpForm({
+    super.key,
+    this.redirectPath,
+  });
 
   @override
   State<SignUpForm> createState() => _SignUpFormState();
@@ -33,6 +37,10 @@ class _SignUpFormState extends State<SignUpForm> with InputValidator {
               email: emailController.text,
               password: passwordController.text,
               onSuccess: () {
+                if (widget.redirectPath != null) {
+                  context.go(widget.redirectPath!);
+                  return;
+                }
                 context.go(OnboardingSelectAccountScreen.route);
               },
             ),

@@ -21,9 +21,9 @@ import 'package:heroicons/heroicons.dart';
 
 class CampaignDetailsScreen extends StatefulWidget {
   final String campaignId;
-  static const route = '/campaign-details/:campaignId';
+  static const route = 'campaign-details/:campaignId';
   static generateRoute({required String campaignId}) =>
-      '/campaign-details/$campaignId';
+      'campaign-details/$campaignId';
   const CampaignDetailsScreen({
     super.key,
     required this.campaignId,

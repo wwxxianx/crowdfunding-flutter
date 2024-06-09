@@ -31,13 +31,17 @@ class AppUserCubit extends Cubit<AppUserState> {
     }
   }
 
-  Future<void> checkUserLoggedIn() async {
+  Future<bool> checkUserLoggedIn() async {
+    bool userIsLoggedIn = false;
     final res = await _getCurrentUser(NoPayload());
-
     res.fold(
       (failure) => emit(const AppUserState.initial()),
-      (user) => emit(state.copyWith(currentUser: user)),
+      (user) {
+        emit(state.copyWith(currentUser: user));
+        userIsLoggedIn = true;
+      },
     );
+    return userIsLoggedIn;
   }
 
   Future<void> signOut({
