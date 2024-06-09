@@ -14,6 +14,12 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       phoneNumber: json['phoneNumber'] as String? ?? "",
       refreshToken: json['refreshToken'] as String? ?? "",
       isOnboardingCompleted: json['isOnboardingCompleted'] as bool? ?? false,
+      organization: json['organization'] == null
+          ? null
+          : Organization.fromJson(json['organization'] as Map<String, dynamic>),
+      preference: json['preference'] == null
+          ? null
+          : UserPreference.fromJson(json['preference'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
@@ -24,6 +30,8 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'phoneNumber': instance.phoneNumber,
       'refreshToken': instance.refreshToken,
       'isOnboardingCompleted': instance.isOnboardingCompleted,
+      'organization': instance.organization,
+      'preference': instance.preference,
     };
 
 UserModelWithAccessToken _$UserModelWithAccessTokenFromJson(
@@ -35,6 +43,9 @@ UserModelWithAccessToken _$UserModelWithAccessTokenFromJson(
       profileImageUrl: json['profileImageUrl'] as String?,
       phoneNumber: json['phoneNumber'] as String?,
       refreshToken: json['refreshToken'] as String? ?? "",
+      preference: json['preference'] == null
+          ? null
+          : UserPreference.fromJson(json['preference'] as Map<String, dynamic>),
       isOnboardingCompleted: json['isOnboardingCompleted'] as bool? ?? false,
       accessToken: json['accessToken'] as String,
     );
@@ -49,5 +60,6 @@ Map<String, dynamic> _$UserModelWithAccessTokenToJson(
       'phoneNumber': instance.phoneNumber,
       'refreshToken': instance.refreshToken,
       'isOnboardingCompleted': instance.isOnboardingCompleted,
+      'preference': instance.preference,
       'accessToken': instance.accessToken,
     };

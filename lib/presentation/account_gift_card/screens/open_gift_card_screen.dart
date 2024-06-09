@@ -16,6 +16,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:toastification/toastification.dart';
 
 class OpenGiftCardScreen extends StatefulWidget {
   final GiftCard? giftCard;
@@ -48,6 +49,24 @@ class _OpenGiftCardScreenState extends State<OpenGiftCardScreen> {
 
   void _handleSelectGiftCardToUse() {
     context.read<GiftCardBloc>().add(OnSelectGiftCardToUse(giftCard: giftCard));
+    toastification.show(
+      type: ToastificationType.success,
+      style: ToastificationStyle.flatColored,
+      title: const Text(
+        "Use your gift card to donate!",
+        style: CustomFonts.labelSmall,
+      ),
+      description: const Text("Choose a fundraiser and donate with your gift!",
+          style: CustomFonts.labelSmall,),
+      icon: SvgPicture.asset("assets/icons/gift.svg"),
+      alignment: Alignment.topLeft,
+      primaryColor: CustomColors.primaryGreen,
+      autoCloseDuration: const Duration(seconds: 7),
+      boxShadow: lowModeShadow,
+      showProgressBar: true,
+      dragToClose: true,
+      applyBlurEffect: true,
+    );
     context.go(ExploreScreen.route);
   }
 

@@ -42,6 +42,30 @@ class AuthServiceImpl implements AuthService {
   @override
   Future<UserModel> createUserWithEmailPassword(
       {required String email, required String password}) async {
+        final res = await supabaseClient.auth.signUp(
+        password: password,
+        email: email,
+      );
+      final user = res.user;
+      if (user == null) {
+        throw const ServerException("Failed to create account.");
+      }
+      final fullName = user.email?.split("@").first ?? "";
+      // Create user record in db
+      final signUpPayload = SignUpPayload(
+          id: user.id, email: user.email ?? "", fullName: fullName);
+      final tokens = await api.signUp(signUpPayload);
+      await _saveTokens(tokens);
+
+      // cache user
+      final userModel = UserModel(
+        id: user.id,
+        fullName: fullName,
+        email: email,
+        isOnboardingCompleted: false,
+      );
+      _cacheUser(userModel);
+      return userModel;
     try {
       final res = await supabaseClient.auth.signUp(
         password: password,
@@ -107,6 +131,11 @@ class AuthServiceImpl implements AuthService {
     sp.clearData(Constants.sharedPreferencesKey.user);
     sp.clearData(Constants.sharedPreferencesKey.accessToken);
     sp.clearData(Constants.sharedPreferencesKey.refreshToken);
+  }
+
+  @override
+  Future<void> updateCacheUser({required UserModel user}) async {
+    await _cacheUser(user);
   }
 
   _cacheUser(UserModel user) async {

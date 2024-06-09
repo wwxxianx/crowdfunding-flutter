@@ -11,6 +11,7 @@ import 'package:crowdfunding_flutter/state_management/sign_up/sign_up_bloc.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:toastification/toastification.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,25 +49,27 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Crowdfunding App',
-      theme: appTheme,
-      // home: SplashScreen(),
-      routerConfig: _appRouter.router,
-      // home: BlocBuilder<AppUserCubit, AppUserState>(
-      //   builder: (context, state) {
-      //     if (state is AppUserInitial) {
-      //       return const LoginScreen();
-      //     }
-      //     if (state is AppUserLoggedIn) {
-      //       if (state.user.isOnboardingCompleted) {
-      //         return const NavigationScreen();
-      //       }
-      //       return const LoginScreen();
-      //     }
-      //     return const SizedBox();
-      //   },
-      // ),
+    return ToastificationWrapper(
+      child: MaterialApp.router(
+        title: 'Crowdfunding App',
+        theme: appTheme,
+        // home: SplashScreen(),
+        routerConfig: _appRouter.router,
+        // home: BlocBuilder<AppUserCubit, AppUserState>(
+        //   builder: (context, state) {
+        //     if (state is AppUserInitial) {
+        //       return const LoginScreen();
+        //     }
+        //     if (state is AppUserLoggedIn) {
+        //       if (state.user.isOnboardingCompleted) {
+        //         return const NavigationScreen();
+        //       }
+        //       return const LoginScreen();
+        //     }
+        //     return const SizedBox();
+        //   },
+        // ),
+      ),
     );
   }
 }

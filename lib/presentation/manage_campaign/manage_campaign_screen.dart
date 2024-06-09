@@ -28,7 +28,7 @@ class ManageCampaignScreen extends StatelessWidget {
       return CampaignLoadingCard();
     }
     if (myCampaignResult is ApiResultSuccess<List<Campaign>>) {
-    if (myCampaignResult.data.isEmpty) {
+      if (myCampaignResult.data.isEmpty) {
         // Empty state
         return Text("Empty");
       }
@@ -76,7 +76,7 @@ class ManageCampaignScreen extends StatelessWidget {
               foregroundColor: CustomColors.primaryGreen,
               shape: const CircleBorder(),
               onPressed: () {
-                Navigator.push(context, CreateCampaignScreen.route());
+                context.push(CreateCampaignScreen.route);
               },
               child: const HeroIcon(HeroIcons.plus),
             ),

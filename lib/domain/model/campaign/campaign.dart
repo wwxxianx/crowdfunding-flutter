@@ -45,7 +45,7 @@ class Campaign {
     required this.id,
     required this.title,
     required this.description,
-    required this.images,
+    this.images = const [],
     this.videoUrl,
     required this.thumbnailUrl,
     required this.stateAndRegion,
@@ -161,6 +161,59 @@ class Campaign {
     numOfLikes: 0,
     numOfUpdates: 0,
   );
+
+  static const samples = [
+    Campaign(
+      id: '1',
+      title: 'Sample Campaign',
+      description: 'This is a sample campaign description.',
+      images: [ImageModel.sample, ImageModel.sample],
+      videoUrl: '',
+      thumbnailUrl:
+          'https://yyavkrjmlxoqxeeybxuc.supabase.co/storage/v1/object/public/campaign/thumbnail/larm-rmah-AEaTUnvneik-unsplash.jpg',
+      stateAndRegion: StateAndRegion.sample,
+      targetAmount: 1000.0,
+      contactPhoneNumber: '112189387',
+      isPublished: true,
+      beneficiaryName: 'Sample Beneficiary',
+      beneficiaryImageUrl:
+          'https://yyavkrjmlxoqxeeybxuc.supabase.co/storage/v1/object/public/campaign/thumbnail/larm-rmah-AEaTUnvneik-unsplash.jpg',
+      beneficiaryAgeGroup: AgeGroup.baby,
+      campaignCategory: CampaignCategory.sample,
+      user: UserModel.sample,
+      numOfDonations: 0,
+      createdAt: '2024-05-16T08:21:57.324Z',
+      updatedAt: '2024-05-16T08:21:57.324Z',
+      numOfComments: 0,
+      numOfLikes: 0,
+      numOfUpdates: 0,
+    ),
+    Campaign(
+      id: '2',
+      title: 'Sample Campaign',
+      description: 'This is a sample campaign description.',
+      images: [ImageModel.sample, ImageModel.sample],
+      videoUrl: '',
+      thumbnailUrl:
+          'https://yyavkrjmlxoqxeeybxuc.supabase.co/storage/v1/object/public/campaign/thumbnail/larm-rmah-AEaTUnvneik-unsplash.jpg',
+      stateAndRegion: StateAndRegion.sample,
+      targetAmount: 1000.0,
+      contactPhoneNumber: '112189387',
+      isPublished: true,
+      beneficiaryName: 'Sample Beneficiary',
+      beneficiaryImageUrl:
+          'https://yyavkrjmlxoqxeeybxuc.supabase.co/storage/v1/object/public/campaign/thumbnail/larm-rmah-AEaTUnvneik-unsplash.jpg',
+      beneficiaryAgeGroup: AgeGroup.baby,
+      campaignCategory: CampaignCategory.sample,
+      user: UserModel.sample,
+      numOfDonations: 0,
+      createdAt: '2024-05-16T08:21:57.324Z',
+      updatedAt: '2024-05-16T08:21:57.324Z',
+      numOfComments: 0,
+      numOfLikes: 0,
+      numOfUpdates: 0,
+    ),
+  ];
 
 //   @override
 //   String toString() {

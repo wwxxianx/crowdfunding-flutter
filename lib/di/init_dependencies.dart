@@ -4,12 +4,14 @@ import 'package:crowdfunding_flutter/data/network/retrofit_api.dart';
 import 'package:crowdfunding_flutter/data/repository/auth_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/repository/campaign/campaign_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/repository/constant_repository_impl.dart';
+import 'package:crowdfunding_flutter/data/repository/organization/organization_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/repository/user/user_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/service/auth_service_impl.dart';
 import 'package:crowdfunding_flutter/data/service/payment/payment_service.dart';
 import 'package:crowdfunding_flutter/domain/repository/auth_repository.dart';
 import 'package:crowdfunding_flutter/domain/repository/campaign/campaign_repository.dart';
 import 'package:crowdfunding_flutter/domain/repository/constant_repository.dart';
+import 'package:crowdfunding_flutter/domain/repository/organization/organization_repository.dart';
 import 'package:crowdfunding_flutter/domain/repository/user/user_repository.dart';
 import 'package:crowdfunding_flutter/domain/service/auth_service.dart';
 import 'package:crowdfunding_flutter/domain/usecases/auth/get_current_user.dart';
@@ -25,6 +27,12 @@ import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaigns.da
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaign_categories.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/update_campaign.dart';
 import 'package:crowdfunding_flutter/domain/usecases/fetch_state_and_regions.dart';
+import 'package:crowdfunding_flutter/domain/usecases/organization/create_organization.dart';
+import 'package:crowdfunding_flutter/domain/usecases/organization/fetch_organization.dart';
+import 'package:crowdfunding_flutter/domain/usecases/organization/fetch_organization_members.dart';
+import 'package:crowdfunding_flutter/domain/usecases/organization/fetch_organization_with_code.dart';
+import 'package:crowdfunding_flutter/domain/usecases/organization/join_organization.dart';
+import 'package:crowdfunding_flutter/domain/usecases/organization/update_organization.dart';
 import 'package:crowdfunding_flutter/domain/usecases/user/favourite_campaign/create_favourite_campaign.dart';
 import 'package:crowdfunding_flutter/domain/usecases/user/favourite_campaign/delete_favourite_campaign.dart';
 import 'package:crowdfunding_flutter/domain/usecases/user/favourite_campaign/fetch_favourite_campaigns.dart';
@@ -45,9 +53,9 @@ final serviceLocator = GetIt.instance;
 
 Future<void> initDependencies() async {
   final supabase = await Supabase.initialize(
-      url: "https://yyavkrjmlxoqxeeybxuc.supabase.co",
+      url: "https://dopwacnojucwkhhdoiqd.supabase.co",
       anonKey:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl5YXZrcmptbHhvcXhlZXlieHVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTU0OTcyNjMsImV4cCI6MjAzMTA3MzI2M30.M9Fr10hV4nydDqUaJHzmve91jDYrO_POprT4txlqK9o");
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRvcHdhY25vanVjd2toaGRvaXFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTc4MjU2MzcsImV4cCI6MjAzMzQwMTYzN30.vqTc8vyjpg6x5dZftpgYbmASLf42W3-K2BPAJ1mRh34");
 
   serviceLocator.registerLazySingleton(() => supabase.client);
 
@@ -70,6 +78,7 @@ Future<void> initDependencies() async {
   _initUser();
   _initPayment();
   _initGiftCard();
+  _initOrganization();
 }
 
 void _initExploreCampaigns() {
@@ -127,7 +136,8 @@ void _initCampaign() {
     ..registerFactory(
         () => CreateCampaignUpdate(campaignRepository: serviceLocator()))
     // Bloc
-    ..registerLazySingleton(() => HomeBloc(fetchCampaign: serviceLocator()));
+    ..registerLazySingleton(() => HomeBloc(
+        fetchCampaign: serviceLocator(), paymentService: serviceLocator()));
 }
 
 void _initConstant() {
@@ -158,6 +168,26 @@ void _initUser() {
     ..registerFactory(() => FetchUsers(userRepository: serviceLocator()))
     ..registerFactory(() =>
         FetchNumOfReceivedUnusedGiftCards(userRepository: serviceLocator()));
+}
+
+void _initOrganization() {
+  serviceLocator
+    // Repo
+    ..registerFactory<OrganizationRepository>(() => OrganizationRepositoryImpl(
+        api: serviceLocator(), authService: serviceLocator()))
+    // Usecase
+    ..registerFactory(
+        () => CreateOrganization(organizationRepository: serviceLocator()))
+    ..registerFactory(() =>
+        FetchOrganizationWithCode(organizationRepository: serviceLocator()))
+    ..registerFactory(
+        () => JoinOrganization(organizationRepository: serviceLocator()))
+    ..registerFactory(
+        () => FetchOrganization(organizationRepository: serviceLocator()))
+    ..registerFactory(() =>
+        FetchOrganizationMembers(organizationRepository: serviceLocator()))
+    ..registerFactory(
+        () => UpdateOrganization(organizationRepository: serviceLocator()));
 }
 
 void _initPayment() {

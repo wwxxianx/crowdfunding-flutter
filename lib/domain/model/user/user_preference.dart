@@ -7,14 +7,12 @@ part 'user_preference.g.dart';
 @JsonSerializable()
 class UserPreference {
   final String id;
-  final UserModel user;
   final List<CampaignCategory> favouriteCampaignCategories;
   final String createdAt;
   final String updatedAt;
 
   const UserPreference({
     required this.id,
-    required this.user,
     required this.favouriteCampaignCategories,
     required this.createdAt,
     required this.updatedAt,

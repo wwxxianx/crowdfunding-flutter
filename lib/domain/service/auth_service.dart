@@ -16,5 +16,9 @@ abstract interface class AuthService {
     required String password,
   });
 
+  Future<void> updateCacheUser({
+    required UserModel user,
+  });
+
   Future<void> signOut();
 }

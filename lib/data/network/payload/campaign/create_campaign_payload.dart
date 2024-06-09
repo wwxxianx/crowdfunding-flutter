@@ -38,7 +38,6 @@ class CreateCampaignPayload {
     final List<MultipartFile> campaignImagesBytes =
         campaignImageFiles.map((file) => MultipartFile.fromBytes(file.readAsBytesSync())).toList();
 
-
     // Must match with backend data structure
     return {
       'title': title,

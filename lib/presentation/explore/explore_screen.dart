@@ -60,24 +60,24 @@ class _ExploreScreenState extends State<ExploreScreen>
     _searchResultContainerAnimation = CurvedAnimation(
         parent: _searchResultContainerController, curve: Curves.fastOutSlowIn);
 
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) async {
-        final giftCardBloc = context.read<GiftCardBloc>();
-        if (giftCardBloc.state.shouldShowGiftCardDialog) {
-          context.displayDialog(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("testing"),
-              ],
-            ),
-            onClose: () {
-              giftCardBloc.add(OnCloseDialog());
-            },
-          );
-        }
-      },
-    );
+    // WidgetsBinding.instance.addPostFrameCallback(
+    //   (_) async {
+    //     final giftCardBloc = context.read<GiftCardBloc>();
+    //     if (giftCardBloc.state.shouldShowGiftCardDialog) {
+    //       context.displayDialog(
+    //         child: Column(
+    //           crossAxisAlignment: CrossAxisAlignment.start,
+    //           children: [
+    //             Text("testing"),
+    //           ],
+    //         ),
+    //         onClose: () {
+    //           giftCardBloc.add(OnCloseDialog());
+    //         },
+    //       );
+    //     }
+    //   },
+    // );
   }
 
   void _showSearchResultContainer() {

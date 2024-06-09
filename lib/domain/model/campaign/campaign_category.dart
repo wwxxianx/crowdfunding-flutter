@@ -18,4 +18,9 @@ class CampaignCategory {
   Map<String, dynamic> toJson() => _$CampaignCategoryToJson(this);
 
   static const sample = CampaignCategory(id: 'sample-id', title: 'medical');
+  static const samples = [
+    CampaignCategory(id: '1', title: 'medical'),
+    CampaignCategory(id: '2', title: 'education'),
+    CampaignCategory(id: '3', title: 'emergency'),
+  ];
 }

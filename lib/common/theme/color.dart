@@ -22,6 +22,7 @@ class CustomColors {
   static const accentBlue = Color(0xFF1E40AF);
 
   static const pink = Color(0xFFFFDADD);
+  static const alert = Color(0xFFF43F5E);
 
   static const containerBorderGrey = Color(0xFFE2E2EA);
   static const containerBorderGreen = Color(0xFF235600);
@@ -51,10 +52,15 @@ class CustomColors {
     )
   ];
   static const containerGreenShadow = [
-     BoxShadow(
+    BoxShadow(
       blurRadius: 7.5,
       offset: Offset(0, 2),
       color: CustomColors.primaryGreen,
     )
   ];
+
+  // Color Theme
+  static const amber50 = Color(0xFFFFFFEC);
+  static const amber500 = Color(0xFFFFEEC3);
+  static const amber700 = Color(0xFF92400E);
 }

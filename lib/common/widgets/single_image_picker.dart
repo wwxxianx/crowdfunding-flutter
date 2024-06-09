@@ -11,12 +11,16 @@ import 'package:image_picker/image_picker.dart';
 class SingleImagePicker extends StatefulWidget {
   final double size;
   final void Function(File)? onFileChanged;
+  final VoidCallback? onPressed;
   final File? previewFile;
+  final String? previewImageUrl;
   const SingleImagePicker({
     super.key,
     this.size = 100,
     this.onFileChanged,
     this.previewFile,
+    this.previewImageUrl,
+    this.onPressed,
   });
 
   @override
@@ -36,6 +40,10 @@ class _SingleImagePickerState extends State<SingleImagePicker> {
   }
 
   void _handlePickImage() async {
+    if (widget.onPressed != null) {
+      widget.onPressed!();
+      return;
+    }
     final image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       final imageFile = File(image.path);
@@ -55,7 +63,7 @@ class _SingleImagePickerState extends State<SingleImagePicker> {
       alignment: Alignment.bottomCenter,
       children: [
         Avatar(
-          imageUrl: null,
+          imageUrl: widget.previewImageUrl,
           size: widget.size,
           filePath: selectedImage,
           placeholder: "w",

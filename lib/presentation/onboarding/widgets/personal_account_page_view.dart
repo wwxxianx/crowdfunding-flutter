@@ -2,7 +2,6 @@ import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
-import 'package:crowdfunding_flutter/common/utils/slide_route_transition.dart';
 import 'package:crowdfunding_flutter/di/init_dependencies.dart';
 import 'package:crowdfunding_flutter/presentation/onboarding/pages/personal_onboarding/campaign_preference_page.dart';
 import 'package:crowdfunding_flutter/presentation/onboarding/pages/personal_onboarding/setup_profile_page.dart';
@@ -13,7 +12,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:heroicons/heroicons.dart';
 
 class OnboardingPersonalProfileScreen extends StatefulWidget {
-  static route() => SlideRoute(page: const OnboardingPersonalProfileScreen());
+  static const route = '/onboarding-personal';
+  // static route() => SlideRoute(page: const OnboardingPersonalProfileScreen());
   const OnboardingPersonalProfileScreen({
     super.key,
   });
@@ -66,7 +66,8 @@ class _OnboardingPersonalProfileScreenState
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => PersonalOnboardingBloc(updateUserProfile: serviceLocator()),
+      create: (context) =>
+          PersonalOnboardingBloc(updateUserProfile: serviceLocator()),
       child: Scaffold(
         body: SafeArea(
           child: Padding(

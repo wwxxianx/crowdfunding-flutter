@@ -9,12 +9,14 @@ part of 'organization.dart';
 Organization _$OrganizationFromJson(Map<String, dynamic> json) => Organization(
       id: json['id'] as String,
       name: json['name'] as String,
+      email: json['email'] as String,
       description: json['description'] as String?,
-      imageUrl: json['imageUrl'] as String?,
+      imageUrl: json['imageUrl'] as String,
+      contactPhoneNumber: json['contactPhoneNumber'] as String,
       invitationCode: json['invitationCode'] as String,
       isVerified: json['isVerified'] as bool,
-      members: (json['members'] as List<dynamic>)
-          .map((e) => UserModel.fromJson(e as Map<String, dynamic>))
+      members: (json['members'] as List<dynamic>?)
+          ?.map((e) => UserModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,
@@ -22,18 +24,22 @@ Organization _$OrganizationFromJson(Map<String, dynamic> json) => Organization(
               ?.map((e) => Campaign.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      createdBy: UserModel.fromJson(json['createdBy'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$OrganizationToJson(Organization instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
+      'email': instance.email,
       'description': instance.description,
+      'contactPhoneNumber': instance.contactPhoneNumber,
+      'isVerified': instance.isVerified,
       'imageUrl': instance.imageUrl,
       'invitationCode': instance.invitationCode,
-      'isVerified': instance.isVerified,
       'members': instance.members,
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
       'campaigns': instance.campaigns,
+      'createdBy': instance.createdBy,
     };

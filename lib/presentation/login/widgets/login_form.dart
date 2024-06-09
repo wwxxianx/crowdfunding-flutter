@@ -4,8 +4,9 @@ import 'package:crowdfunding_flutter/common/utils/input_validator.dart';
 import 'package:crowdfunding_flutter/common/utils/show_snackbar.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/input/outlined_text_field.dart';
+import 'package:crowdfunding_flutter/presentation/home/home_screen.dart';
+import 'package:crowdfunding_flutter/presentation/onboarding/widgets/onboarding_select_account_type_screen.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
-import 'package:crowdfunding_flutter/state_management/app_user_state.dart';
 import 'package:crowdfunding_flutter/state_management/login/login_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/login/login_event.dart';
 import 'package:crowdfunding_flutter/state_management/login/login_state.dart';
@@ -30,7 +31,6 @@ class _LoginFormState extends State<LoginForm> with InputValidator {
 
   void _handleLoginSubmit() {
     if (_formKey.currentState!.validate()) {
-      var logger = Logger();
       final appUserCubit = context.read<AppUserCubit>();
       context.read<LoginBloc>().add(OnLogin(
             email: _emailController.text,
@@ -38,7 +38,9 @@ class _LoginFormState extends State<LoginForm> with InputValidator {
             onSuccess: (user) {
               appUserCubit.updateUser(user);
               if (user.isOnboardingCompleted) {
-                context.go('/main');
+                context.go(HomeScreen.route);
+              } else {
+                context.go(OnboardingSelectAccountScreen.route);
               }
             },
           ));
@@ -63,7 +65,13 @@ class _LoginFormState extends State<LoginForm> with InputValidator {
                 label: "Email",
                 hintText: "email@gmail.com",
                 controller: _emailController,
-                validator: (value) => validateEmail(value),
+                validator: (value) {
+                  final validationResult = validateEmail(value);
+                  if (validationResult.successful) {
+                    return null;
+                  }
+                  return validationResult.errorMessage;
+                },
                 prefixIcon: const HeroIcon(
                   HeroIcons.envelope,
                   size: 20.0,

@@ -1,54 +1,19 @@
 import 'package:crowdfunding_flutter/common/theme/app_theme.dart';
 import 'package:crowdfunding_flutter/common/theme/color.dart';
-import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
-import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
-import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/tab/custom_tab_button.dart';
-import 'package:crowdfunding_flutter/domain/model/gift_card/gift_cards_response.dart';
-import 'package:crowdfunding_flutter/presentation/account_gift_card/widgets/purchase_gift_card_bottom_sheet.dart';
 import 'package:crowdfunding_flutter/presentation/account_gift_card/widgets/tab_give.dart';
 import 'package:crowdfunding_flutter/presentation/account_gift_card/widgets/tab_receive.dart';
+import 'package:crowdfunding_flutter/presentation/account_gift_card/widgets/tab_sent.dart';
 import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_bloc.dart';
-import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
-class GiftCardScreen extends StatefulWidget {
+class GiftCardScreen extends StatelessWidget {
   static const String route = "/gift-card";
   const GiftCardScreen({
     super.key,
   });
-
-  @override
-  State<GiftCardScreen> createState() => _GiftCardScreenState();
-}
-
-class _GiftCardScreenState extends State<GiftCardScreen>
-    with SingleTickerProviderStateMixin {
-  late PageController pageViewController;
-  @override
-  void initState() {
-    super.initState();
-    pageViewController = PageController();
-  }
-
-  void _handleTabChanged(int tabIndex) {
-    if (tabIndex == 0) {
-      pageViewController.animateToPage(
-        0,
-        duration: const Duration(milliseconds: 700),
-        curve: Curves.decelerate,
-      );
-      return;
-    }
-    pageViewController.animateToPage(
-      1,
-      duration: const Duration(milliseconds: 700),
-      curve: Curves.decelerate,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,51 +30,76 @@ class _GiftCardScreenState extends State<GiftCardScreen>
           ),
         ),
       ),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            "Gift Card",
-            style: CustomFonts.labelMedium,
-          ),
-          centerTitle: true,
-        ),
-        body: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Builder(builder: (context) {
-              final giftCardState = context.watch<GiftCardBloc>().state;
-              final numOfUnusedGiftCards = giftCardState.receivedGiftCards
-                  .where((giftCard) => giftCard.campaignDonation == null)
-                  .length;
-              return Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Dimensions.screenHorizontalPadding,
-                ),
-                child: CustomTab(
-                  width: double.maxFinite,
-                  tabs: [
-                    const TabItem(title: 'Give'),
-                    const TabItem(title: 'Sent'),
-                    TabItem(
-                      title:
-                          'Received ${numOfUnusedGiftCards > 0 ? '($numOfUnusedGiftCards)' : ''}',
+      child: DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              "Gift Card",
+              style: CustomFonts.labelMedium,
+            ),
+            centerTitle: true,
+            bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(40),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(6)),
+                child: Container(
+                  height: 40,
+                  padding: const EdgeInsets.all(4.0),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(6)),
+                    color: Color(0xFFF1F9F2),
+                  ),
+                  child: TabBar(
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    dividerColor: Colors.transparent,
+                    indicator: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: const BorderRadius.all(Radius.circular(4)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.08),
+                          blurRadius: 3.0,
+                          offset: const Offset(0, 1),
+                        ),
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.12),
+                          blurRadius: 2.0,
+                          offset: const Offset(0, 1),
+                        ),
+                      ],
                     ),
-                  ],
-                  onTabItemChange: _handleTabChanged,
+                    labelColor: CustomColors.textBlack,
+                    unselectedLabelColor: Colors.black54,
+                    tabs: [
+                      const TabItem(title: 'Give'),
+                      const TabItem(title: 'Sent'),
+                      Builder(builder: (context) {
+                        final giftCardState =
+                            context.watch<GiftCardBloc>().state;
+                        final numOfUnusedGiftCards = giftCardState
+                            .receivedGiftCards
+                            .where(
+                                (giftCard) => giftCard.campaignDonation == null)
+                            .length;
+                        return TabItem(
+                          title:
+                              'Received ${numOfUnusedGiftCards > 0 ? '($numOfUnusedGiftCards)' : ''}',
+                        );
+                      }),
+                    ],
+                  ),
                 ),
-              );
-            }),
-            Expanded(
-              child: PageView(
-                physics: const NeverScrollableScrollPhysics(),
-                controller: pageViewController,
-                children: [
-                  GiveTabContent(),
-                  ReceivedTabContent(),
-                ],
               ),
-            )
-          ],
+            ),
+          ),
+          body: const TabBarView(
+            children: [
+              GiveTabContent(),
+              SentTabContent(),
+              ReceivedTabContent(),
+            ],
+          ),
         ),
       ),
     );

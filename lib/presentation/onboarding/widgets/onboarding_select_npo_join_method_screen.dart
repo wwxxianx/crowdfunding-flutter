@@ -1,16 +1,17 @@
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
-import 'package:crowdfunding_flutter/common/utils/slide_route_transition.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/selectable_container.dart';
 import 'package:crowdfunding_flutter/presentation/onboarding/widgets/create_organization_page_view.dart';
 import 'package:crowdfunding_flutter/presentation/onboarding/widgets/join_with_code_page_view.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class OnboardingSelectNPOJoinMethodScreen extends StatefulWidget {
-  static route() =>
-      SlideRoute(page: const OnboardingSelectNPOJoinMethodScreen());
+  static const route = '/onboarding-npo-join-method';
+  // static route() =>
+  //     SlideRoute(page: const OnboardingSelectNPOJoinMethodScreen());
   const OnboardingSelectNPOJoinMethodScreen({
     super.key,
   });
@@ -38,14 +39,14 @@ class _OnboardingSelectNPOJoinMethodScreenState
 
   void _handleNextPage() {
     if (isUseCodeSelected) {
-      Navigator.push(context, JoinWithCodePageView.route());
+      context.push(JoinWithCodePageView.route);
     } else {
-      Navigator.push(context, CreateOrganizationPageView.route());
+      context.push(CreateOrganizationPageView.route);
     }
   }
 
   void _handlePreviousPage() {
-    Navigator.pop(context);
+    context.pop();
   }
 
   @override

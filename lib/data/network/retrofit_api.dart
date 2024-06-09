@@ -5,7 +5,10 @@ import 'package:crowdfunding_flutter/data/network/payload/auth/login_be_payload.
 import 'package:crowdfunding_flutter/data/network/payload/auth/sign_up_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_comment_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_reply_payload.dart';
+import 'package:crowdfunding_flutter/data/network/payload/organization/create_organization_payload.dart';
+import 'package:crowdfunding_flutter/data/network/payload/organization/join_organization_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/user/favourite_campaign/favourite_campaign_payload.dart';
+import 'package:crowdfunding_flutter/data/network/response/create_organization_response.dart';
 import 'package:crowdfunding_flutter/data/service/payment/campaign_donation/create_campaign_donation_payment_intent_payload.dart';
 import 'package:crowdfunding_flutter/data/service/payment/gift_card/create_gift_card_payment_intent_payload.dart';
 import 'package:crowdfunding_flutter/data/service/payment/payment_intent_response.dart';
@@ -15,6 +18,7 @@ import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update.dart';
 import 'package:crowdfunding_flutter/domain/model/gift_card/gift_cards_response.dart';
 import 'package:crowdfunding_flutter/domain/model/gift_card/num_gift_card_response.dart';
+import 'package:crowdfunding_flutter/domain/model/organization/organization.dart';
 import 'package:crowdfunding_flutter/domain/model/state/state_region.dart';
 import 'package:crowdfunding_flutter/domain/model/tokens_response.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
@@ -164,4 +168,51 @@ abstract class RestClient {
   Future<PaymentIntentResponse> createGiftCardPaymentIntent(
     @Body() CreateGiftCardPaymentIntentPayload payload,
   );
+
+  @POST("payment/test-payment")
+  Future<PaymentIntentResponse> testPayment();
+
+  // Organization
+  @GET("organizations")
+  Future<List<Organization>> getOrganizations({
+    @Query("limit") int limit = 0,
+  });
+
+  @POST("organizations")
+  @MultiPart()
+  Future<UserModel> createOrganization({
+    @Part(name: "name") required String npoName,
+    @Part(name: "email") required String npoEmail,
+    // @Part(name: "registrationNumber") required String registrationNumber,
+    @Part(name: "contactPhoneNumber") required String npoContactPhoneNumber,
+    @Part(name: "imageFile") File? imageFile,
+  });
+
+  @PATCH("organizations/{id}")
+  @MultiPart()
+  Future<Organization> updateOrganization({
+    @Path('id') required String organizationId,
+    @Part(name: "name") required String npoName,
+    @Part(name: "email") required String npoEmail,
+    @Part(name: "contactPhoneNumber") required String npoContactPhoneNumber,
+    @Part(name: "imageFile") File? imageFile,
+  });
+
+  @GET("organizations/{id}")
+  Future<Organization> getOrganization({
+    @Path('id') required String organizationId,
+  });
+
+  @GET("organizations/{id}/members")
+  Future<List<UserModel>> getOrganizationMembers({
+    @Path('id') required String organizationId,
+  });
+
+  @GET("organizations/invitation/{code}")
+  Future<Organization> getOrganizationByInvitationCode({
+    @Path('code') required String invitationCode,
+  });
+
+  @POST("organizations/join")
+  Future<UserModel> joinOrganization(@Body() JoinOrganizationPayload payload);
 }

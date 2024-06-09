@@ -10,6 +10,7 @@ import 'package:crowdfunding_flutter/state_management/sign_up/sign_up_event.dart
 import 'package:crowdfunding_flutter/state_management/sign_up/sign_up_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:heroicons/heroicons.dart';
 
 class SignUpForm extends StatefulWidget {
@@ -32,11 +33,7 @@ class _SignUpFormState extends State<SignUpForm> with InputValidator {
               email: emailController.text,
               password: passwordController.text,
               onSuccess: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  OnboardingSelectAccountScreen.route(),
-                  (route) => false,
-                );
+                context.go(OnboardingSelectAccountScreen.route);
               },
             ),
           );
@@ -61,7 +58,13 @@ class _SignUpFormState extends State<SignUpForm> with InputValidator {
                 label: "Email",
                 hintText: "email@gmail.com",
                 controller: emailController,
-                validator: (value) => validateEmail(value),
+                validator: (value) {
+                  final validationResult = validateEmail(value);
+                  if (validationResult.successful) {
+                    return null;
+                  }
+                  return validationResult.errorMessage;
+                },
                 prefixIcon: const HeroIcon(
                   HeroIcons.envelope,
                   size: 20.0,

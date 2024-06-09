@@ -33,7 +33,6 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<Either<Failure, UserModel>> updateUserProfile(
       UserProfilePayload payload) async {
-    var logger = Logger();
     try {
       final res = await api.updateUserProfile(
         favouriteCategoriesId: payload.favouriteCategoriesId,
@@ -44,7 +43,9 @@ class UserRepositoryImpl implements UserRepository {
       );
       // Cache user
       sp.saveData(
-          data: jsonEncode(res), key: Constants.sharedPreferencesKey.user);
+        data: jsonEncode(res),
+        key: Constants.sharedPreferencesKey.user,
+      );
       return right(res);
     } on Exception catch (e) {
       if (e is DioException) {
@@ -58,10 +59,24 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<Either<Failure, UserModel>> getUserProfile() async {
     final user = await authService.getCurrentUser();
-    if (user == null) {
-      return left(Failure());
+      if (user != null) {
+        return right(user);
+      }
+      // Get from backend
+      final res = await api.getUserProfile();
+      return right(res);
+    try {
+      // Get from local cache
+      final user = await authService.getCurrentUser();
+      if (user != null) {
+        return right(user);
+      }
+      // Get from backend
+      final res = await api.getUserProfile();
+      return right(res);
+    } catch (e) {
+      return left(Failure('Failed to get user details'));
     }
-    return right(user);
   }
 
   @override
@@ -112,7 +127,10 @@ class UserRepositoryImpl implements UserRepository {
   Future<Either<Failure, List<UserModel>>> getUsers(
       GetUsersPayload payload) async {
     try {
-      final res = await api.getUsers(userName: payload.userName, email: payload.email,);
+      final res = await api.getUsers(
+        userName: payload.userName,
+        email: payload.email,
+      );
       return right(res);
     } on Exception catch (e) {
       if (e is DioException) {
@@ -122,9 +140,10 @@ class UserRepositoryImpl implements UserRepository {
       return left(Failure(ErrorHandler.otherException(error: e).errorMessage));
     }
   }
-  
+
   @override
-  Future<Either<Failure, NumOfGiftCardsResponse>> getNumOfReceivedUnusedGiftCards() async {
+  Future<Either<Failure, NumOfGiftCardsResponse>>
+      getNumOfReceivedUnusedGiftCards() async {
     try {
       final res = await api.getNumOfReceivedUnusedGiftCards();
       return right(res);

@@ -6,11 +6,13 @@ import 'package:crowdfunding_flutter/presentation/home/widgets/header.dart';
 import 'package:crowdfunding_flutter/presentation/home/widgets/recommended_campaigns.dart';
 import 'package:crowdfunding_flutter/presentation/home/widgets/slogan_banner.dart';
 import 'package:crowdfunding_flutter/state_management/home/home_bloc.dart';
+import 'package:crowdfunding_flutter/state_management/home/home_event.dart';
 import 'package:crowdfunding_flutter/state_management/home/home_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   static const route = "/home";
@@ -40,6 +42,15 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (context, state) {
             return Column(
               children: [
+                CustomButton(
+                  onPressed: () async {
+                    final url = Uri.parse("https://flutter.dev");
+                    if (!await launchUrl(url)) {
+                      throw Exception('Could not launch $url');
+                    }
+                  },
+                  child: Text("Launch URL"),
+                ),
                 HomePageHeader(
                   title: "Welcome back!",
                   action: InkWell(
@@ -101,7 +112,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                
                 SloganBanner(),
                 RecommendedCampaigns(),
                 20.kH,

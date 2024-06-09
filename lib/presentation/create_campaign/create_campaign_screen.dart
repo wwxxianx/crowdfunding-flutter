@@ -11,8 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreateCampaignScreen extends StatefulWidget {
-  static route() =>
-      MaterialPageRoute(builder: (context) => const CreateCampaignScreen());
+  static const route = '/create-campaign';
+  // static route() =>
+  //     MaterialPageRoute(builder: (context) => const CreateCampaignScreen());
   const CreateCampaignScreen({super.key});
 
   @override

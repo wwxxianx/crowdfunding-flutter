@@ -10,9 +10,10 @@ Campaign _$CampaignFromJson(Map<String, dynamic> json) => Campaign(
       id: json['id'] as String,
       title: json['title'] as String,
       description: json['description'] as String,
-      images: (json['images'] as List<dynamic>)
-          .map((e) => ImageModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      images: (json['images'] as List<dynamic>?)
+              ?.map((e) => ImageModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
       videoUrl: json['videoUrl'] as String?,
       thumbnailUrl: json['thumbnailUrl'] as String,
       stateAndRegion: StateAndRegion.fromJson(

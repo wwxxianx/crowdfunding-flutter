@@ -34,17 +34,35 @@ class DonateBloc extends Bloc<DonateEvent, DonateState> {
       isAnonymous: event.isAnonymous,
       giftCardId: event.giftCardId,
     );
-    final paymentIntentRes =
-        await _paymentService.initCampaignDonationPaymentSheet(payload);
+    // final paymentIntentRes =
+    //     await _paymentService.initCampaignDonationPaymentSheet(payload);
+    // paymentIntentRes.fold(
+    //   (failure) {},
+    //   (unit) async {
+    //     final paymentRes = await _paymentService.presentPaymentSheet();
+    //     paymentRes.fold((l) {if (emit.isDone) return;
+    //       emit(state.copyWith(isCreatingDonation: false));}, (r) {
+    //       if (emit.isDone) return;
+    //       emit(state.copyWith(isCreatingDonation: false));
+    //     },);
+    //   },
+    // );
+    final paymentIntentRes = await _paymentService.testPayment();
     paymentIntentRes.fold(
       (failure) {},
       (unit) async {
         final paymentRes = await _paymentService.presentPaymentSheet();
-        paymentRes.fold((l) {if (emit.isDone) return;
-          emit(state.copyWith(isCreatingDonation: false));}, (r) {
-          if (emit.isDone) return;
-          emit(state.copyWith(isCreatingDonation: false));
-        },);
+        paymentRes.fold(
+          (l) {
+            print("Failed");
+            if (emit.isDone) return;
+          },
+          (r) {
+            print("Done!!");
+            // if (emit.isDone) return;
+            // emit(state.copyWith(isCreatingDonation: false));
+          },
+        );
       },
     );
   }

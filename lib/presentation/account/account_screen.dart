@@ -29,6 +29,14 @@ class AccountScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = context.watch<AppUserCubit>().state.currentUser;
+    if (currentUser == null) {
+      return Scaffold(
+        body: Center(
+          child: Column()
+        ),
+      );
+    }
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -43,7 +51,8 @@ class AccountScreen extends StatelessWidget {
               Row(
                 children: [
                   Avatar(
-                    imageUrl: "",
+                    imageUrl: currentUser.profileImageUrl,
+                    placeholder: currentUser.fullName[0],
                     size: 64,
                   ),
                   8.kW,
@@ -53,11 +62,11 @@ class AccountScreen extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            "Leonardo",
+                            currentUser.fullName,
                             style: CustomFonts.labelLarge,
                           ),
                           4.kW,
-                          HeroIcon(
+                          const HeroIcon(
                             HeroIcons.checkBadge,
                             size: 20,
                             color: CustomColors.accentGreen,
@@ -67,7 +76,7 @@ class AccountScreen extends StatelessWidget {
                       ),
                       InkWell(
                         onTap: () {},
-                        child: Text(
+                        child: const Text(
                           "Edit my account",
                           style: TextStyle(
                             decoration: TextDecoration.underline,
@@ -79,11 +88,12 @@ class AccountScreen extends StatelessWidget {
                 ],
               ),
               24.kH,
+              if (currentUser.organization != null)
               CustomCard(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextWithGradientBGShape(
+                    const TextWithGradientBGShape(
                       text: Text(
                         "My Team",
                         style: CustomFonts.titleMedium,
@@ -95,10 +105,10 @@ class AccountScreen extends StatelessWidget {
                       onTap: () {},
                       leading: SvgPicture.asset("assets/icons/building.svg"),
                       title: Text(
-                        "Bill Gate Foundation",
+                        currentUser.organization!.name,
                         style: CustomFonts.labelSmall,
                       ),
-                      trailing: HeroIcon(
+                      trailing: const HeroIcon(
                         HeroIcons.chevronRight,
                         size: 16.0,
                       ),
@@ -214,7 +224,7 @@ class AccountScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextWithGradientBGShape(
+                    const TextWithGradientBGShape(
                       text: Text(
                         "My Account",
                         style: CustomFonts.titleMedium,
@@ -223,7 +233,9 @@ class AccountScreen extends StatelessWidget {
                     ),
                     4.kH,
                     CustomListTile(
-                      onTap: () {},
+                      onTap: () {
+                        
+                      },
                       leading: SvgPicture.asset("assets/icons/smile-heart.svg"),
                       title: Text(
                         "My Preferences",

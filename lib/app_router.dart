@@ -1,17 +1,29 @@
 import 'package:crowdfunding_flutter/domain/model/gift_card/gift_card.dart';
+import 'package:crowdfunding_flutter/domain/model/organization/organization.dart';
 import 'package:crowdfunding_flutter/presentation/account/account_screen.dart';
 import 'package:crowdfunding_flutter/presentation/account_gift_card/charity_gift_card_screen.dart';
 import 'package:crowdfunding_flutter/presentation/account_gift_card/screens/open_gift_card_screen.dart';
+import 'package:crowdfunding_flutter/presentation/account_join_team/account_join_team_screen.dart';
 import 'package:crowdfunding_flutter/presentation/account_saved_campaigns/saved_campaigns_screen.dart';
 import 'package:crowdfunding_flutter/presentation/campaign_details/campaign_details_screen.dart';
+import 'package:crowdfunding_flutter/presentation/create_campaign/create_campaign_screen.dart';
 import 'package:crowdfunding_flutter/presentation/donate/donate_screen.dart';
+import 'package:crowdfunding_flutter/presentation/edit_organization/edit_organization_screen.dart';
 import 'package:crowdfunding_flutter/presentation/explore/explore_screen.dart';
 import 'package:crowdfunding_flutter/presentation/home/home_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign/manage_campaign_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/manage_campaign_details_screen.dart';
+import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/collaborate_with_npo_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/create_campaign_update_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/edit_campaign_screen.dart';
 import 'package:crowdfunding_flutter/presentation/notification/notification_screen.dart';
+import 'package:crowdfunding_flutter/presentation/onboarding/pages/npo_onboarding/join_npo_success_page.dart';
+import 'package:crowdfunding_flutter/presentation/onboarding/widgets/create_organization_page_view.dart';
+import 'package:crowdfunding_flutter/presentation/onboarding/widgets/join_with_code_page_view.dart';
+import 'package:crowdfunding_flutter/presentation/onboarding/widgets/onboarding_select_account_type_screen.dart';
+import 'package:crowdfunding_flutter/presentation/onboarding/widgets/onboarding_select_npo_join_method_screen.dart';
+import 'package:crowdfunding_flutter/presentation/onboarding/widgets/personal_account_page_view.dart';
+import 'package:crowdfunding_flutter/presentation/organization_profile/organization_profile_screen.dart';
 import 'package:crowdfunding_flutter/presentation/splash/splash_screen.dart';
 import 'package:crowdfunding_flutter/presentation/testing/test_screen.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +40,8 @@ class AppRouter {
   GoRouter get router => GoRouter(
         navigatorKey: _rootNavigatorKey,
         // initialLocation: EditCampaignScreen.generateRoute(campaignId: '123'),
+        // initialLocation:
+        //     OrganizationProfileScreen.generateRoute(organizationId: 'asd'),
         initialLocation: '/loading',
         routes: [
           ShellRoute(
@@ -65,6 +79,10 @@ class AppRouter {
             builder: (context, state) => const TestScreen(),
           ),
           GoRoute(
+            path: '/test2',
+            builder: (context, state) => const TestScreen2(),
+          ),
+          GoRoute(
             path: '/loading',
             builder: (context, state) => const SplashScreen(), //
           ),
@@ -79,20 +97,36 @@ class AppRouter {
             ),
           ),
           GoRoute(
-              path: DonateScreen.route,
-              builder: (context, state) {
-                final campaignId = state.pathParameters['campaignId'] ?? '';
-                final campaignTitle = state.extra as String?;
-                return DonateScreen(
-                  campaignId: campaignId,
-                  campaignTitle: campaignTitle,
-                );
-              }),
+            path: DonateScreen.route,
+            builder: (context, state) {
+              final campaignId = state.pathParameters['campaignId'] ?? '';
+              final campaignTitle = state.extra as String?;
+              return DonateScreen(
+                campaignId: campaignId,
+                campaignTitle: campaignTitle,
+              );
+            },
+          ),
+          // Account
+          GoRoute(
+            path: AccountJoinTeamScreen.route,
+            builder: (context, state) {
+              return AccountJoinTeamScreen();
+            },
+          ),
           GoRoute(
             path: ManageCampaignDetailsScreen.route,
             builder: (context, state) => ManageCampaignDetailsScreen(
               campaignId: state.pathParameters['campaignId'] ?? '',
             ),
+          ),
+          GoRoute(
+            path: CollaborateWithNPOScreen.route,
+            builder: (context, state) => CollaborateWithNPOScreen(),
+          ),
+          GoRoute(
+            path: CreateCampaignScreen.route,
+            builder: (context, state) => const CreateCampaignScreen(),
           ),
           GoRoute(
             path: EditCampaignScreen.route,
@@ -123,6 +157,69 @@ class AppRouter {
               );
             },
           ),
+          // Onboarding
+          GoRoute(
+            path: OnboardingSelectAccountScreen.route,
+            builder: (context, state) {
+              return OnboardingSelectAccountScreen();
+            },
+          ),
+          GoRoute(
+            path: CreateOrganizationPageView.route,
+            builder: (context, state) {
+              return CreateOrganizationPageView();
+            },
+          ),
+          GoRoute(
+            path: JoinWithCodePageView.route,
+            builder: (context, state) {
+              return JoinWithCodePageView();
+            },
+          ),
+          GoRoute(
+            path: OnboardingSelectNPOJoinMethodScreen.route,
+            builder: (context, state) {
+              return OnboardingSelectNPOJoinMethodScreen();
+            },
+          ),
+          GoRoute(
+            path: OnboardingPersonalProfileScreen.route,
+            builder: (context, state) {
+              return OnboardingPersonalProfileScreen();
+            },
+          ),
+          GoRoute(
+            path: JoinNPOSuccessScreen.route,
+            builder: (context, state) {
+              final organization = state.extra as Organization?;
+              final organizationId =
+                  state.pathParameters['organizationId'] ?? "";
+              return JoinNPOSuccessScreen(
+                organizationId: organizationId,
+                organizationInfo: organization,
+              );
+            },
+          ),
+          GoRoute(
+              path: OrganizationProfileScreen.route,
+              builder: (context, state) {
+                final organizationId =
+                    state.pathParameters['organizationId'] ?? "";
+                return OrganizationProfileScreen(
+                  organizationId: organizationId,
+                );
+              }),
+          GoRoute(
+              path: EditOrganizationScreen.route,
+              builder: (context, state) {
+                final organizationId =
+                    state.pathParameters['organizationId'] ?? "";
+                final organization = state.extra as Organization?;
+                return EditOrganizationScreen(
+                  organization: organization,
+                  organizationId: organizationId,
+                );
+              }),
         ],
       );
 }

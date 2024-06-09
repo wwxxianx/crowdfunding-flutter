@@ -1,5 +1,6 @@
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/presentation/home/home_screen.dart';
+import 'package:crowdfunding_flutter/presentation/onboarding/widgets/onboarding_select_account_type_screen.dart';
 import 'package:crowdfunding_flutter/presentation/splash/splash_bg_shape.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_bloc.dart';
@@ -62,7 +63,7 @@ class _SplashScreenState extends State<SplashScreen>
           if (state.currentUser!.isOnboardingCompleted) {
             destination = HomeScreen.route;
           } else {
-            destination = '/login';
+            destination = OnboardingSelectAccountScreen.route;
           }
         } else {
           destination = '/login';

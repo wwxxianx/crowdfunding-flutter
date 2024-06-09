@@ -1,3 +1,5 @@
+import 'package:crowdfunding_flutter/domain/model/organization/organization.dart';
+import 'package:crowdfunding_flutter/domain/model/user/user_preference.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user.g.dart';
@@ -11,14 +13,14 @@ class UserModel {
   final String? phoneNumber;
   final String refreshToken;
   final bool isOnboardingCompleted;
-  // UserPreference? preference;
+  final Organization? organization;
+  final UserPreference? preference;
   // List<CampaignDonation> campaignDonations;
   // List<Campaign> campaigns;
   // List<CampaignComment> campaignComments;
   // List<UserFavouriteCampaign> favouriteCampaigns;
   // List<Notification> notifications;
   // List<CampaignUpdate> campaignUpdates;
-  // Organization? organization;
   // String? organizationId;
 
   const UserModel({
@@ -29,6 +31,8 @@ class UserModel {
     this.phoneNumber = "",
     this.refreshToken = "",
     this.isOnboardingCompleted = false,
+    this.organization,
+    this.preference,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
@@ -65,6 +69,7 @@ class UserModelWithAccessToken extends UserModel {
     String? profileImageUrl,
     String? phoneNumber,
     String refreshToken = "",
+    UserPreference? preference,
     bool isOnboardingCompleted = false,
     required this.accessToken,
   }) : super(
@@ -75,6 +80,7 @@ class UserModelWithAccessToken extends UserModel {
           profileImageUrl: profileImageUrl,
           phoneNumber: phoneNumber,
           refreshToken: refreshToken,
+          preference: preference,
         );
 
   UserModel toUserModel() {
@@ -86,6 +92,7 @@ class UserModelWithAccessToken extends UserModel {
       phoneNumber: phoneNumber ?? "",
       refreshToken: refreshToken,
       isOnboardingCompleted: isOnboardingCompleted,
+      preference: preference,
     );
   }
 

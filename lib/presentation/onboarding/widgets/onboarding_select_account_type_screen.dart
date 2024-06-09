@@ -1,16 +1,17 @@
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
-import 'package:crowdfunding_flutter/common/utils/slide_route_transition.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/dialog.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/selectable_container.dart';
 import 'package:crowdfunding_flutter/presentation/onboarding/widgets/onboarding_select_npo_join_method_screen.dart';
 import 'package:crowdfunding_flutter/presentation/onboarding/widgets/personal_account_page_view.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class OnboardingSelectAccountScreen extends StatefulWidget {
-  static route() => SlideRoute(page: const OnboardingSelectAccountScreen());
+  static const route = '/select-account';
+  // static route() => SlideRoute(page: const OnboardingSelectAccountScreen());
   const OnboardingSelectAccountScreen({super.key});
 
   @override
@@ -36,9 +37,9 @@ class _OnboardingSelectAccountScreenState
 
   void _handleNextPage() {
     if (isPersonalSelected) {
-      Navigator.push(context, OnboardingPersonalProfileScreen.route());
+      context.push(OnboardingPersonalProfileScreen.route);
     } else {
-      Navigator.push(context, OnboardingSelectNPOJoinMethodScreen.route());
+      context.push(OnboardingSelectNPOJoinMethodScreen.route);
     }
   }
 

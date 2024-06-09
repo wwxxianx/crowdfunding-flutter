@@ -19,12 +19,12 @@ final appTheme = ThemeData(
   appBarTheme: const AppBarTheme(
     backgroundColor: Colors.white,
   ),
-  bottomSheetTheme: const BottomSheetThemeData(
+  bottomSheetTheme: BottomSheetThemeData(
     backgroundColor: Colors.white,
     surfaceTintColor: Colors.white,
     shadowColor: Colors.white,
-    modalBackgroundColor: Colors.white,
-    modalBarrierColor: Colors.white,
+    modalBackgroundColor: Colors.transparent,
+    modalBarrierColor: Colors.black.withOpacity(0.6),
     dragHandleColor: Colors.white,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.zero),

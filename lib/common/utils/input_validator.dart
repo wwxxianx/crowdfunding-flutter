@@ -17,17 +17,32 @@ mixin InputValidator {
   static const campaignTitleMaxLength = 300;
   static const campaignDescriptionMinLength = 100;
   static const campaignDescriptionMaxLength = 2000;
+  static final RegExp invitationCodePattern = RegExp(r'^[A-Za-z0-9]{0,15}$');
 
-  String? validateEmail(String? value) {
+  InputValidationResult validateInvitationCode(String? value) {
     if (value == null || value.isEmpty) {
-      return "Email is required!";
+      return const InputValidationResult.fail('Invitation code is required');
+    }
+    // Regular expression for email validation
+    if (!invitationCodePattern.hasMatch(value)) {
+      return const InputValidationResult.fail(
+          'Wrong invitation code format! Please try another.');
+    }
+    return const InputValidationResult
+        .success(); // Return null if validation passes
+  }
+
+  InputValidationResult validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return const InputValidationResult.fail('Email is required');
     }
     // Regular expression for email validation
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(value)) {
-      return "Enter a valid email address!";
+      return const InputValidationResult.fail('Wrong email format!');
     }
-    return null; // Return null if validation passes
+    return const InputValidationResult
+        .success(); // Return null if validation passes
   }
 
   String? validatePassword(String? value) {
