@@ -23,7 +23,7 @@ class CampaignDetailsScreen extends StatefulWidget {
   final String campaignId;
   static const route = 'campaign-details/:campaignId';
   static generateRoute({required String campaignId}) =>
-      'campaign-details/$campaignId';
+      '/explore/campaign-details/$campaignId';
   const CampaignDetailsScreen({
     super.key,
     required this.campaignId,

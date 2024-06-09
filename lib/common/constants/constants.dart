@@ -6,6 +6,7 @@ class Constants {
 
   static const stripePublishableKey =
       "pk_test_51OmSFdIGtvkAiXyxrpvC4ohbIbN4COdgvxZlihCNKSE0j0AR8gg4hXvYcj9MQKUxSS4J7LjMGHUDTA5fG2ynSFQs00EODoklrH";
+  static const appLinkDomain = 'http://wwxxianx.github.io';
 }
 
 class SharedPreferencesKey {

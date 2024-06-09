@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:crowdfunding_flutter/common/constants/constants.dart';
 import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
@@ -19,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:share_plus/share_plus.dart';
 
 class CampaignDetailsBottomSheet extends StatefulWidget {
   final String campaignId;
@@ -76,6 +78,16 @@ class _CampaignDetailsBottomSheetState
     }
     _handleHideCommentBottomBar(context);
     commentTextController.clear();
+  }
+
+  void _handleShare() async {
+    final appLink =
+        '${Constants.appLinkDomain}/explore/campaign-details/${widget.campaignId}';
+    final result =
+        await Share.shareWithResult('Checkout this campaign! \n\n  $appLink');
+    if (result.status == ShareResultStatus.success) {
+      // Update campaign statistics
+    }
   }
 
   Widget _buildReplyBottomSheetTitle(CampaignDetailsState state) {
@@ -176,7 +188,9 @@ class _CampaignDetailsBottomSheetState
                               icon: const HeroIcon(HeroIcons.paperAirplane),
                             )
                           : CustomIconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                _handleShare();
+                              },
                               icon: const HeroIcon(HeroIcons.share),
                             )
                     ],

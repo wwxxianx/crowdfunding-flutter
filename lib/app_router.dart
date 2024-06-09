@@ -50,7 +50,7 @@ class AppRouter {
         // initialLocation: EditCampaignScreen.generateRoute(campaignId: '123'),
         // initialLocation:
         //     OrganizationProfileScreen.generateRoute(organizationId: 'asd'),
-        initialLocation: '/data',
+        initialLocation: '/loading',
         routes: [
           GoRoute(
             path: '/',
