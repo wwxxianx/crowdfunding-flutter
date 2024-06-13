@@ -15,6 +15,7 @@ class UserModel {
   final bool isOnboardingCompleted;
   final Organization? organization;
   final UserPreference? preference;
+  final String? stripeConnectId;
   // List<CampaignDonation> campaignDonations;
   // List<Campaign> campaigns;
   // List<CampaignComment> campaignComments;
@@ -33,6 +34,7 @@ class UserModel {
     this.isOnboardingCompleted = false,
     this.organization,
     this.preference,
+    this.stripeConnectId,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
@@ -72,6 +74,7 @@ class UserModelWithAccessToken extends UserModel {
     UserPreference? preference,
     bool isOnboardingCompleted = false,
     required this.accessToken,
+    String? stripeConnectId,
   }) : super(
           id: id,
           fullName: fullName,
@@ -81,6 +84,7 @@ class UserModelWithAccessToken extends UserModel {
           phoneNumber: phoneNumber,
           refreshToken: refreshToken,
           preference: preference,
+          stripeConnectId: stripeConnectId,
         );
 
   UserModel toUserModel() {
@@ -93,6 +97,7 @@ class UserModelWithAccessToken extends UserModel {
       refreshToken: refreshToken,
       isOnboardingCompleted: isOnboardingCompleted,
       preference: preference,
+      stripeConnectId: stripeConnectId,
     );
   }
 

@@ -118,6 +118,7 @@ class DonationItem extends StatelessWidget {
         ),
         16.kW,
         Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               displayName,

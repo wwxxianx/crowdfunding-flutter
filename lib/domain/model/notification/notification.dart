@@ -1,42 +1,42 @@
-import 'package:crowdfunding_flutter/domain/model/image/image_model.dart';
+// ignore_for_file: constant_identifier_names
+
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'notification.g.dart';
 
 enum NotificationType {
-  campaignUpdate,
-  campaignDonation,
-  campaignComment,
-  coin,
+  CAMPAIGN_UPDATE,
+  CAMPAIGN_DONATION,
+  CAMPAIGN_COMMENT,
+  COIN,
 }
 
 @JsonSerializable()
 class NotificationModel {
   final String id;
-  final NotificationType type;
+  final String type;
   final String title;
   final String? description;
-  final Map<String, dynamic>? meta;
+  final bool isRead;
+  final Map<String, dynamic>? metadata;
   final UserModel? actor;
   final String entityId;
   final String createdAt;
-  final String? actorImageUrl;
-  final String? campaignImageUrl;
-  final String? coinEarned;
+  final CampaignSummary? campaign;
 
   const NotificationModel({
     required this.id,
     required this.type,
     required this.title,
+    required this.isRead,
     this.description,
-    this.meta,
+    this.metadata,
     this.actor,
     required this.entityId,
     required this.createdAt,
-    this.actorImageUrl,
-    this.campaignImageUrl,
-    this.coinEarned,
+    this.campaign,
   });
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) =>
@@ -45,37 +45,38 @@ class NotificationModel {
   Map<String, dynamic> toJson() => _$NotificationModelToJson(this);
 
   static final samples = [
-    NotificationModel(
+    const NotificationModel(
       id: '1',
-      type: NotificationType.campaignUpdate,
+      type: 'CAMPAIGN_UPDATE',
       title: 'title',
+      isRead: false,
       description: 'description',
       actor: UserModel.sample,
       entityId: '123',
       createdAt: '2024-05-16T08:21:57.324Z',
-      actorImageUrl: ImageModel.sample.imageUrl,
-      campaignImageUrl: ImageModel.sample.imageUrl,
     ),
     const NotificationModel(
       id: '1',
-      type: NotificationType.coin,
+      type: 'CAMPAIGN_UPDATE',
       title: 'title',
+      isRead: false,
       description: 'description',
       actor: UserModel.sample,
       entityId: '123',
       createdAt: '2024-05-16T08:21:57.324Z',
-      coinEarned: '24',
     ),
     const NotificationModel(
       id: '1',
-      type: NotificationType.campaignDonation,
+      isRead: false,
+      type: 'CAMPAIGN_UPDATE',
       title: 'A lover donated RM500 to your fundraiser!',
       entityId: '123',
       createdAt: '2024-05-16T08:21:57.324Z',
     ),
     const NotificationModel(
       id: '1',
-      type: NotificationType.campaignComment,
+      isRead: false,
+      type: 'CAMPAIGN_UPDATE',
       title: 'A new comment to your fundraiser “Green Initiative”.',
       description: "Comment: “How can i donate to your fundraiser?”",
       entityId: '123',

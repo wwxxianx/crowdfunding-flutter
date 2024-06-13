@@ -8,13 +8,13 @@ final class OnCreateDonation extends DonateEvent {
   final String campaignId;
   final bool isAnonymous;
   final String? giftCardId;
-  final VoidCallback? onSuccess;
+  final VoidCallback onSuccess;
 
   OnCreateDonation({
     required this.amount,
     required this.campaignId,
     required this.isAnonymous,
     this.giftCardId,
-    this.onSuccess,
+    required this.onSuccess,
   });
 }

@@ -5,6 +5,8 @@ import 'package:crowdfunding_flutter/common/widgets/text/gradient_text.dart';
 import 'package:crowdfunding_flutter/presentation/home/widgets/header.dart';
 import 'package:crowdfunding_flutter/presentation/home/widgets/recommended_campaigns.dart';
 import 'package:crowdfunding_flutter/presentation/home/widgets/slogan_banner.dart';
+import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_bloc.dart';
+import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_event.dart';
 import 'package:crowdfunding_flutter/state_management/home/home_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/home/home_event.dart';
 import 'package:crowdfunding_flutter/state_management/home/home_state.dart';
@@ -35,7 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    context.read<HomeBloc>().add(OnInitData()); // Trigger the event here
+    context.read<HomeBloc>().add(OnInitData());
+    context.read<GiftCardBloc>().add(OnFetchAllGiftCards());
   }
 
   @override
@@ -46,15 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (context, state) {
             return Column(
               children: [
-                CustomButton(
-                  onPressed: () async {
-                    final url = Uri.parse("https://flutter.dev");
-                    if (!await launchUrl(url)) {
-                      throw Exception('Could not launch $url');
-                    }
-                  },
-                  child: Text("Launch URL"),
-                ),
                 HomePageHeader(
                   title: "Welcome back!",
                   action: InkWell(

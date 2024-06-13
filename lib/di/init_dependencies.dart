@@ -4,6 +4,7 @@ import 'package:crowdfunding_flutter/data/network/retrofit_api.dart';
 import 'package:crowdfunding_flutter/data/repository/auth_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/repository/campaign/campaign_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/repository/constant_repository_impl.dart';
+import 'package:crowdfunding_flutter/data/repository/notification/notification_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/repository/organization/organization_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/repository/user/user_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/service/auth_service_impl.dart';
@@ -11,6 +12,7 @@ import 'package:crowdfunding_flutter/data/service/payment/payment_service.dart';
 import 'package:crowdfunding_flutter/domain/repository/auth_repository.dart';
 import 'package:crowdfunding_flutter/domain/repository/campaign/campaign_repository.dart';
 import 'package:crowdfunding_flutter/domain/repository/constant_repository.dart';
+import 'package:crowdfunding_flutter/domain/repository/notification/notification_repository.dart';
 import 'package:crowdfunding_flutter/domain/repository/organization/organization_repository.dart';
 import 'package:crowdfunding_flutter/domain/repository/user/user_repository.dart';
 import 'package:crowdfunding_flutter/domain/service/auth_service.dart';
@@ -22,17 +24,22 @@ import 'package:crowdfunding_flutter/domain/usecases/campaign/campaign_comment/c
 import 'package:crowdfunding_flutter/domain/usecases/campaign/campaign_comment/create_campaign_reply.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/campaign_update/create_campaign_update.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/create_campaign.dart';
+import 'package:crowdfunding_flutter/domain/usecases/campaign/donation/create_giftcard_donation.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaign.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaigns.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaign_categories.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/update_campaign.dart';
 import 'package:crowdfunding_flutter/domain/usecases/fetch_state_and_regions.dart';
+import 'package:crowdfunding_flutter/domain/usecases/notification/fetch_notifications.dart';
 import 'package:crowdfunding_flutter/domain/usecases/organization/create_organization.dart';
 import 'package:crowdfunding_flutter/domain/usecases/organization/fetch_organization.dart';
 import 'package:crowdfunding_flutter/domain/usecases/organization/fetch_organization_members.dart';
 import 'package:crowdfunding_flutter/domain/usecases/organization/fetch_organization_with_code.dart';
 import 'package:crowdfunding_flutter/domain/usecases/organization/join_organization.dart';
 import 'package:crowdfunding_flutter/domain/usecases/organization/update_organization.dart';
+import 'package:crowdfunding_flutter/domain/usecases/stripe/connect_account.dart';
+import 'package:crowdfunding_flutter/domain/usecases/stripe/fetch_connected_account.dart';
+import 'package:crowdfunding_flutter/domain/usecases/stripe/update_connect_account.dart';
 import 'package:crowdfunding_flutter/domain/usecases/user/favourite_campaign/create_favourite_campaign.dart';
 import 'package:crowdfunding_flutter/domain/usecases/user/favourite_campaign/delete_favourite_campaign.dart';
 import 'package:crowdfunding_flutter/domain/usecases/user/favourite_campaign/fetch_favourite_campaigns.dart';
@@ -64,7 +71,8 @@ Future<void> initDependencies() async {
     ..registerLazySingleton(() => AppUserCubit(
           getCurrentUser: serviceLocator(),
           signOut: serviceLocator(),
-          fetchNumOfReceivedUnusedGiftCards: serviceLocator(),
+          fetchNotifications: serviceLocator(),
+          connectAccount: serviceLocator(),
         ))
     ..registerLazySingleton(() => NavigationCubit())
     ..registerLazySingleton(() => DioNetwork.provideDio())
@@ -79,6 +87,17 @@ Future<void> initDependencies() async {
   _initPayment();
   _initGiftCard();
   _initOrganization();
+  _initNotifications();
+}
+
+void _initNotifications() {
+  serviceLocator
+    // Repo
+    ..registerFactory<NotificationRepository>(
+        () => NotificationRepositoryImpl(api: serviceLocator()))
+    // Usecase
+    ..registerFactory(
+        () => FetchNotifications(notificationRepository: serviceLocator()));
 }
 
 void _initExploreCampaigns() {
@@ -135,6 +154,8 @@ void _initCampaign() {
         () => CreateCampaignReply(campaignRepository: serviceLocator()))
     ..registerFactory(
         () => CreateCampaignUpdate(campaignRepository: serviceLocator()))
+    ..registerFactory(
+        () => CreateGiftCardDonation(campaignRepository: serviceLocator()))
     // Bloc
     ..registerLazySingleton(() => HomeBloc(
         fetchCampaign: serviceLocator(), paymentService: serviceLocator()));
@@ -191,8 +212,14 @@ void _initOrganization() {
 }
 
 void _initPayment() {
-  serviceLocator.registerFactory<PaymentService>(
-      () => PaymentService(api: serviceLocator()));
+  serviceLocator
+    ..registerFactory<PaymentService>(
+        () => PaymentService(api: serviceLocator()))
+    ..registerFactory(() => ConnectAccount(paymentService: serviceLocator()))
+    ..registerFactory(
+        () => FetchConnectedAccount(paymentService: serviceLocator()))
+    ..registerFactory(
+        () => UpdateConnectAccount(paymentService: serviceLocator()));
 }
 
 void _initGiftCard() {

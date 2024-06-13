@@ -22,7 +22,10 @@ class DonateScreen extends StatefulWidget {
   final String? campaignTitle;
   final String campaignId;
   static const route = '/donate/:campaignId';
-  static generateRoute({required String campaignId}) => '/donate/$campaignId';
+  static generateRoute({
+    required String campaignId,
+  }) =>
+      '/donate/$campaignId';
   const DonateScreen({
     super.key,
     required this.campaignId,
@@ -54,7 +57,10 @@ class _DonateScreenState extends State<DonateScreen> {
         isAnonymous: isAnonymousSelected,
         giftCardId: selectedGiftCardToUse?.id,
         onSuccess: () {
-          // context.push("location");
+          context
+              .read<GiftCardBloc>()
+              ..add(OnRemoveSelectedGiftCard())..add(OnFetchAllGiftCards());
+          context.go('/explore/campaign-details/${widget.campaignId}');
         }));
   }
 
@@ -184,7 +190,10 @@ class _DonateScreenState extends State<DonateScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => DonateBloc(paymentService: serviceLocator()),
+      create: (context) => DonateBloc(
+        paymentService: serviceLocator(),
+        createGiftCardDonation: serviceLocator(),
+      ),
       child: BlocBuilder<DonateBloc, DonateState>(
         builder: (context, state) {
           return Scaffold(

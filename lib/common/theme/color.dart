@@ -61,6 +61,11 @@ class CustomColors {
 
   // Color Theme
   static const amber50 = Color(0xFFFFFFEC);
+  static const amber100 = Color(0xFFFEF3C7);
   static const amber500 = Color(0xFFFFEEC3);
   static const amber700 = Color(0xFF92400E);
+
+  static const red100 = Color(0xFFFEE2E2);
+
+
 }

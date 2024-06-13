@@ -56,8 +56,10 @@ class _OpenGiftCardScreenState extends State<OpenGiftCardScreen> {
         "Use your gift card to donate!",
         style: CustomFonts.labelSmall,
       ),
-      description: const Text("Choose a fundraiser and donate with your gift!",
-          style: CustomFonts.labelSmall,),
+      description: const Text(
+        "Choose a fundraiser and donate with your gift!",
+        style: CustomFonts.labelSmall,
+      ),
       icon: SvgPicture.asset("assets/icons/gift.svg"),
       alignment: Alignment.topLeft,
       primaryColor: CustomColors.primaryGreen,
@@ -67,7 +69,7 @@ class _OpenGiftCardScreenState extends State<OpenGiftCardScreen> {
       dragToClose: true,
       applyBlurEffect: true,
     );
-    context.go(ExploreScreen.route);
+    context.go('/explore');
   }
 
   @override

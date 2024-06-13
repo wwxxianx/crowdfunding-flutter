@@ -5,10 +5,14 @@ import 'package:crowdfunding_flutter/data/network/payload/auth/login_be_payload.
 import 'package:crowdfunding_flutter/data/network/payload/auth/sign_up_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_comment_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_reply_payload.dart';
+import 'package:crowdfunding_flutter/data/network/payload/donation/create_campaign_donation_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/organization/create_organization_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/organization/join_organization_payload.dart';
+import 'package:crowdfunding_flutter/data/network/payload/stripe/update_connect_account_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/user/favourite_campaign/favourite_campaign_payload.dart';
 import 'package:crowdfunding_flutter/data/network/response/create_organization_response.dart';
+import 'package:crowdfunding_flutter/data/network/response/donation/giftcard_donation_response.dart';
+import 'package:crowdfunding_flutter/data/network/response/payment/connect_account_response.dart';
 import 'package:crowdfunding_flutter/data/service/payment/campaign_donation/create_campaign_donation_payment_intent_payload.dart';
 import 'package:crowdfunding_flutter/data/service/payment/gift_card/create_gift_card_payment_intent_payload.dart';
 import 'package:crowdfunding_flutter/data/service/payment/payment_intent_response.dart';
@@ -18,8 +22,10 @@ import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update.dart';
 import 'package:crowdfunding_flutter/domain/model/gift_card/gift_cards_response.dart';
 import 'package:crowdfunding_flutter/domain/model/gift_card/num_gift_card_response.dart';
+import 'package:crowdfunding_flutter/domain/model/notification/notification.dart';
 import 'package:crowdfunding_flutter/domain/model/organization/organization.dart';
 import 'package:crowdfunding_flutter/domain/model/state/state_region.dart';
+import 'package:crowdfunding_flutter/domain/model/stripe/stripe_account.dart';
 import 'package:crowdfunding_flutter/domain/model/tokens_response.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user_favourite_campaign.dart';
@@ -158,7 +164,13 @@ abstract class RestClient {
     @Body() FavouriteCampaignPayload payload,
   );
 
-  // Payment sheet
+  // Donations
+  @POST("donations")
+  Future<GiftCardDonationResponse> createGiftCardDonation(
+    @Body() CreateGiftCardDonationPayload payload,
+  );
+
+  // Payment
   @POST("payment/payment-intent/campaign-donation")
   Future<PaymentIntentResponse> createCampaignDonationPaymentIntent(
     @Body() CreateCampaignDonationPaymentIntentPayload payload,
@@ -171,6 +183,18 @@ abstract class RestClient {
 
   @POST("payment/test-payment")
   Future<PaymentIntentResponse> testPayment();
+
+  @POST("payment/connect-account")
+  Future<ConnectAccountResponse> connectStripeAccount();
+
+  @POST("payment/onboard-update")
+  Future<ConnectAccountResponse> updateConnectAccount(
+      @Body() UpdateConnectAccountPayload payload);
+
+  @GET("payment/connected-account/{id}")
+  Future<StripeAccount> getConnectedAccount({
+    @Path('id') required String connectedAccountId,
+  });
 
   // Organization
   @GET("organizations")
@@ -215,4 +239,11 @@ abstract class RestClient {
 
   @POST("organizations/join")
   Future<UserModel> joinOrganization(@Body() JoinOrganizationPayload payload);
+
+  // Notifications
+  @GET("notifications")
+  Future<List<NotificationModel>> getNotifications();
+
+  @PATCH("notifications/{id}")
+  Future<NotificationModel> readNotification({@Path('id') required String notificationId});
 }

@@ -1,3 +1,4 @@
+import 'package:crowdfunding_flutter/domain/model/notification/notification.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:equatable/equatable.dart';
 
@@ -17,29 +18,34 @@ import 'package:equatable/equatable.dart';
 
 final class AppUserState extends Equatable {
   final UserModel? currentUser;
-  final int numOfReceivedUnusedGiftCards;
+  final bool isConnectingStripeAccount;
+  final List<NotificationModel> notifications;
 
   const AppUserState._({
     this.currentUser,
-    this.numOfReceivedUnusedGiftCards = 0,
+    this.isConnectingStripeAccount = false,
+    this.notifications = const [],
   });
 
   const AppUserState.initial() : this._();
 
   AppUserState copyWith({
     UserModel? currentUser,
-    int? numOfReceivedUnusedGiftCards,
+    bool? isConnectingStripeAccount,
+    List<NotificationModel>? notifications,
   }) {
     return AppUserState._(
       currentUser: currentUser ?? this.currentUser,
-      numOfReceivedUnusedGiftCards:
-          numOfReceivedUnusedGiftCards ?? this.numOfReceivedUnusedGiftCards,
+      isConnectingStripeAccount:
+          isConnectingStripeAccount ?? this.isConnectingStripeAccount,
+      notifications: notifications ?? this.notifications,
     );
   }
 
   @override
   List<Object?> get props => [
         currentUser,
-        numOfReceivedUnusedGiftCards,
+        isConnectingStripeAccount,
+        notifications,
       ];
 }

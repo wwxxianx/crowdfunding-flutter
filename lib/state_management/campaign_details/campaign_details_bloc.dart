@@ -144,6 +144,7 @@ class CampaignDetailsBloc
     OnFetchCampaign event,
     Emitter emit,
   ) async {
+    // emit(CampaignDetailsState.fetchCampaignSuccess(Campaign.sample));
     final res = await _fetchCampaign(event.campaignId);
     res.fold(
       (l) => emit(CampaignDetailsState.fetchCampaignFailed(l.errorMessage)),

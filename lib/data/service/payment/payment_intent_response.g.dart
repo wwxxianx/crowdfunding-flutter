@@ -13,6 +13,7 @@ PaymentIntentResponse _$PaymentIntentResponseFromJson(
       ephemeralKey: json['ephemeralKey'] as String,
       customer: json['customer'] as String,
       publishableKey: json['publishableKey'] as String,
+      stripeAccountId: json['stripeAccountId'] as String?,
     );
 
 Map<String, dynamic> _$PaymentIntentResponseToJson(
@@ -22,4 +23,5 @@ Map<String, dynamic> _$PaymentIntentResponseToJson(
       'ephemeralKey': instance.ephemeralKey,
       'customer': instance.customer,
       'publishableKey': instance.publishableKey,
+      'stripeAccountId': instance.stripeAccountId,
     };

@@ -79,6 +79,7 @@ class _SplashScreenState extends State<SplashScreen>
     if (state.currentUser != null) {
       // Init app state
       context.read<GiftCardBloc>().add(OnFetchAllGiftCards());
+      context.read<AppUserCubit>().fetchNotifications();
       context.read<HomeBloc>().add(OnFetchRecommendedCampaigns());
     }
   }

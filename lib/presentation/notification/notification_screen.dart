@@ -2,8 +2,11 @@ import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/presentation/notification/widgets/notification_item.dart';
+import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
+import 'package:crowdfunding_flutter/state_management/app_user_state.dart';
 import 'package:flutter/material.dart';
 import 'package:crowdfunding_flutter/domain/model/notification/notification.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class NotificationScreen extends StatelessWidget {
   static const route = 'notification';
@@ -28,20 +31,27 @@ class NotificationScreen extends StatelessWidget {
                     style: CustomFonts.titleLarge,
                   ),
                 ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: NotificationModel.samples.length,
-                  itemBuilder: (context, index) {
-                    return NotificationItem(
-                      border: index == 0
-                          ? const Border.symmetric(
-                              horizontal: BorderSide(
-                                color: CustomColors.containerBorderGrey,
-                              ),
-                            )
-                          : null,
-                      notification: NotificationModel.samples[index],
-                    );
+                BlocBuilder<AppUserCubit, AppUserState>(
+                  builder: (context, state) {
+                    if (state.notifications.isNotEmpty) {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: state.notifications.length,
+                        itemBuilder: (context, index) {
+                          return NotificationItem(
+                            border: index == 0
+                                ? const Border.symmetric(
+                                    horizontal: BorderSide(
+                                      color: CustomColors.containerBorderGrey,
+                                    ),
+                                  )
+                                : null,
+                            notification: state.notifications[index],
+                          );
+                        },
+                      );
+                    }
+                    return Text('Empty');
                   },
                 ),
               ],

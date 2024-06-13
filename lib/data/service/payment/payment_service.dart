@@ -1,7 +1,11 @@
 import 'package:crowdfunding_flutter/common/error/failure.dart';
+import 'package:crowdfunding_flutter/data/network/payload/stripe/update_connect_account_payload.dart';
+import 'package:crowdfunding_flutter/data/network/response/payment/connect_account_response.dart';
 import 'package:crowdfunding_flutter/data/network/retrofit_api.dart';
 import 'package:crowdfunding_flutter/data/service/payment/campaign_donation/create_campaign_donation_payment_intent_payload.dart';
 import 'package:crowdfunding_flutter/data/service/payment/gift_card/create_gift_card_payment_intent_payload.dart';
+import 'package:crowdfunding_flutter/data/service/payment/payment_intent_response.dart';
+import 'package:crowdfunding_flutter/domain/model/stripe/stripe_account.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:fpdart/fpdart.dart';
@@ -12,6 +16,41 @@ class PaymentService {
   final RestClient api;
 
   PaymentService({required this.api});
+
+  Future<Either<Failure, ConnectAccountResponse>> getUpdateConnectAccountLink(
+      {required UpdateConnectAccountPayload payload}) async {
+    final res = await api.updateConnectAccount(payload);
+    return right(res);
+    try {
+      final res = await api.updateConnectAccount(payload);
+      return right(res);
+    } catch (e) {
+      return left(Failure('Failed to get connected account link'));
+    }
+  }
+
+  Future<Either<Failure, StripeAccount>> getConnectedAccount(
+      {required String connectedAccountId}) async {
+    final res =
+        await api.getConnectedAccount(connectedAccountId: connectedAccountId);
+    return right(res);
+    try {
+      final res =
+          await api.getConnectedAccount(connectedAccountId: connectedAccountId);
+      return right(res);
+    } catch (e) {
+      return left(Failure('Failed to get connected account details'));
+    }
+  }
+
+  Future<Either<Failure, ConnectAccountResponse>> connectAccount() async {
+    try {
+      final res = await api.connectStripeAccount();
+      return right(res);
+    } catch (e) {
+      return left(Failure('Failed to connect account'));
+    }
+  }
 
   Future<Either<Failure, Unit>> testPayment() async {
     try {
@@ -48,9 +87,10 @@ class PaymentService {
   ) async {
     try {
       // 1. create payment intent on the server
-      final paymentIntentRes = await api
+      final PaymentIntentResponse paymentIntentRes = await api
           .createCampaignDonationPaymentIntent(createPaymentIntentPayload);
-
+      // Set to campaign launcher's stripe account id to receive donation
+      Stripe.stripeAccountId = paymentIntentRes.stripeAccountId;
       // 2. initialize the payment sheet
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(

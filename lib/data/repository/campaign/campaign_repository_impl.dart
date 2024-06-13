@@ -9,6 +9,8 @@ import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campai
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_reply_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/update_campaign_payload.dart';
+import 'package:crowdfunding_flutter/data/network/payload/donation/create_campaign_donation_payload.dart';
+import 'package:crowdfunding_flutter/data/network/response/donation/giftcard_donation_response.dart';
 import 'package:crowdfunding_flutter/data/network/retrofit_api.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_category.dart';
@@ -193,6 +195,20 @@ class CampaignRepositoryImpl implements CampaignRepository {
         description: payload.description,
         imageFiles: payload.imageFiles,
       );
+      return right(res);
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException().errorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, GiftCardDonationResponse>> createGiftCardDonation(CreateGiftCardDonationPayload payload) async {
+    try {
+      final res = await api.createGiftCardDonation(payload);
       return right(res);
     } on Exception catch (e) {
       if (e is DioException) {

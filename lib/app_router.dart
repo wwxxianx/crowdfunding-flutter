@@ -17,6 +17,7 @@ import 'package:crowdfunding_flutter/presentation/home/home_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign/manage_campaign_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/manage_campaign_details_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/collaborate_with_npo_screen.dart';
+import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/connected_bank_account_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/create_campaign_update_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/edit_campaign_screen.dart';
 import 'package:crowdfunding_flutter/presentation/notification/notification_screen.dart';
@@ -154,8 +155,9 @@ class AppRouter {
                 appBar: AppBar(title: Text('Data All')),
                 body: CustomButton(
                   onPressed: () {
+                    String? id;
                     context.push(
-                      '/data/details',
+                      '/data/details/$id',
                     );
                   },
                   child: Text('Go details'),
@@ -164,8 +166,10 @@ class AppRouter {
             },
             routes: [
               GoRoute(
-                path: 'details',
+                path: 'details/:id',
                 builder: (context, state) {
+                  final id = state.pathParameters['id'];
+                  var logger = Logger();
                   return Scaffold(
                     appBar: AppBar(
                       title: Text('Details'),
@@ -177,11 +181,7 @@ class AppRouter {
           ),
           GoRoute(
             path: '/testing',
-            builder: (context, state) => const TestScreen(),
-          ),
-          GoRoute(
-            path: '/test2',
-            builder: (context, state) => const TestScreen2(),
+            builder: (context, state) => TestScreen(),
           ),
           GoRoute(
             path: '/loading',
@@ -236,6 +236,17 @@ class AppRouter {
             builder: (context, state) => ManageCampaignDetailsScreen(
               campaignId: state.pathParameters['campaignId'] ?? '',
             ),
+          ),
+          GoRoute(
+            name: "connected-bank-account",
+            path: '/connected-bank-account',
+            builder: (context, state) {
+              final connectedAccountId =
+                  state.uri.queryParameters['connectedAccountId'];
+              return ConnectedBankAccountScreen(
+                connectedAccountId: connectedAccountId,
+              );
+            },
           ),
           GoRoute(
             path: CollaborateWithNPOScreen.route,

@@ -8,12 +8,14 @@ class PaymentIntentResponse {
   final String ephemeralKey;
   final String customer;
   final String publishableKey;
+  final String? stripeAccountId;
 
   const PaymentIntentResponse({
     required this.clientSecret,
     required this.ephemeralKey,
     required this.customer,
     required this.publishableKey,
+    this.stripeAccountId,
   });
 
   factory PaymentIntentResponse.fromJson(Map<String, dynamic> json) =>

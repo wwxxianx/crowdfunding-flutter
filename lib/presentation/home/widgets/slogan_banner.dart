@@ -74,11 +74,7 @@ class SloganBanner extends StatelessWidget {
                       borderRadius: BorderRadius.circular(6.0),
                       height: 40.0,
                       onPressed: () {
-                        final numver = context
-                            .read<AppUserCubit>()
-                            .state
-                            .numOfReceivedUnusedGiftCards;
-                        print(numver);
+                        
                       },
                       textStyle: CustomFonts.titleSmall,
                       child: const GradientText(

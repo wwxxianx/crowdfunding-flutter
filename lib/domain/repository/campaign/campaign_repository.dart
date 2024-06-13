@@ -4,6 +4,8 @@ import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campai
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_reply_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/update_campaign_payload.dart';
+import 'package:crowdfunding_flutter/data/network/payload/donation/create_campaign_donation_payload.dart';
+import 'package:crowdfunding_flutter/data/network/response/donation/giftcard_donation_response.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_category.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
@@ -38,4 +40,7 @@ abstract interface class CampaignRepository {
   Future<Either<Failure, CampaignUpdate>> createCampaignUpdatePost(
     CreateCampaignUpdatePayload payload,
   );
+
+  // Donation
+  Future<Either<Failure, GiftCardDonationResponse>> createGiftCardDonation(CreateGiftCardDonationPayload payload);
 }

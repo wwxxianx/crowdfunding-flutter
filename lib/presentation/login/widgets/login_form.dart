@@ -47,7 +47,7 @@ class _LoginFormState extends State<LoginForm> with InputValidator {
                 return;
               }
               if (user.isOnboardingCompleted) {
-                context.go(HomeScreen.route);
+                context.go('/home');
               } else {
                 context.go(OnboardingSelectAccountScreen.route);
               }

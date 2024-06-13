@@ -14,7 +14,7 @@ class _RestClient implements RestClient {
     this.baseUrl,
   }) {
     baseUrl ??=
-        'https://a332-2001-f40-987-516-4fc-5302-ebc1-62fc.ngrok-free.app/';
+        'https://1158-2001-f40-987-516-5dd7-f728-aa7d-42f7.ngrok-free.app/';
   }
 
   final Dio _dio;
@@ -801,6 +801,35 @@ class _RestClient implements RestClient {
   }
 
   @override
+  Future<GiftCardDonationResponse> createGiftCardDonation(
+      CreateGiftCardDonationPayload payload) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(payload.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<GiftCardDonationResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'donations',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = GiftCardDonationResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
   Future<PaymentIntentResponse> createCampaignDonationPaymentIntent(
       CreateCampaignDonationPaymentIntentPayload payload) async {
     const _extra = <String, dynamic>{};
@@ -882,6 +911,89 @@ class _RestClient implements RestClient {
               baseUrl,
             ))));
     final value = PaymentIntentResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<ConnectAccountResponse> connectStripeAccount() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ConnectAccountResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'payment/connect-account',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ConnectAccountResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<ConnectAccountResponse> updateConnectAccount(
+      UpdateConnectAccountPayload payload) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = payload;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ConnectAccountResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'payment/onboard-update',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ConnectAccountResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<StripeAccount> getConnectedAccount(
+      {required String connectedAccountId}) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<StripeAccount>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'payment/connected-account/${connectedAccountId}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = StripeAccount.fromJson(_result.data!);
     return value;
   }
 
@@ -1135,6 +1247,36 @@ class _RestClient implements RestClient {
               baseUrl,
             ))));
     final value = UserModel.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<List<NotificationModel>> getNotifications() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<List<dynamic>>(_setStreamType<List<NotificationModel>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'notifications',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    var value = _result.data!
+        .map((dynamic i) =>
+            NotificationModel.fromJson(i as Map<String, dynamic>))
+        .toList();
     return value;
   }
 

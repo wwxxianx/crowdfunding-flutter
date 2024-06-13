@@ -93,6 +93,7 @@ class CampaignUpdateItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: MediaQuery.of(context).size.width,
       decoration: const BoxDecoration(
         border: Border(
           bottom: BorderSide(color: CustomColors.containerBorderGrey),

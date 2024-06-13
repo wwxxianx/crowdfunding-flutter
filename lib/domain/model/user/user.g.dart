@@ -20,6 +20,7 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       preference: json['preference'] == null
           ? null
           : UserPreference.fromJson(json['preference'] as Map<String, dynamic>),
+      stripeConnectId: json['stripeConnectId'] as String?,
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
@@ -32,6 +33,7 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'isOnboardingCompleted': instance.isOnboardingCompleted,
       'organization': instance.organization,
       'preference': instance.preference,
+      'stripeConnectId': instance.stripeConnectId,
     };
 
 UserModelWithAccessToken _$UserModelWithAccessTokenFromJson(
@@ -48,6 +50,7 @@ UserModelWithAccessToken _$UserModelWithAccessTokenFromJson(
           : UserPreference.fromJson(json['preference'] as Map<String, dynamic>),
       isOnboardingCompleted: json['isOnboardingCompleted'] as bool? ?? false,
       accessToken: json['accessToken'] as String,
+      stripeConnectId: json['stripeConnectId'] as String?,
     );
 
 Map<String, dynamic> _$UserModelWithAccessTokenToJson(
@@ -61,5 +64,6 @@ Map<String, dynamic> _$UserModelWithAccessTokenToJson(
       'refreshToken': instance.refreshToken,
       'isOnboardingCompleted': instance.isOnboardingCompleted,
       'preference': instance.preference,
+      'stripeConnectId': instance.stripeConnectId,
       'accessToken': instance.accessToken,
     };
