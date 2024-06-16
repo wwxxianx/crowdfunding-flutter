@@ -1,3 +1,4 @@
+import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/utils/phone_input_formatter.dart';
@@ -63,71 +64,77 @@ class EditOrganizationInfoBottomSheet extends StatelessWidget {
 
         return CustomDraggableSheet(
           initialChildSize: 0.95,
-          child: Column(
-            children: [
-              const Text(
-                "Organization Info",
-                style: CustomFonts.labelMedium,
-              ),
-              12.kH,
-              CustomOutlinedTextfield(
-                label: 'Name',
-                initialValue: nameFieldInitialValue,
-                onChanged: (value) {
-                  _handleNameChanged(context, value);
+          footer: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: Dimensions.screenHorizontalPadding,
+              vertical: 10,
+            ),
+            child: SizedBox(
+              width: double.maxFinite,
+              child: CustomButton(
+                isLoading: state.isUpdatingOrganization,
+                enabled: !state.isUpdatingOrganization,
+                onPressed: () {
+                  _handleUpdateOrganization(context);
                 },
+                child: Text("Save"),
               ),
-              12.kH,
-              CustomOutlinedTextfield(
-                label: 'Email',
-                initialValue: emailFieldInitialValue,
-                onChanged: (value) {
-                  _handleEmailChanged(context, value);
-                },
-                prefixIcon: const HeroIcon(
-                  HeroIcons.envelope,
-                  size: 18,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: Dimensions.screenHorizontalPadding),
+            child: Column(
+              children: [
+                const Text(
+                  "Organization Info",
+                  style: CustomFonts.labelMedium,
                 ),
-              ),
-              12.kH,
-              CustomOutlinedTextfield(
-                label: 'Contact Phoone Number',
-                initialValue: contactPhoneFieldInitialValue,
-                onChanged: (value) {
-                  _handlePhoneNumberChanged(context, value);
-                },
-                inputFormatters: [PhoneInputFormatter()],
-                prefixIcon: Padding(
-                  padding: const EdgeInsets.only(left: 12.0, right: 8.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Image.asset("assets/images/malaysia-flag.png"),
-                      4.kW,
-                      const Text(
-                        "+60",
-                        style: CustomFonts.labelSmall,
-                      )
-                    ],
+                12.kH,
+                CustomOutlinedTextfield(
+                  label: 'Name',
+                  initialValue: nameFieldInitialValue,
+                  onChanged: (value) {
+                    _handleNameChanged(context, value);
+                  },
+                ),
+                12.kH,
+                CustomOutlinedTextfield(
+                  label: 'Email',
+                  initialValue: emailFieldInitialValue,
+                  onChanged: (value) {
+                    _handleEmailChanged(context, value);
+                  },
+                  prefixIcon: const HeroIcon(
+                    HeroIcons.envelope,
+                    size: 18,
                   ),
                 ),
-              ),
-              // const Spacer(),
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomButton(
-                      isLoading: state.isUpdatingOrganization,
-                      enabled: !state.isUpdatingOrganization,
-                      onPressed: () {
-                        _handleUpdateOrganization(context);
-                      },
-                      child: Text("Save"),
+                12.kH,
+                CustomOutlinedTextfield(
+                  label: 'Contact Phoone Number',
+                  initialValue: contactPhoneFieldInitialValue,
+                  onChanged: (value) {
+                    _handlePhoneNumberChanged(context, value);
+                  },
+                  inputFormatters: [PhoneInputFormatter()],
+                  prefixIcon: Padding(
+                    padding: const EdgeInsets.only(left: 12.0, right: 8.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Image.asset("assets/images/malaysia-flag.png"),
+                        4.kW,
+                        const Text(
+                          "+60",
+                          style: CustomFonts.labelSmall,
+                        )
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         );
       },

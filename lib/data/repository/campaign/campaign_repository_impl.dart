@@ -15,6 +15,7 @@ import 'package:crowdfunding_flutter/data/network/retrofit_api.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_category.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update.dart';
 import 'package:crowdfunding_flutter/domain/repository/campaign/campaign_repository.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaigns.dart';
@@ -89,10 +90,10 @@ class CampaignRepositoryImpl implements CampaignRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> createCampaign(
+  Future<Either<Failure, CampaignSummary>> createCampaign(
       CreateCampaignPayload payload) async {
     try {
-      await api.createCampaign(
+      final res = await api.createCampaign(
         title: payload.title,
         description: payload.description,
         targetAmount: payload.targetAmount,
@@ -104,7 +105,7 @@ class CampaignRepositoryImpl implements CampaignRepository {
         campaignVideoFile: payload.campaignVideoFile,
         beneficiaryImageFile: payload.beneficiaryImageFile,
       );
-      return right(unit);
+      return right(res);
     } catch (e) {
       if (e is DioException) {
         final errorMessage = ErrorHandler.dioException(error: e).errorMessage;

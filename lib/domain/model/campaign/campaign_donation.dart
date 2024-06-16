@@ -99,4 +99,22 @@ class CampaignSummary {
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }
+
+  static const samples = [
+    CampaignSummary(
+      id: 'sample-id',
+      title: 'Sample Campaign',
+      description: 'This is a sample campaign description.',
+      videoUrl: '',
+      thumbnailUrl:
+          'https://yyavkrjmlxoqxeeybxuc.supabase.co/storage/v1/object/public/campaign/thumbnail/larm-rmah-AEaTUnvneik-unsplash.jpg',
+      targetAmount: 1000.0,
+      contactPhoneNumber: '112189387',
+      beneficiaryName: 'Sample Beneficiary',
+      beneficiaryImageUrl:
+          'https://yyavkrjmlxoqxeeybxuc.supabase.co/storage/v1/object/public/campaign/thumbnail/larm-rmah-AEaTUnvneik-unsplash.jpg',
+      createdAt: '2024-05-16T08:21:57.324Z',
+      updatedAt: '2024-05-16T08:21:57.324Z',
+    ),
+  ];
 }

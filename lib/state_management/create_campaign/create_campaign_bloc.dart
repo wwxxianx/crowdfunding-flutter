@@ -65,10 +65,10 @@ class CreateCampaignBloc extends Bloc<CreateCampaignEvent, CreateCampaignState>
     res.fold(
       (l) => emit(state.copyWith(
           createCampaignError: l.errorMessage, isCreatingCampaign: false)),
-      (r) {
+      (campaign) {
         emit(state.copyWith(
             createCampaignError: null, isCreatingCampaign: false));
-        event.onSuccess();
+        event.onSuccess(campaign.id);
       },
     );
   }

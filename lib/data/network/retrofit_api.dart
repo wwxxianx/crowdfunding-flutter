@@ -5,6 +5,8 @@ import 'package:crowdfunding_flutter/data/network/payload/auth/login_be_payload.
 import 'package:crowdfunding_flutter/data/network/payload/auth/sign_up_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_comment_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_reply_payload.dart';
+import 'package:crowdfunding_flutter/data/network/payload/collaboration/create_collaboration_payload.dart';
+import 'package:crowdfunding_flutter/data/network/payload/collaboration/update_collaboration_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/donation/create_campaign_donation_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/organization/create_organization_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/organization/join_organization_payload.dart';
@@ -19,7 +21,9 @@ import 'package:crowdfunding_flutter/data/service/payment/payment_intent_respons
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_category.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update.dart';
+import 'package:crowdfunding_flutter/domain/model/collaboration/collaboration.dart';
 import 'package:crowdfunding_flutter/domain/model/gift_card/gift_cards_response.dart';
 import 'package:crowdfunding_flutter/domain/model/gift_card/num_gift_card_response.dart';
 import 'package:crowdfunding_flutter/domain/model/notification/notification.dart';
@@ -65,7 +69,7 @@ abstract class RestClient {
 
   @POST("campaigns")
   @MultiPart()
-  Future<void> createCampaign({
+  Future<CampaignSummary> createCampaign({
     @Part(name: "title") required String title,
     @Part(name: "description") required String description,
     @Part(name: "targetAmount") required int targetAmount,
@@ -245,5 +249,26 @@ abstract class RestClient {
   Future<List<NotificationModel>> getNotifications();
 
   @PATCH("notifications/{id}")
-  Future<NotificationModel> readNotification({@Path('id') required String notificationId});
+  Future<NotificationModel> readNotification(
+      {@Path('id') required String notificationId});
+
+  // Collaboration
+  @POST("collaborations")
+  Future<Collaboration> createCollaboration(
+    @Body() CreateCollaborationPayload payload,
+  );
+
+  @GET("collaborations/{id}")
+  Future<Collaboration?> getCollaboration({
+    @Path('id') required String campaignId,
+  });
+
+  @GET("collaborations")
+  Future<List<Collaboration>> getCollaborations();
+
+  @PATCH("collaborations/{id}")
+  Future<Collaboration> updateCollaboration({
+    @Path('id') required String collaborationId,
+    @Body() required UpdateCollaborationPayload payload,
+  });
 }

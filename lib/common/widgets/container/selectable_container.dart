@@ -5,9 +5,11 @@ class SelectableContainer extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
   final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry? margin;
   final Widget child;
   const SelectableContainer({
     super.key,
+    this.margin,
     required this.isSelected,
     required this.onTap,
     required this.child,
@@ -18,7 +20,8 @@ class SelectableContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      child: Ink(
+      child: Container(
+        margin: margin,
         padding: padding,
         decoration: BoxDecoration(
           color: isSelected ? CustomColors.containerLightGreen : Colors.white,

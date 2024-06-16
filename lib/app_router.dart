@@ -10,6 +10,7 @@ import 'package:crowdfunding_flutter/presentation/account_preferences/account_pr
 import 'package:crowdfunding_flutter/presentation/account_saved_campaigns/saved_campaigns_screen.dart';
 import 'package:crowdfunding_flutter/presentation/campaign_details/campaign_details_screen.dart';
 import 'package:crowdfunding_flutter/presentation/create_campaign/create_campaign_screen.dart';
+import 'package:crowdfunding_flutter/presentation/create_campaign/screens/create_campaign_success_screen.dart';
 import 'package:crowdfunding_flutter/presentation/donate/donate_screen.dart';
 import 'package:crowdfunding_flutter/presentation/edit_organization/edit_organization_screen.dart';
 import 'package:crowdfunding_flutter/presentation/explore/explore_screen.dart';
@@ -51,7 +52,7 @@ class AppRouter {
         // initialLocation: EditCampaignScreen.generateRoute(campaignId: '123'),
         // initialLocation:
         //     OrganizationProfileScreen.generateRoute(organizationId: 'asd'),
-        initialLocation: '/loading',
+        initialLocation: '/organization-profile/123',
         routes: [
           GoRoute(
             path: '/',
@@ -110,44 +111,13 @@ class AppRouter {
               return null;
             },
           ),
-          // ShellRoute(
-          //   navigatorKey: _shellNavigatorKey,
-          //   builder: (BuildContext context, GoRouterState state, Widget child) {
-          //     return NavigationScreen(
-          //       child: child,
-          //     );
-          //   },
-          //   routes: [
-          //     GoRoute(
-          //       path: HomeScreen.route,
-          //       builder: (context, state) => const HomeScreen(),
-          //     ),
-          //     GoRoute(
-          //       path: ExploreScreen.route,
-          //       builder: (context, state) => const ExploreScreen(),
-          //       routes: [
-          //         GoRoute(
-          //           path: CampaignDetailsScreen.route,
-          //           builder: (context, state) => CampaignDetailsScreen(
-          //             campaignId: state.pathParameters['campaignId'] ?? '',
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //     GoRoute(
-          //       path: NotificationScreen.route,
-          //       builder: (context, state) => const NotificationScreen(),
-          //     ),
-          //     GoRoute(
-          //       path: ManageCampaignScreen.route,
-          //       builder: (context, state) => const ManageCampaignScreen(),
-          //     ),
-          //     GoRoute(
-          //       path: AccountScreen.route,
-          //       builder: (context, state) => const AccountScreen(),
-          //     ),
-          //   ],
-          // ),
+          GoRoute(
+            path: '/create-campaign-success/:campaignId',
+            builder: (context, state) {
+              final campaignId = state.pathParameters['campaignId'] ?? '';
+              return CreateCampaignSuccessScreen(campaignId: campaignId);
+            },
+          ),
           GoRoute(
             path: '/data',
             builder: (context, state) {
@@ -250,7 +220,12 @@ class AppRouter {
           ),
           GoRoute(
             path: CollaborateWithNPOScreen.route,
-            builder: (context, state) => CollaborateWithNPOScreen(),
+            builder: (context, state) {
+              final campaignId = state.pathParameters['campaignId'] ?? '';
+              return CollaborateWithNPOScreen(
+                campaignId: campaignId,
+              );
+            },
           ),
           GoRoute(
             path: CreateCampaignScreen.route,

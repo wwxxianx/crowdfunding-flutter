@@ -38,7 +38,7 @@ class AppUserCubit extends Cubit<AppUserState> {
       (newNotification) {
         final updatedNotifications = state.notifications.map((notification) {
           if (notification.id == newNotification.id) {
-            return newNotification;
+            return notification.copyWith(isRead: true);
           }
           return notification;
         }).toList();

@@ -9,6 +9,7 @@ import 'package:crowdfunding_flutter/data/network/response/donation/giftcard_don
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_category.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaigns.dart';
 import 'package:fpdart/fpdart.dart';
@@ -20,7 +21,7 @@ abstract interface class CampaignRepository {
 
   Future<Either<Failure, List<CampaignCategory>>> getCampaignCategories();
 
-  Future<Either<Failure, void>> createCampaign(
+  Future<Either<Failure, CampaignSummary>> createCampaign(
     CreateCampaignPayload payload,
   );
 

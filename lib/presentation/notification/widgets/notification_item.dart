@@ -26,11 +26,9 @@ class NotificationItem extends StatelessWidget {
   get notificationType => NotificationType.values.byName(notification.type);
 
   void _handlePressed(BuildContext context) {
-    Isolate.run(() {
-      context
-          .read<AppUserCubit>()
-          .toggleReadNotification(notificationId: notification.id);
-    });
+    context
+        .read<AppUserCubit>()
+        .toggleReadNotification(notificationId: notification.id);
     if (notificationType == NotificationType.CAMPAIGN_UPDATE) {
       context.push(CampaignDetailsScreen.generateRoute(
           campaignId: notification.campaign?.id ?? ''));

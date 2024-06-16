@@ -50,7 +50,7 @@ class Organization {
       email: "7J9qH@example.com",
       contactPhoneNumber: "1234567890",
       invitationCode: "123456",
-      isVerified: false,
+      isVerified: true,
       members: [
         UserModel.sample,
       ],

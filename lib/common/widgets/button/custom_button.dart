@@ -23,6 +23,7 @@ class CustomButton extends StatelessWidget {
   final bool isLoading;
   final List<BoxShadow>? boxShadow;
   final bool enabled;
+  final BoxBorder? border;
 
   const CustomButton({
     Key? key,
@@ -38,6 +39,7 @@ class CustomButton extends StatelessWidget {
     this.isLoading = false,
     this.boxShadow,
     this.enabled = true,
+    this.border,
   }) : super(key: key);
 
   Color? _getBackgroundColor() {
@@ -68,19 +70,32 @@ class CustomButton extends StatelessWidget {
     }
   }
 
+  BoxBorder? get _buttonBorder {
+    if (border != null) {
+      return border;
+    }
+    if (style == CustomButtonStyle.grey) {
+      return null;
+    }
+    return Border.all(width: 1, color: Colors.black);
+  }
+
+  LinearGradient? get _bgGradient {
+    if (style == CustomButtonStyle.gradientGreen) {
+      return CustomColors.primaryGreenGradient;
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final _bgGradient = style == CustomButtonStyle.gradientGreen
-        ? CustomColors.primaryGreenGradient
-        : null;
-
     return Ink(
       child: Container(
         height: height,
         decoration: BoxDecoration(
           color: _getBackgroundColor(),
           gradient: _bgGradient,
-          border: style == CustomButtonStyle.grey ? null : Border.all(width: 1, color: Colors.black),
+          border: _buttonBorder,
           borderRadius: borderRadius,
           boxShadow: boxShadow,
         ),

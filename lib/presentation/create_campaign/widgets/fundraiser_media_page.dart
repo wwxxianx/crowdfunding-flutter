@@ -11,6 +11,7 @@ import 'package:crowdfunding_flutter/state_management/create_campaign/create_cam
 import 'package:crowdfunding_flutter/state_management/create_campaign/create_campaign_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class FundraiserMediaUploadPage extends StatefulWidget {
   final VoidCallback onPreviousPage;
@@ -41,10 +42,11 @@ class _FundraiserMediaUploadPageState extends State<FundraiserMediaUploadPage> {
   }
 
   void _onCreateCampaign() {
-    context.read<CreateCampaignBloc>().add(OnCreateCampaign(onSuccess: () {
-      // Navigate to success screen
-      print('Success');
-    }));
+    context.read<CreateCampaignBloc>().add(OnCreateCampaign(
+      onSuccess: (campaignId) {
+        context.go('/create-campaign-success/$campaignId');
+      },
+    ));
   }
 
   @override

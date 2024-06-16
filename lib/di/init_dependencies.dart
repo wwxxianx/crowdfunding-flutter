@@ -3,6 +3,7 @@ import 'package:crowdfunding_flutter/data/network/dio.dart';
 import 'package:crowdfunding_flutter/data/network/retrofit_api.dart';
 import 'package:crowdfunding_flutter/data/repository/auth_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/repository/campaign/campaign_repository_impl.dart';
+import 'package:crowdfunding_flutter/data/repository/collaboration/collaboration_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/repository/constant_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/repository/notification/notification_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/repository/organization/organization_repository_impl.dart';
@@ -11,6 +12,7 @@ import 'package:crowdfunding_flutter/data/service/auth_service_impl.dart';
 import 'package:crowdfunding_flutter/data/service/payment/payment_service.dart';
 import 'package:crowdfunding_flutter/domain/repository/auth_repository.dart';
 import 'package:crowdfunding_flutter/domain/repository/campaign/campaign_repository.dart';
+import 'package:crowdfunding_flutter/domain/repository/collaboration/collaboration_repository.dart';
 import 'package:crowdfunding_flutter/domain/repository/constant_repository.dart';
 import 'package:crowdfunding_flutter/domain/repository/notification/notification_repository.dart';
 import 'package:crowdfunding_flutter/domain/repository/organization/organization_repository.dart';
@@ -29,8 +31,12 @@ import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaign.dar
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaigns.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaign_categories.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/update_campaign.dart';
+import 'package:crowdfunding_flutter/domain/usecases/collaboration/create_campaign_collaboration.dart';
+import 'package:crowdfunding_flutter/domain/usecases/collaboration/fetch_campaign_collaboration.dart';
+import 'package:crowdfunding_flutter/domain/usecases/collaboration/update_campaign_collaboration.dart';
 import 'package:crowdfunding_flutter/domain/usecases/fetch_state_and_regions.dart';
 import 'package:crowdfunding_flutter/domain/usecases/notification/fetch_notifications.dart';
+import 'package:crowdfunding_flutter/domain/usecases/notification/read_notification.dart';
 import 'package:crowdfunding_flutter/domain/usecases/organization/create_organization.dart';
 import 'package:crowdfunding_flutter/domain/usecases/organization/fetch_organization.dart';
 import 'package:crowdfunding_flutter/domain/usecases/organization/fetch_organization_members.dart';
@@ -73,6 +79,7 @@ Future<void> initDependencies() async {
           signOut: serviceLocator(),
           fetchNotifications: serviceLocator(),
           connectAccount: serviceLocator(),
+          toggleReadNotification: serviceLocator(),
         ))
     ..registerLazySingleton(() => NavigationCubit())
     ..registerLazySingleton(() => DioNetwork.provideDio())
@@ -87,17 +94,34 @@ Future<void> initDependencies() async {
   _initPayment();
   _initGiftCard();
   _initOrganization();
-  _initNotifications();
+  _initNotification();
+  _initCollaboration();
 }
 
-void _initNotifications() {
+void _initCollaboration() {
+  serviceLocator
+    // Repo
+    ..registerFactory<CollaborationRepository>(
+        () => CollaborationRepositoryImpl(api: serviceLocator()))
+    // Usecase
+    ..registerFactory(() =>
+        FetchCampaignCollaboration(collaborationRepository: serviceLocator()))
+    ..registerFactory(() =>
+        CreateCampaignCollaboration(collaborationRepository: serviceLocator()))
+    ..registerFactory(() =>
+        UpdateCampaignCollaboration(collaborationRepository: serviceLocator()));
+}
+
+void _initNotification() {
   serviceLocator
     // Repo
     ..registerFactory<NotificationRepository>(
         () => NotificationRepositoryImpl(api: serviceLocator()))
     // Usecase
     ..registerFactory(
-        () => FetchNotifications(notificationRepository: serviceLocator()));
+        () => FetchNotifications(notificationRepository: serviceLocator()))
+    ..registerFactory(
+        () => ToggleReadNotification(notificationRepository: serviceLocator()));
 }
 
 void _initExploreCampaigns() {

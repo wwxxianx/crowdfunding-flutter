@@ -1,3 +1,4 @@
+import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
@@ -29,11 +30,29 @@ class EditOrganizationImageBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomBottomSheet(
-      child: BlocBuilder<EditOrganizationBloc, EditOrganizationState>(
-        builder: (context, state) {
-          final organizationResult = state.organizationResult;
-          return Column(
+    return BlocBuilder<EditOrganizationBloc, EditOrganizationState>(
+      builder: (context, state) {
+        final organizationResult = state.organizationResult;
+        return CustomDraggableSheet(
+          initialChildSize: 0.95,
+          footer: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: Dimensions.screenHorizontalPadding,
+              vertical: 10,
+            ),
+            child: SizedBox(
+              width: double.maxFinite,
+              child: CustomButton(
+                isLoading: state.isUpdatingOrganization,
+                enabled: !state.isUpdatingOrganization,
+                onPressed: () {
+                  _handleUpdateOrganization(context);
+                },
+                child: const Text("Save"),
+              ),
+            ),
+          ),
+          child: Column(
             children: [
               const Text(
                 'Upload Organization Image',
@@ -51,25 +70,10 @@ class EditOrganizationImageBottomSheet extends StatelessWidget {
                       .add(OnImageFileChanged(file: file));
                 },
               ),
-              24.kH,
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomButton(
-                      isLoading: state.isUpdatingOrganization,
-                      enabled: !state.isUpdatingOrganization,
-                      onPressed: () {
-                        _handleUpdateOrganization(context);
-                      },
-                      child: Text("Save"),
-                    ),
-                  ),
-                ],
-              )
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

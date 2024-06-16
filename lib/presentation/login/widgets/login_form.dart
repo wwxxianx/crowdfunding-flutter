@@ -7,6 +7,8 @@ import 'package:crowdfunding_flutter/common/widgets/input/outlined_text_field.da
 import 'package:crowdfunding_flutter/presentation/home/home_screen.dart';
 import 'package:crowdfunding_flutter/presentation/onboarding/widgets/onboarding_select_account_type_screen.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
+import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_bloc.dart';
+import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_event.dart';
 import 'package:crowdfunding_flutter/state_management/login/login_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/login/login_event.dart';
 import 'package:crowdfunding_flutter/state_management/login/login_state.dart';
@@ -47,6 +49,9 @@ class _LoginFormState extends State<LoginForm> with InputValidator {
                 return;
               }
               if (user.isOnboardingCompleted) {
+                // Init app state
+                context.read<GiftCardBloc>().add(OnFetchAllGiftCards());
+                context.read<AppUserCubit>().fetchNotifications();
                 context.go('/home');
               } else {
                 context.go(OnboardingSelectAccountScreen.route);

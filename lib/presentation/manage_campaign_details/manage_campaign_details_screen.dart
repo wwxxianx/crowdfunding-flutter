@@ -14,6 +14,7 @@ import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/stripe/stripe_account.dart';
 import 'package:crowdfunding_flutter/presentation/campaign_details/tabs/tab_view.dart';
 import 'package:crowdfunding_flutter/presentation/campaign_details/widgets/protect_info_banner.dart';
+import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/collaborate_with_npo_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/create_campaign_update_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/edit_campaign_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/widgets/reply_bottom_sheet.dart';
@@ -116,14 +117,14 @@ class _ManageCampaignDetailsScreenState
               Expanded(
                 flex: 1,
                 child: InkWell(
-                  onTap: () {},
+                  onTap: _navigateToEditScreen,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SvgPicture.asset("assets/icons/information-filled.svg"),
+                      const HeroIcon(HeroIcons.pencil),
                       6.kH,
                       const Text(
-                        "Details",
+                        "Edit",
                         style: CustomFonts.titleSmall,
                       ),
                     ],
@@ -186,23 +187,6 @@ class _ManageCampaignDetailsScreenState
               Expanded(
                 flex: 1,
                 child: InkWell(
-                  onTap: _navigateToEditScreen,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const HeroIcon(HeroIcons.pencil),
-                      6.kH,
-                      const Text(
-                        "Edit",
-                        style: CustomFonts.titleSmall,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: InkWell(
                   onTap: () {
                     _navigateToBankScreen(context);
                   },
@@ -222,14 +206,18 @@ class _ManageCampaignDetailsScreenState
               Expanded(
                 flex: 1,
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    context.push(CollaborateWithNPOScreen.generateRoute(
+                      campaignId: widget.campaignId,
+                    ));
+                  },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const HeroIcon(HeroIcons.banknotes),
+                      SvgPicture.asset('assets/icons/organization.svg'),
                       6.kH,
                       const Text(
-                        "Donations",
+                        "Collaborate",
                         style: CustomFonts.titleSmall,
                       ),
                     ],

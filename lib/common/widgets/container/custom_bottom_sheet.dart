@@ -2,10 +2,10 @@ import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 
 class CustomDraggableSheet extends StatefulWidget {
   final Widget child;
+  final Widget? footer;
   final List<double>? snapSizes;
   final double initialChildSize;
   const CustomDraggableSheet({
@@ -13,6 +13,7 @@ class CustomDraggableSheet extends StatefulWidget {
     required this.child,
     this.initialChildSize = 0.5,
     this.snapSizes,
+    this.footer,
   });
 
   @override
@@ -30,7 +31,7 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet> {
   }
 
   void onChanged() {
-    final currentSize = controller.size;
+    // final currentSize = controller.size;
     // if (currentSize <= 0.3) context.pop();
   }
 
@@ -79,8 +80,22 @@ class _CustomDraggableSheetState extends State<CustomDraggableSheet> {
               slivers: [
                 topButtonIndicator(),
                 SliverToBoxAdapter(
-                  child: widget.child,
+                  child: Container(
+                    child: widget.child,
+                  ),
                 ),
+                if (widget.footer != null)
+                  // Footer widget
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        //footer widgets,
+                        widget.footer!,
+                      ],
+                    ),
+                  ),
               ],
             ),
           );

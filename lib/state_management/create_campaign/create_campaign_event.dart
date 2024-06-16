@@ -90,7 +90,7 @@ final class ValidateStepThree extends CreateCampaignEvent {
 }
 
 final class OnCreateCampaign extends CreateCampaignEvent {
-  final VoidCallback onSuccess;
+  final void Function(String campaignId) onSuccess;
 
   const OnCreateCampaign({required this.onSuccess});
 }

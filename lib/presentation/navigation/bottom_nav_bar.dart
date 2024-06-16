@@ -1,13 +1,6 @@
-import 'package:crowdfunding_flutter/presentation/account/account_screen.dart';
-import 'package:crowdfunding_flutter/presentation/explore/explore_screen.dart';
-import 'package:crowdfunding_flutter/presentation/home/home_screen.dart';
-import 'package:crowdfunding_flutter/presentation/manage_campaign/manage_campaign_screen.dart';
 import 'package:crowdfunding_flutter/presentation/navigation/widgets/badge_icon.dart';
-import 'package:crowdfunding_flutter/presentation/notification/notification_screen.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_bloc.dart';
-import 'package:crowdfunding_flutter/state_management/navigation/navigation_cubit.dart';
-import 'package:crowdfunding_flutter/state_management/navigation/navigation_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -71,6 +64,9 @@ class _HomeBottomNavigationBarState extends State<HomeBottomNavigationBar> {
     final hasUnusedGiftCard = giftCardState.receivedGiftCards.isNotEmpty &&
         giftCardState.receivedGiftCards
             .any((giftCard) => giftCard.campaignDonation == null);
+    final appUserState = context.watch<AppUserCubit>().state;
+    final hasUnreadNotification =
+        appUserState.notifications.any((notification) => !notification.isRead);
     return BottomNavigationBar(
       backgroundColor: Colors.white,
       type: BottomNavigationBarType.fixed,
@@ -92,8 +88,14 @@ class _HomeBottomNavigationBarState extends State<HomeBottomNavigationBar> {
           label: "Explore",
         ),
         BottomNavigationBarItem(
-          icon: SvgPicture.asset("assets/icons/bell.svg"),
-          activeIcon: SvgPicture.asset("assets/icons/bell-active.svg"),
+          icon: IconWithBadge(
+            icon: SvgPicture.asset("assets/icons/bell.svg"),
+            showBadge: hasUnreadNotification,
+          ),
+          activeIcon: IconWithBadge(
+            icon: SvgPicture.asset("assets/icons/bell-active.svg"),
+            showBadge: hasUnreadNotification,
+          ),
           label: "Notification",
         ),
         BottomNavigationBarItem(

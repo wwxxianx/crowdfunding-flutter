@@ -4,12 +4,24 @@ import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/custom_bottom_sheet.dart';
 import 'package:crowdfunding_flutter/common/widgets/input/outlined_text_field.dart';
+import 'package:crowdfunding_flutter/data/network/api_result.dart';
+import 'package:crowdfunding_flutter/state_management/campaign_collaboration/campaign_collaboration_bloc.dart';
+import 'package:crowdfunding_flutter/state_management/campaign_collaboration/campaign_collaboration_event.dart';
+import 'package:crowdfunding_flutter/state_management/campaign_collaboration/campaign_collaboration_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class RewardBottomSheet extends StatefulWidget {
-  const RewardBottomSheet({super.key});
+  final String campaignId;
+  final bool isUpdate;
+  const RewardBottomSheet({
+    super.key,
+    required this.campaignId,
+    this.isUpdate = false,
+  });
 
   @override
   State<RewardBottomSheet> createState() => _RewardBottomSheetState();
@@ -38,6 +50,33 @@ class _RewardBottomSheetState extends State<RewardBottomSheet> {
       return (100 * (reward / 100)).toString();
     }
     return (100 * selectedReward).toString();
+  }
+
+  void _handleSubmit(BuildContext context) {
+    double reward = selectedReward;
+    if (rewardTextController.text.isNotEmpty) {
+      reward = int.parse(rewardTextController.text) / 100.0;
+    }
+    if (widget.isUpdate) {
+      context.read<CampaignCollaborationBloc>().add(
+            OnSubmitCampaignCollaboration(
+                isUpdate: widget.isUpdate,
+                onSuccess: () {
+                  context.pop();
+                },
+                reward: reward,),
+          );
+    } else {
+      context.read<CampaignCollaborationBloc>().add(
+            OnSubmitCampaignCollaboration(
+                isUpdate: widget.isUpdate,
+                onSuccess: () {
+                  context.pop();
+                },
+                campaignId: widget.campaignId,
+                reward: reward),
+          );
+    }
   }
 
   @override
@@ -134,15 +173,26 @@ class _RewardBottomSheetState extends State<RewardBottomSheet> {
               label: "Reward",
             ),
             const Spacer(),
-            Row(
-              children: [
-                Expanded(
-                  child: CustomButton(
-                    onPressed: () {},
-                    child: Text("Send my help request"),
-                  ),
-                ),
-              ],
+            BlocBuilder<CampaignCollaborationBloc, CampaignCollaborationState>(
+              builder: (context, state) {
+                return Row(
+                  children: [
+                    Expanded(
+                      child: CustomButton(
+                        isLoading:
+                            state.submitCollaborationResult is ApiResultLoading,
+                        enabled: state.submitCollaborationResult
+                            is! ApiResultLoading,
+                        onPressed: () {
+                          _handleSubmit(context);
+                        },
+                        child: Text(
+                            "${widget.isUpdate ? "Update" : "Send"} my help request"),
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ],
         ),

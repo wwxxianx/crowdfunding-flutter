@@ -44,6 +44,32 @@ class NotificationModel {
 
   Map<String, dynamic> toJson() => _$NotificationModelToJson(this);
 
+  NotificationModel copyWith({
+    String? id,
+    String? type,
+    String? title,
+    String? description,
+    bool? isRead,
+    Map<String, dynamic>? metadata,
+    UserModel? actor,
+    String? entityId,
+    String? createdAt,
+    CampaignSummary? campaign,
+  }) {
+    return NotificationModel(
+      id: id ?? this.id,
+      type: type ?? this.type,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      isRead: isRead ?? this.isRead,
+      metadata: metadata ?? this.metadata,
+      actor: actor ?? this.actor,
+      entityId: entityId ?? this.entityId,
+      createdAt: createdAt ?? this.createdAt,
+      campaign: campaign ?? this.campaign,
+    );
+  }
+
   static final samples = [
     const NotificationModel(
       id: '1',
