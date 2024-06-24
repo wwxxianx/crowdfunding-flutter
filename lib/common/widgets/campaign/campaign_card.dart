@@ -12,6 +12,8 @@ import 'package:crowdfunding_flutter/common/widgets/skeleton.dart';
 import 'package:crowdfunding_flutter/common/widgets/tag/custom_tag.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:video_player/video_player.dart';
@@ -108,6 +110,9 @@ class CampaignCard extends StatelessWidget {
   final double? height;
   final Campaign campaign;
   final bool isSmall;
+  final Widget? headerLeadingTag;
+  final Widget? headerTrailingTag;
+  final Widget? footerAction;
   final VoidCallback? onPressed;
   const CampaignCard({
     this.campaign = Campaign.sample,
@@ -115,6 +120,9 @@ class CampaignCard extends StatelessWidget {
     this.isSmall = false,
     this.onPressed,
     this.height,
+    this.headerLeadingTag,
+    this.headerTrailingTag,
+    this.footerAction,
   });
 
   Widget _buildMedia() {
@@ -176,18 +184,17 @@ class CampaignCard extends StatelessWidget {
                             child: _buildMedia(),
                           ),
                         ),
-                        if (!isSmall)
+                        if (headerLeadingTag != null)
                           Positioned(
                             top: 8.0,
-                            left: 12.0,
-                            child: CustomTag(
-                              prefixIcon: const HeroIcon(
-                                HeroIcons.mapPin,
-                                size: 16.0,
-                                color: Color(0xFF2F2F2F),
-                              ),
-                              label: campaign.stateAndRegion.name.toTitleCase(),
-                            ),
+                            left: 8.0,
+                            child: headerLeadingTag!,
+                          ),
+                        if (headerTrailingTag != null)
+                          Positioned(
+                            top: 5.0,
+                            right: 8.0,
+                            child: headerTrailingTag!,
                           ),
                       ],
                     ),
@@ -223,7 +230,7 @@ class CampaignCard extends StatelessWidget {
                                           CustomTag(
                                             label: "65% Raised",
                                           ),
-                                        if (isSmall) MatchOfferTag(),
+                                        // if (isSmall) MatchOfferTag(),
                                       ],
                                     )
                                   ],
@@ -268,6 +275,15 @@ class CampaignCard extends StatelessWidget {
                               ],
                             ),
                           ),
+                          if (footerAction != null)
+                            Padding(
+                              padding: EdgeInsets.only(
+                                left: isSmall ? 8.0 : 12.0,
+                                right: isSmall ? 8.0 : 12.0,
+                                bottom: isSmall ? 8.0 : 0.0,
+                              ),
+                              child: footerAction,
+                            ),
                           if (!isSmall) 12.kH,
                           // Top border for Match Offer container
                           if (!isSmall)

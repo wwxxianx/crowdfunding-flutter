@@ -61,7 +61,10 @@ class MediaPicker extends StatefulWidget {
   final void Function(List<File>)? onSelected;
   final List<File>? preview;
   final List<ImageModel> previewImageModels;
+  final List<String> previewImageUrls;
   final void Function(ImageModel image)? onRemovePreviewImageModel;
+  final void Function(String imageUrl)? onRemovePreviewImageUrl;
+  final bool canRemove;
 
   const MediaPicker({
     super.key,
@@ -70,7 +73,10 @@ class MediaPicker extends StatefulWidget {
     this.onSelected,
     this.preview,
     this.previewImageModels = const [],
+    this.previewImageUrls = const [],
     this.onRemovePreviewImageModel,
+    this.onRemovePreviewImageUrl,
+    this.canRemove = true,
   });
 
   @override
@@ -81,6 +87,7 @@ class _MediaPickerState<T> extends State<MediaPicker> {
   final picker = ImagePicker();
   List<File> selectedImages = [];
   File? videoThumbnail;
+  List<String> previewImageUrls = [];
 
   @override
   void initState() {
@@ -88,12 +95,16 @@ class _MediaPickerState<T> extends State<MediaPicker> {
     if (widget.preview != null && widget.preview!.isNotEmpty) {
       selectedImages = widget.preview!;
     }
+    if (widget.previewImageUrls.isNotEmpty) {
+      previewImageUrls = widget.previewImageUrls;
+    }
   }
 
   void _handlePickButtonPressed() async {
-    final hasExceedLimit =
-        (widget.previewImageModels.length + selectedImages.length) >=
-            widget.limit;
+    final hasExceedLimit = (widget.previewImageModels.length +
+            selectedImages.length +
+            widget.previewImageUrls.length) >=
+        widget.limit;
     if (hasExceedLimit) {
       context.showSnackBar(
           "You can only select ${widget.limit} ${widget.isVideo ? 'video' : 'image'}${widget.limit > 1 ? 's' : ''}");
@@ -162,12 +173,27 @@ class _MediaPickerState<T> extends State<MediaPicker> {
     if (widget.previewImageModels.isNotEmpty) {
       return widget.previewImageModels.map((image) {
         return ImagePreviewContainer(
+          canRemove: widget.canRemove,
           onRemove: () {
             if (widget.onRemovePreviewImageModel != null) {
               widget.onRemovePreviewImageModel!(image);
             }
           },
           imageUrl: image.imageUrl,
+        );
+      }).toList();
+    }
+
+    if (previewImageUrls.isNotEmpty) {
+      return previewImageUrls.map((imageUrl) {
+        return ImagePreviewContainer(
+          canRemove: widget.canRemove,
+          onRemove: () {
+            setState(() {
+              previewImageUrls.remove(imageUrl);
+            });
+          },
+          imageUrl: imageUrl,
         );
       }).toList();
     }
@@ -191,6 +217,7 @@ class _MediaPickerState<T> extends State<MediaPicker> {
       if (widget.limit == 1) {
         return [
           ImagePreviewContainer(
+              canRemove: widget.canRemove,
               onRemove: () {
                 setState(() {
                   selectedImages = [];
@@ -202,6 +229,7 @@ class _MediaPickerState<T> extends State<MediaPicker> {
         // multiple images
         return selectedImages.map((image) {
           return ImagePreviewContainer(
+            canRemove: widget.canRemove,
               onRemove: () {
                 setState(() {
                   selectedImages.remove(image);
@@ -240,7 +268,9 @@ class _MediaPickerState<T> extends State<MediaPicker> {
       runSpacing: 12.0,
       direction: Axis.horizontal,
       children: [
-        if (widget.previewImageModels.isNotEmpty) ..._buildPreview(),
+        if (widget.previewImageModels.isNotEmpty ||
+            widget.previewImageUrls.isNotEmpty)
+          ..._buildPreview(),
         ..._buildContent(),
         InkWell(
           onTap: _handlePickButtonPressed,
@@ -325,6 +355,7 @@ class VideoPreviewContainer extends StatelessWidget {
 }
 
 class ImagePreviewContainer extends StatelessWidget {
+  final bool canRemove;
   final String? imageUrl;
   final File? file;
   final VoidCallback onRemove;
@@ -333,6 +364,7 @@ class ImagePreviewContainer extends StatelessWidget {
     this.imageUrl,
     required this.onRemove,
     this.file,
+    this.canRemove = true,
   });
 
   Widget _buildImage() {
@@ -366,6 +398,7 @@ class ImagePreviewContainer extends StatelessWidget {
             child: _buildImage(),
           ),
         ),
+        if (canRemove)
         Positioned(
           right: -5,
           top: -5,

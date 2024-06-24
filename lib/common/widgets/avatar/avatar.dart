@@ -41,7 +41,7 @@ class Avatar extends StatelessWidget {
             child: Text(
               placeholder.toUpperCase(),
               style: CustomFonts.titleExtraLarge.copyWith(
-                color: Colors.black.withOpacity(0.4),
+                color: Colors.black38,
               ),
             ),
           );
@@ -56,7 +56,7 @@ class Avatar extends StatelessWidget {
         Text(
           placeholder.toUpperCase(),
           style: CustomFonts.titleExtraLarge.copyWith(
-            color: Colors.black.withOpacity(0.4),
+            color: Colors.black38,
           ),
         ),
       ],
@@ -71,14 +71,10 @@ class Avatar extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(100.0),
         border: border,
-        color: Colors.black.withOpacity(0.2),
+        color: CustomColors.slate300,
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(100.0),
-        // child: FadeInImage.memoryNetwork(
-        //   placeholder: kTransparentImage,
-        //   image: "",
-        // ),
         child: _buildImage(),
       ),
     );

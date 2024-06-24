@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:crowdfunding_flutter/common/utils/input_validator.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/data/network/payload/user/get_users_payload.dart';
@@ -9,6 +7,7 @@ import 'package:crowdfunding_flutter/domain/usecases/user/fetch_users.dart';
 import 'package:crowdfunding_flutter/state_management/purchase_gift_card/purchase_gift_card_event.dart';
 import 'package:crowdfunding_flutter/state_management/purchase_gift_card/purchase_gift_card_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fpdart/fpdart.dart';
 
 class PurchaseGiftCardBloc
     extends Bloc<PurchaseGiftCardEvent, PurchaseGiftCardState>
@@ -62,7 +61,7 @@ class PurchaseGiftCardBloc
               createGiftCardResult: ApiResultFailure(l.errorMessage))),
           (r) {
             emit(state.copyWith(
-                createGiftCardResult: const ApiResultSuccess(Void)));
+                createGiftCardResult: const ApiResultSuccess(Unit)));
             event.onSuccess();
           },
         );

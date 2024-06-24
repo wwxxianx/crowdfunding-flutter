@@ -14,6 +14,7 @@ class CustomButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final Widget? child;
   final Color? color;
+  final Color? backgroundColor;
   final double height;
   final double elevation;
   final BorderRadius borderRadius;
@@ -30,6 +31,7 @@ class CustomButton extends StatelessWidget {
     required this.onPressed,
     required this.child,
     this.color,
+    this.backgroundColor,
     this.height = 50.0,
     this.elevation = 2.0,
     this.borderRadius = const BorderRadius.all(Radius.circular(8.0)),
@@ -43,6 +45,9 @@ class CustomButton extends StatelessWidget {
   }) : super(key: key);
 
   Color? _getBackgroundColor() {
+    if (backgroundColor != null) {
+      return backgroundColor;
+    }
     switch (style) {
       case CustomButtonStyle.grey:
         return const Color(0xFFF0F0F0);
@@ -94,7 +99,7 @@ class CustomButton extends StatelessWidget {
         height: height,
         decoration: BoxDecoration(
           color: _getBackgroundColor(),
-          gradient: _bgGradient,
+          gradient: backgroundColor != null ? null : _bgGradient,
           border: _buttonBorder,
           borderRadius: borderRadius,
           boxShadow: boxShadow,

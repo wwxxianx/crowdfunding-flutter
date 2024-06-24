@@ -17,6 +17,10 @@ Collaboration _$CollaborationFromJson(Map<String, dynamic> json) =>
       reward: (json['reward'] as num).toDouble(),
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,
+      isCancelled: json['isCancelled'] as bool? ?? false,
+      cancelledById: json['cancelledById'] as String?,
+      cancellationReason: json['cancellationReason'] as String?,
+      cancelledAt: json['cancelledAt'] as String?,
     );
 
 Map<String, dynamic> _$CollaborationToJson(Collaboration instance) =>
@@ -27,4 +31,8 @@ Map<String, dynamic> _$CollaborationToJson(Collaboration instance) =>
       'reward': instance.reward,
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
+      'isCancelled': instance.isCancelled,
+      'cancelledById': instance.cancelledById,
+      'cancellationReason': instance.cancellationReason,
+      'cancelledAt': instance.cancelledAt,
     };

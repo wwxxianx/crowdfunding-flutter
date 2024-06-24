@@ -9,11 +9,14 @@ import 'package:crowdfunding_flutter/presentation/account_join_team/account_join
 import 'package:crowdfunding_flutter/presentation/account_preferences/account_preferences_screen.dart';
 import 'package:crowdfunding_flutter/presentation/account_saved_campaigns/saved_campaigns_screen.dart';
 import 'package:crowdfunding_flutter/presentation/campaign_details/campaign_details_screen.dart';
+import 'package:crowdfunding_flutter/presentation/community_challenge/community_challenge_screen.dart';
+import 'package:crowdfunding_flutter/presentation/community_challenge_details/community_challenge_details_screen.dart';
 import 'package:crowdfunding_flutter/presentation/create_campaign/create_campaign_screen.dart';
 import 'package:crowdfunding_flutter/presentation/create_campaign/screens/create_campaign_success_screen.dart';
 import 'package:crowdfunding_flutter/presentation/donate/donate_screen.dart';
 import 'package:crowdfunding_flutter/presentation/edit_organization/edit_organization_screen.dart';
 import 'package:crowdfunding_flutter/presentation/explore/explore_screen.dart';
+import 'package:crowdfunding_flutter/presentation/explore_collaboration/explore_collaboration_screen.dart';
 import 'package:crowdfunding_flutter/presentation/home/home_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign/manage_campaign_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/manage_campaign_details_screen.dart';
@@ -52,8 +55,14 @@ class AppRouter {
         // initialLocation: EditCampaignScreen.generateRoute(campaignId: '123'),
         // initialLocation:
         //     OrganizationProfileScreen.generateRoute(organizationId: 'asd'),
-        initialLocation: '/organization-profile/123',
+        initialLocation: '/loading',
         routes: [
+          GoRoute(
+            path: '/testing',
+            builder: (context, state) {
+              return TestScreen();
+            },
+          ),
           GoRoute(
             path: '/',
             routes: [
@@ -111,6 +120,26 @@ class AppRouter {
               return null;
             },
           ),
+          // Collboration
+          GoRoute(
+            path: '/explore-collaborations',
+            builder: (context, state) => const ExploreCollaborationScreen(),
+          ),
+          // Community Challenge
+          GoRoute(
+            path: '/community-challenges',
+            builder: (context, state) =>
+                const ExploreCommunityChallengeScreen(),
+            routes: [
+              GoRoute(
+                path: ':id',
+                builder: (context, state) {
+                  final id = state.pathParameters['id'] ?? "";
+                  return CommunityChallengeDetailsScreen(id: id);
+                },
+              ),
+            ],
+          ),
           GoRoute(
             path: '/create-campaign-success/:campaignId',
             builder: (context, state) {
@@ -148,10 +177,6 @@ class AppRouter {
                 },
               ),
             ],
-          ),
-          GoRoute(
-            path: '/testing',
-            builder: (context, state) => TestScreen(),
           ),
           GoRoute(
             path: '/loading',

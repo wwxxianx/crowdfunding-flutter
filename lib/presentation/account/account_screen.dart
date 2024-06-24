@@ -164,6 +164,36 @@ class AccountScreen extends StatelessWidget {
                   children: [
                     TextWithGradientBGShape(
                       text: Text(
+                        "Community",
+                        style: CustomFonts.titleMedium,
+                      ),
+                      width: 90,
+                    ),
+                    4.kH,
+                    CustomListTile(
+                      onTap: () {
+                        context.push('/community-challenges');
+                      },
+                      leading: SvgPicture.asset("assets/icons/circus.svg"),
+                      title: Text(
+                        "Community Challenge",
+                        style: CustomFonts.labelSmall,
+                      ),
+                      trailing: HeroIcon(
+                        HeroIcons.chevronRight,
+                        size: 16.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              20.kH,
+              CustomCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextWithGradientBGShape(
+                      text: Text(
                         "For You",
                         style: CustomFonts.titleMedium,
                       ),

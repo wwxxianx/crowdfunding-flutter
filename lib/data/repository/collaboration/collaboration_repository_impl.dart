@@ -72,4 +72,18 @@ class CollaborationRepositoryImpl implements CollaborationRepository {
       return left(Failure(ErrorHandler.otherException().errorMessage));
     }
   }
+  
+  @override
+  Future<Either<Failure, List<Collaboration>>> getPendingCollaborations() async {
+    try {
+      final res = await api.getPendingCollaborations();
+      return right(res);
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException().errorMessage));
+    }
+  }
 }

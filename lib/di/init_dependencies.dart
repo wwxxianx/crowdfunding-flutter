@@ -1,9 +1,11 @@
 import 'package:crowdfunding_flutter/data/local/shared_preference.dart';
 import 'package:crowdfunding_flutter/data/network/dio.dart';
+import 'package:crowdfunding_flutter/data/network/payload/community_challenge/create_challenge_participant_payload.dart';
 import 'package:crowdfunding_flutter/data/network/retrofit_api.dart';
 import 'package:crowdfunding_flutter/data/repository/auth_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/repository/campaign/campaign_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/repository/collaboration/collaboration_repository_impl.dart';
+import 'package:crowdfunding_flutter/data/repository/community_challenge/community_challenge_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/repository/constant_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/repository/notification/notification_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/repository/organization/organization_repository_impl.dart';
@@ -13,6 +15,7 @@ import 'package:crowdfunding_flutter/data/service/payment/payment_service.dart';
 import 'package:crowdfunding_flutter/domain/repository/auth_repository.dart';
 import 'package:crowdfunding_flutter/domain/repository/campaign/campaign_repository.dart';
 import 'package:crowdfunding_flutter/domain/repository/collaboration/collaboration_repository.dart';
+import 'package:crowdfunding_flutter/domain/repository/community_challenge/community_challenge_repository.dart';
 import 'package:crowdfunding_flutter/domain/repository/constant_repository.dart';
 import 'package:crowdfunding_flutter/domain/repository/notification/notification_repository.dart';
 import 'package:crowdfunding_flutter/domain/repository/organization/organization_repository.dart';
@@ -33,7 +36,13 @@ import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaign_cat
 import 'package:crowdfunding_flutter/domain/usecases/campaign/update_campaign.dart';
 import 'package:crowdfunding_flutter/domain/usecases/collaboration/create_campaign_collaboration.dart';
 import 'package:crowdfunding_flutter/domain/usecases/collaboration/fetch_campaign_collaboration.dart';
+import 'package:crowdfunding_flutter/domain/usecases/collaboration/fetch_pending_collaborations.dart';
 import 'package:crowdfunding_flutter/domain/usecases/collaboration/update_campaign_collaboration.dart';
+import 'package:crowdfunding_flutter/domain/usecases/community_challenge/create_challenge_participant.dart';
+import 'package:crowdfunding_flutter/domain/usecases/community_challenge/fetch_challenge_progress.dart';
+import 'package:crowdfunding_flutter/domain/usecases/community_challenge/fetch_community_challenge.dart';
+import 'package:crowdfunding_flutter/domain/usecases/community_challenge/fetch_community_challenges.dart';
+import 'package:crowdfunding_flutter/domain/usecases/community_challenge/update_challenge_participant.dart';
 import 'package:crowdfunding_flutter/domain/usecases/fetch_state_and_regions.dart';
 import 'package:crowdfunding_flutter/domain/usecases/notification/fetch_notifications.dart';
 import 'package:crowdfunding_flutter/domain/usecases/notification/read_notification.dart';
@@ -70,7 +79,7 @@ Future<void> initDependencies() async {
       anonKey:
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRvcHdhY25vanVjd2toaGRvaXFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTc4MjU2MzcsImV4cCI6MjAzMzQwMTYzN30.vqTc8vyjpg6x5dZftpgYbmASLf42W3-K2BPAJ1mRh34");
 
-  serviceLocator.registerLazySingleton(() => supabase.client);
+  serviceLocator.registerLazySingleton<SupabaseClient>(() => supabase.client);
 
   // core
   serviceLocator
@@ -96,6 +105,25 @@ Future<void> initDependencies() async {
   _initOrganization();
   _initNotification();
   _initCollaboration();
+  _initCommunityChallenge();
+}
+
+void _initCommunityChallenge() {
+  serviceLocator
+    // Repo
+    ..registerFactory<CommunityChallengeRepository>(
+        () => CommunityChallengeRepositoryImpl(api: serviceLocator()))
+    // Usecase
+    ..registerFactory(() => FetchCommunityChallenges(
+        communityChallengeRepository: serviceLocator()))
+    ..registerFactory(() =>
+        FetchCommunityChallenge(communityChallengeRepository: serviceLocator()))
+    ..registerFactory(() =>
+        FetchChallengeProgress(communityChallengeRepository: serviceLocator()))
+    ..registerFactory(() => CreateChallengeParticipant(
+        communityChallengeRepository: serviceLocator()))
+    ..registerFactory(() => UpdateChallengeParticipant(
+        communityChallengeRepository: serviceLocator()));
 }
 
 void _initCollaboration() {
@@ -109,7 +137,9 @@ void _initCollaboration() {
     ..registerFactory(() =>
         CreateCampaignCollaboration(collaborationRepository: serviceLocator()))
     ..registerFactory(() =>
-        UpdateCampaignCollaboration(collaborationRepository: serviceLocator()));
+        UpdateCampaignCollaboration(collaborationRepository: serviceLocator()))
+    ..registerFactory(() =>
+        FetchPendingCollaborations(collaborationRepository: serviceLocator()));
 }
 
 void _initNotification() {

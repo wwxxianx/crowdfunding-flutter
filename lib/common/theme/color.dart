@@ -68,6 +68,7 @@ class CustomColors {
   static const red100 = Color(0xFFFEE2E2);
 
   static const slate100 = Color(0xFFF1F5F9);
+  static const slate300 = Color(0xFFCBD5E1);
   static const slate700 = Color(0xFF334155);
 
   static const purple200 = Color(0xFFE3E9FF);

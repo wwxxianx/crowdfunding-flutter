@@ -7,6 +7,7 @@ import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campai
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_reply_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/collaboration/create_collaboration_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/collaboration/update_collaboration_payload.dart';
+import 'package:crowdfunding_flutter/data/network/payload/community_challenge/create_challenge_participant_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/donation/create_campaign_donation_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/organization/create_organization_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/organization/join_organization_payload.dart';
@@ -24,6 +25,8 @@ import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update.dart';
 import 'package:crowdfunding_flutter/domain/model/collaboration/collaboration.dart';
+import 'package:crowdfunding_flutter/domain/model/community_challenge/challenge_participant.dart';
+import 'package:crowdfunding_flutter/domain/model/community_challenge/community_challenge.dart';
 import 'package:crowdfunding_flutter/domain/model/gift_card/gift_cards_response.dart';
 import 'package:crowdfunding_flutter/domain/model/gift_card/num_gift_card_response.dart';
 import 'package:crowdfunding_flutter/domain/model/notification/notification.dart';
@@ -34,7 +37,7 @@ import 'package:crowdfunding_flutter/domain/model/tokens_response.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user_favourite_campaign.dart';
 import 'package:dio/dio.dart';
-import 'package:retrofit/http.dart';
+import 'package:retrofit/retrofit.dart';
 
 part 'retrofit_api.g.dart';
 
@@ -266,9 +269,38 @@ abstract class RestClient {
   @GET("collaborations")
   Future<List<Collaboration>> getCollaborations();
 
+  @GET("collaborations/pending")
+  Future<List<Collaboration>> getPendingCollaborations();
+
   @PATCH("collaborations/{id}")
   Future<Collaboration> updateCollaboration({
     @Path('id') required String collaborationId,
     @Body() required UpdateCollaborationPayload payload,
+  });
+
+  // Community Challenge
+  @GET("community-challenges?isExpired=false")
+  Future<List<CommunityChallenge>> getCommunityChallenges();
+
+  @GET("community-challenges/{id}")
+  Future<CommunityChallenge> getCommunityChallenge({
+    @Path('id') required String id,
+  });
+
+  @GET("community-challenges/participants/{communityChallengeId}")
+  Future<HttpResponse<ChallengeParticipant>> getChallengeProgress({
+    @Path('communityChallengeId') required String communityChallengeId,
+  });
+
+  @POST("community-challenges/participants")
+  Future<ChallengeParticipant> createChallengeParticipant(
+    @Body() CreateChallengeParticipantPayload payload,
+  );
+
+  @PATCH("community-challenges/participants")
+  @MultiPart()
+  Future<ChallengeParticipant> updateChallengeParticipant({
+    @Part(name: 'imageFile') File? imageFile,
+    @Part(name: 'communityChallengeId') required String communityChallengeId,
   });
 }

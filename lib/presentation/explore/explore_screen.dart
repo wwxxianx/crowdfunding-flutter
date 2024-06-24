@@ -46,7 +46,6 @@ class _ExploreScreenState extends State<ExploreScreen>
   late Animation<double> _searchResultContainerAnimation;
   final _searchTextController = TextEditingController();
   bool isSearching = false;
-  bool isShowingMask = false;
   bool isGridView = false;
 
   @override
@@ -96,15 +95,15 @@ class _ExploreScreenState extends State<ExploreScreen>
     });
   }
 
-  void _handleShowMask() {
+  void _handleOpenSearchBar() {
     setState(() {
-      isShowingMask = true;
+      isSearching = true;
     });
   }
 
   void _handleHideMask() {
     setState(() {
-      isShowingMask = false;
+      isSearching = false;
     });
   }
 
@@ -295,9 +294,10 @@ class _ExploreScreenState extends State<ExploreScreen>
                           crossAxisAlignment: CrossAxisAlignment.end,
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            AnimatedSearchResultContainer(
-                              scaleAnimation: _searchResultContainerAnimation,
-                            ),
+                            if (isSearching)
+                              AnimatedSearchResultContainer(
+                                scaleAnimation: _searchResultContainerAnimation,
+                              ),
                             12.kH,
                             CustomBadge(
                               showBadge: state.searchQuery != null &&
@@ -319,7 +319,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                                   _hideSearchResultContainer();
                                 },
                                 searchBarOpen: (integer) {
-                                  _handleShowMask();
+                                  _handleOpenSearchBar();
                                   _showSearchResultContainer();
                                 },
                               ),
@@ -382,7 +382,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                       ],
                     ),
                   ),
-                  if (isShowingMask) const ScaffoldMask()
+                  if (isSearching) const ScaffoldMask()
                 ],
               ),
             );

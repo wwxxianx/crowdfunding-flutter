@@ -59,7 +59,7 @@ class CampaignDetailsBloc
     res.fold(
       (l) => emit(
           state.copyWith(createReplyResult: ApiResultFailure(l.errorMessage))),
-      (r) {
+      (newComment) {
         // Insert new reply to data
         final campaignResult =
             state.campaignResult as ApiResultSuccess<Campaign>;
@@ -67,7 +67,7 @@ class CampaignDetailsBloc
         List<CampaignComment> updatedCampaignComments;
         updatedCampaignComments = campaign.comments.map((comment) {
           if (comment.id == event.payload.parentId) {
-            comment.replies.add(r);
+            comment.replies.add(newComment);
           }
           return comment;
         }).toList();

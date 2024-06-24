@@ -6,6 +6,7 @@ import 'package:fpdart/fpdart.dart';
 
 abstract interface class CollaborationRepository {
   Future<Either<Failure, List<Collaboration>>> getCollaborations();
+  Future<Either<Failure, List<Collaboration>>> getPendingCollaborations();
   Future<Either<Failure, Collaboration?>> getCollaboration(
       {required String campaignId});
   Future<Either<Failure, Collaboration>> createCollaboration(

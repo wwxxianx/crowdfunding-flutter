@@ -1,8 +1,7 @@
 class Constants {
   Constants._();
   static const sharedPreferencesKey = SharedPreferencesKey();
-  static const apiUrl =
-      "https://3b63-2001-f40-987-516-3dc1-668e-dbd0-ca5b.ngrok-free.app/";
+  static const apiUrl = "https://e033-180-74-225-11.ngrok-free.app/";
 
   static const stripePublishableKey =
       "pk_test_51OmSFdIGtvkAiXyxrpvC4ohbIbN4COdgvxZlihCNKSE0j0AR8gg4hXvYcj9MQKUxSS4J7LjMGHUDTA5fG2ynSFQs00EODoklrH";

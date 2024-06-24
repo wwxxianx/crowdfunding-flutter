@@ -13,8 +13,7 @@ class _RestClient implements RestClient {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??=
-        'https://3b63-2001-f40-987-516-3dc1-668e-dbd0-ca5b.ngrok-free.app/';
+    baseUrl ??= 'https://e033-180-74-225-11.ngrok-free.app/';
   }
 
   final Dio _dio;
@@ -1398,6 +1397,35 @@ class _RestClient implements RestClient {
   }
 
   @override
+  Future<List<Collaboration>> getPendingCollaborations() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<List<dynamic>>(_setStreamType<List<Collaboration>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'collaborations/pending',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    var value = _result.data!
+        .map((dynamic i) => Collaboration.fromJson(i as Map<String, dynamic>))
+        .toList();
+    return value;
+  }
+
+  @override
   Future<Collaboration> updateCollaboration({
     required String collaborationId,
     required UpdateCollaborationPayload payload,
@@ -1425,6 +1453,166 @@ class _RestClient implements RestClient {
               baseUrl,
             ))));
     final value = Collaboration.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<List<CommunityChallenge>> getCommunityChallenges() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<List<dynamic>>(_setStreamType<List<CommunityChallenge>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'community-challenges?isExpired=false',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    var value = _result.data!
+        .map((dynamic i) =>
+            CommunityChallenge.fromJson(i as Map<String, dynamic>))
+        .toList();
+    return value;
+  }
+
+  @override
+  Future<CommunityChallenge> getCommunityChallenge({required String id}) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<CommunityChallenge>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'community-challenges/${id}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = CommunityChallenge.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<HttpResponse<ChallengeParticipant>> getChallengeProgress(
+      {required String communityChallengeId}) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<ChallengeParticipant>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'community-challenges/participants/${communityChallengeId}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ChallengeParticipant.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<ChallengeParticipant> createChallengeParticipant(
+      CreateChallengeParticipantPayload payload) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(payload.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ChallengeParticipant>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'community-challenges/participants',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ChallengeParticipant.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<ChallengeParticipant> updateChallengeParticipant({
+    File? imageFile,
+    required String communityChallengeId,
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    final _data = FormData();
+    if (imageFile != null) {
+      _data.files.add(MapEntry(
+        'imageFile',
+        MultipartFile.fromFileSync(
+          imageFile.path,
+          filename: imageFile.path.split(Platform.pathSeparator).last,
+        ),
+      ));
+    }
+    _data.fields.add(MapEntry(
+      'communityChallengeId',
+      communityChallengeId,
+    ));
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ChallengeParticipant>(Options(
+      method: 'PATCH',
+      headers: _headers,
+      extra: _extra,
+      contentType: 'multipart/form-data',
+    )
+            .compose(
+              _dio.options,
+              'community-challenges/participants',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ChallengeParticipant.fromJson(_result.data!);
     return value;
   }
 

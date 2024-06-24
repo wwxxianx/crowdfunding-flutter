@@ -6,6 +6,7 @@ import 'package:crowdfunding_flutter/common/widgets/avatar/avatar.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/di/init_dependencies.dart';
 import 'package:crowdfunding_flutter/domain/model/organization/organization.dart';
+import 'package:crowdfunding_flutter/presentation/organization_profile/tabs/organization_profile_campaigns_tab.dart';
 import 'package:crowdfunding_flutter/presentation/organization_profile/widgets/organization_app_bar.dart';
 import 'package:crowdfunding_flutter/state_management/organization_profile/organization_profile_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/organization_profile/organization_profile_event.dart';
@@ -137,9 +138,7 @@ class _OrganizationProfileScreenState extends State<OrganizationProfileScreen>
                           return TabBarView(
                             controller: _tabController,
                             children: [
-                              Center(
-                                child: Text('Community tab'),
-                              ),
+                              OrganizationCampaignsTabContent(),
                               Center(
                                 child: Text('Profile tab'),
                               ),

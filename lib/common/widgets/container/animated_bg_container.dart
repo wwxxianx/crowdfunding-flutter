@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class AnimatedBGContainer extends StatefulWidget {
   final Color startColor;
   final Color endColor;
+  final BoxBorder? border;
   final Duration animationDuration;
   final BorderRadiusGeometry? borderRadius;
   final EdgeInsetsGeometry padding;
@@ -13,6 +14,7 @@ class AnimatedBGContainer extends StatefulWidget {
     required this.startColor,
     required this.endColor,
     this.borderRadius,
+    this.border,
     this.animationDuration = const Duration(seconds: 1),
     this.padding = const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
   });
@@ -59,6 +61,7 @@ class _AnimatedBGContainerState extends State<AnimatedBGContainer>
       builder: (context, _) => Container(
         decoration: BoxDecoration(
           borderRadius: widget.borderRadius,
+          border: widget.border,
           gradient: LinearGradient(
             colors: [
               _startColorAnimation.value,

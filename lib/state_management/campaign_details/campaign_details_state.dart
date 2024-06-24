@@ -1,20 +1,19 @@
-import 'dart:ffi';
-
 import 'package:crowdfunding_flutter/common/utils/input_validator.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
 import 'package:equatable/equatable.dart';
+import 'package:fpdart/fpdart.dart';
 
 final class CampaignDetailsState extends Equatable with InputValidator {
   final int currentTabIndex;
   final ApiResult<Campaign> campaignResult;
-  final ApiResult<Void> createCommentResult;
+  final ApiResult<Unit> createCommentResult;
   final bool isShowingCommentBottomBar;
 
   // Reply
   final CampaignComment? selectedCommentToReply;
-  final ApiResult<Void> createReplyResult;
+  final ApiResult<Unit> createReplyResult;
 
   const CampaignDetailsState._({
     this.currentTabIndex = 0,
@@ -45,9 +44,9 @@ final class CampaignDetailsState extends Equatable with InputValidator {
   CampaignDetailsState copyWith({
     int? currentTabIndex,
     ApiResult<Campaign>? campaignResult,
-    ApiResult<Void>? createCommentResult,
+    ApiResult<Unit>? createCommentResult,
     CampaignComment? selectedCommentToReply,
-    ApiResult<Void>? createReplyResult,
+    ApiResult<Unit>? createReplyResult,
     bool? isShowingCommentBottomBar,
   }) {
     return CampaignDetailsState._(
