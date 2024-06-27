@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:crowdfunding_flutter/common/utils/input_validator.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
+import 'package:crowdfunding_flutter/domain/model/scam_report/scam_report.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fpdart/fpdart.dart';
 
@@ -15,6 +18,12 @@ final class CampaignDetailsState extends Equatable with InputValidator {
   final CampaignComment? selectedCommentToReply;
   final ApiResult<Unit> createReplyResult;
 
+  // Scam Report
+  final List<File> scamReportImageFiles;
+  final List<File> scamReportDocumentFiles;
+  final String? scamReportDescription;
+  final ApiResult<ScamReport> createScamReportResult;
+
   const CampaignDetailsState._({
     this.currentTabIndex = 0,
     this.campaignResult = const ApiResultLoading(),
@@ -22,6 +31,10 @@ final class CampaignDetailsState extends Equatable with InputValidator {
     this.createReplyResult = const ApiResultInitial(),
     this.selectedCommentToReply,
     this.isShowingCommentBottomBar = false,
+    this.scamReportImageFiles = const [],
+    this.scamReportDocumentFiles = const [],
+    this.scamReportDescription,
+    this.createScamReportResult = const ApiResultInitial(),
   });
 
   const CampaignDetailsState.initial() : this._(currentTabIndex: 0);
@@ -48,6 +61,10 @@ final class CampaignDetailsState extends Equatable with InputValidator {
     CampaignComment? selectedCommentToReply,
     ApiResult<Unit>? createReplyResult,
     bool? isShowingCommentBottomBar,
+    List<File>? scamReportImageFiles,
+    List<File>? scamReportDocumentFiles,
+    String? scamReportDescription,
+    ApiResult<ScamReport>? createScamReportResult,
   }) {
     return CampaignDetailsState._(
       currentTabIndex: currentTabIndex ?? this.currentTabIndex,
@@ -55,7 +72,15 @@ final class CampaignDetailsState extends Equatable with InputValidator {
       createCommentResult: createCommentResult ?? this.createCommentResult,
       selectedCommentToReply: selectedCommentToReply,
       createReplyResult: createReplyResult ?? this.createReplyResult,
-      isShowingCommentBottomBar: isShowingCommentBottomBar ?? this.isShowingCommentBottomBar,
+      isShowingCommentBottomBar:
+          isShowingCommentBottomBar ?? this.isShowingCommentBottomBar,
+      scamReportImageFiles: scamReportImageFiles ?? this.scamReportImageFiles,
+      scamReportDocumentFiles:
+          scamReportDocumentFiles ?? this.scamReportDocumentFiles,
+      scamReportDescription:
+          scamReportDescription ?? this.scamReportDescription,
+      createScamReportResult:
+          createScamReportResult ?? this.createScamReportResult,
     );
   }
 
@@ -67,5 +92,9 @@ final class CampaignDetailsState extends Equatable with InputValidator {
         selectedCommentToReply,
         createReplyResult,
         isShowingCommentBottomBar,
+        scamReportImageFiles,
+        scamReportDocumentFiles,
+        scamReportDescription,
+        createScamReportResult,
       ];
 }

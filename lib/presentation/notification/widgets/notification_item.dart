@@ -29,10 +29,16 @@ class NotificationItem extends StatelessWidget {
     context
         .read<AppUserCubit>()
         .toggleReadNotification(notificationId: notification.id);
-    if (notificationType == NotificationType.CAMPAIGN_UPDATE) {
-      context.push(CampaignDetailsScreen.generateRoute(
-          campaignId: notification.campaign?.id ?? ''));
-    } else {}
+    switch (notificationType) {
+      case NotificationType.CAMPAIGN_UPDATE:
+        context.push(CampaignDetailsScreen.generateRoute(
+            campaignId: notification.campaign?.id ?? ''));
+        break;
+      case NotificationType.COMMUNITY_CHALLENGE_REWARD:
+        context.push('/community-challenges/${notification.entityId}');
+      default:
+        return;
+    }
   }
 
   Widget _buildFooter() {
@@ -41,6 +47,7 @@ class NotificationItem extends StatelessWidget {
       case NotificationType.COIN:
       case NotificationType.CAMPAIGN_COMMENT:
       case NotificationType.CAMPAIGN_DONATION:
+      case NotificationType.COMMUNITY_CHALLENGE_REWARD:
         return Text(
           notification.createdAt.toTimeAgo(),
           style: CustomFonts.labelExtraSmall.copyWith(
@@ -98,31 +105,69 @@ class NotificationItem extends StatelessWidget {
   }
 
   Widget _buildHeader() {
-    if (notificationType == NotificationType.COIN) {
-      return Row(
-        children: [
-          SvgPicture.asset("assets/icons/coin.svg"),
-          6.kW,
-          Text(
-            "+${notification.metadata?['coinEarned']}",
-            style: CustomFonts.labelMedium,
-          ),
-        ],
-      );
+    switch (notificationType) {
+      case NotificationType.COIN:
+        return Row(
+          children: [
+            SvgPicture.asset("assets/icons/coin.svg"),
+            6.kW,
+            Text(
+              "+${notification.metadata?['coinEarned']}",
+              style: CustomFonts.labelMedium,
+            ),
+          ],
+        );
+      case NotificationType.CAMPAIGN_COMMENT:
+        return Row(
+          children: [
+            SvgPicture.asset("assets/icons/coin.svg"),
+            6.kW,
+            const Text(
+              "New comment",
+              style: CustomFonts.labelMedium,
+            ),
+          ],
+        );
+      case NotificationType.COMMUNITY_CHALLENGE_REWARD:
+        return Row(
+          children: [
+            SvgPicture.asset("assets/icons/circus.svg"),
+            6.kW,
+            const Text(
+              "Check out your challenge reward!",
+              style: CustomFonts.labelMedium,
+            ),
+          ],
+        );
+      default:
+        return const SizedBox();
     }
-    if (notificationType == NotificationType.CAMPAIGN_COMMENT) {
-      return Row(
-        children: [
-          SvgPicture.asset("assets/icons/coin.svg"),
-          6.kW,
-          const Text(
-            "New comment",
-            style: CustomFonts.labelMedium,
-          ),
-        ],
-      );
-    }
-    return const SizedBox();
+    // if (notificationType == NotificationType.COIN) {
+    //   return Row(
+    //     children: [
+    //       SvgPicture.asset("assets/icons/coin.svg"),
+    //       6.kW,
+    //       Text(
+    //         "+${notification.metadata?['coinEarned']}",
+    //         style: CustomFonts.labelMedium,
+    //       ),
+    //     ],
+    //   );
+    // }
+    // if (notificationType == NotificationType.CAMPAIGN_COMMENT) {
+    //   return Row(
+    //     children: [
+    //       SvgPicture.asset("assets/icons/coin.svg"),
+    //       6.kW,
+    //       const Text(
+    //         "New comment",
+    //         style: CustomFonts.labelMedium,
+    //       ),
+    //     ],
+    //   );
+    // }
+
+    // return const SizedBox();
   }
 
   @override

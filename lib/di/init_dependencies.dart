@@ -9,6 +9,7 @@ import 'package:crowdfunding_flutter/data/repository/community_challenge/communi
 import 'package:crowdfunding_flutter/data/repository/constant_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/repository/notification/notification_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/repository/organization/organization_repository_impl.dart';
+import 'package:crowdfunding_flutter/data/repository/scam_report/scam_report_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/repository/user/user_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/service/auth_service_impl.dart';
 import 'package:crowdfunding_flutter/data/service/payment/payment_service.dart';
@@ -19,6 +20,7 @@ import 'package:crowdfunding_flutter/domain/repository/community_challenge/commu
 import 'package:crowdfunding_flutter/domain/repository/constant_repository.dart';
 import 'package:crowdfunding_flutter/domain/repository/notification/notification_repository.dart';
 import 'package:crowdfunding_flutter/domain/repository/organization/organization_repository.dart';
+import 'package:crowdfunding_flutter/domain/repository/scam_report/scam_report_repository.dart';
 import 'package:crowdfunding_flutter/domain/repository/user/user_repository.dart';
 import 'package:crowdfunding_flutter/domain/service/auth_service.dart';
 import 'package:crowdfunding_flutter/domain/usecases/auth/get_current_user.dart';
@@ -52,6 +54,7 @@ import 'package:crowdfunding_flutter/domain/usecases/organization/fetch_organiza
 import 'package:crowdfunding_flutter/domain/usecases/organization/fetch_organization_with_code.dart';
 import 'package:crowdfunding_flutter/domain/usecases/organization/join_organization.dart';
 import 'package:crowdfunding_flutter/domain/usecases/organization/update_organization.dart';
+import 'package:crowdfunding_flutter/domain/usecases/scam_report/create_scam_report.dart';
 import 'package:crowdfunding_flutter/domain/usecases/stripe/connect_account.dart';
 import 'package:crowdfunding_flutter/domain/usecases/stripe/fetch_connected_account.dart';
 import 'package:crowdfunding_flutter/domain/usecases/stripe/update_connect_account.dart';
@@ -89,6 +92,7 @@ Future<void> initDependencies() async {
           fetchNotifications: serviceLocator(),
           connectAccount: serviceLocator(),
           toggleReadNotification: serviceLocator(),
+          supabase: serviceLocator(),
         ))
     ..registerLazySingleton(() => NavigationCubit())
     ..registerLazySingleton(() => DioNetwork.provideDio())
@@ -106,6 +110,17 @@ Future<void> initDependencies() async {
   _initNotification();
   _initCollaboration();
   _initCommunityChallenge();
+  _initScamReport();
+}
+
+void _initScamReport() {
+  serviceLocator
+    // Repo
+    ..registerFactory<ScamReportRepository>(
+        () => ScamReportRepositoryImpl(api: serviceLocator()))
+    // Usecase
+    ..registerFactory(
+        () => CreateScamReport(scamReportRepository: serviceLocator()));
 }
 
 void _initCommunityChallenge() {

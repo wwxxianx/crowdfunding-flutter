@@ -1,9 +1,11 @@
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
+import 'package:crowdfunding_flutter/data/network/payload/scam_report/create_scam_report_payload.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/campaign_comment/create_campaign_comment.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/campaign_comment/create_campaign_reply.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaign.dart';
+import 'package:crowdfunding_flutter/domain/usecases/scam_report/create_scam_report.dart';
 import 'package:crowdfunding_flutter/state_management/campaign_details/campaign_details_event.dart';
 import 'package:crowdfunding_flutter/state_management/campaign_details/campaign_details_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,14 +15,17 @@ class CampaignDetailsBloc
   final FetchCampaign _fetchCampaign;
   final CreateCampaignComment _createCampaignComment;
   final CreateCampaignReply _createCampaignReply;
+  final CreateScamReport _createScamReport;
 
   CampaignDetailsBloc({
     required FetchCampaign fetchCampaign,
     required CreateCampaignComment createCampaignComment,
     required CreateCampaignReply createCampaignReply,
+    required CreateScamReport createScamReport,
   })  : _fetchCampaign = fetchCampaign,
         _createCampaignComment = createCampaignComment,
         _createCampaignReply = createCampaignReply,
+        _createScamReport = createScamReport,
         super(const CampaignDetailsState.initial()) {
     on<CampaignDetailsEvent>(_onEvent);
   }
@@ -38,7 +43,63 @@ class CampaignDetailsBloc
         _onClearSelectedCommentToReply(e, emit),
       final OnSubmitReply e => _onSubmitReply(e, emit),
       final OnToggleCommentBottomBar e => _onToggleCommentBottomBar(e, emit),
+      final OnCreateScamReport e => _onCreateScamReport(e, emit),
+      final OnScamReportImageFilesChanged e =>
+        _onScamReportImageFilesChanged(e, emit),
+      final OnScamReportDocumentFilesChanged e =>
+        _onScamReportDocumentFilesChanged(e, emit),
+      final OnScamReportDescriptionChanged e =>
+        _onScamReportDescriptionChanged(e, emit),
     };
+  }
+
+  Future<void> _onCreateScamReport(
+    OnCreateScamReport event,
+    Emitter emit,
+  ) async {
+    emit(state.copyWith(createScamReportResult: const ApiResultLoading()));
+    final campaignResult = state.campaignResult;
+    if (campaignResult is! ApiResultSuccess<Campaign>) {
+      return;
+    }
+    final payload = CreateScamReportPayload(
+      campaignId: campaignResult.data.id,
+      description: state.scamReportDescription!,
+      evidenceImageFiles: state.scamReportImageFiles,
+      documentFiles: state.scamReportDocumentFiles,
+    );
+    final res = await _createScamReport.call(payload);
+    res.fold(
+      (failure) {
+        emit(state.copyWith(
+            createScamReportResult: ApiResultFailure(failure.errorMessage)));
+      },
+      (r) {
+        emit(state.copyWith(createScamReportResult: ApiResultSuccess(r)));
+        event.onSuccess();
+      },
+    );
+  }
+
+  void _onScamReportDocumentFilesChanged(
+    OnScamReportDocumentFilesChanged event,
+    Emitter emit,
+  ) {
+    emit(state.copyWith(scamReportDocumentFiles: event.documentFiles));
+  }
+
+  void _onScamReportImageFilesChanged(
+    OnScamReportImageFilesChanged event,
+    Emitter emit,
+  ) {
+    emit(state.copyWith(scamReportImageFiles: event.imageFiles));
+  }
+
+  void _onScamReportDescriptionChanged(
+    OnScamReportDescriptionChanged event,
+    Emitter emit,
+  ) {
+    emit(state.copyWith(scamReportDescription: event.value));
   }
 
   void _onToggleCommentBottomBar(

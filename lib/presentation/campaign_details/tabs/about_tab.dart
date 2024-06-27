@@ -3,10 +3,13 @@ import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/avatar/avatar.dart';
+import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
+import 'package:crowdfunding_flutter/common/widgets/file_picker.dart';
 import 'package:crowdfunding_flutter/common/widgets/skeleton.dart';
 import 'package:crowdfunding_flutter/common/widgets/text/expandable_text.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
+import 'package:crowdfunding_flutter/presentation/campaign_details/widgets/scam_report_bottom_sheet.dart';
 import 'package:crowdfunding_flutter/state_management/campaign_details/campaign_details_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/campaign_details/campaign_details_state.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +33,7 @@ class CampaignAboutTabContent extends StatelessWidget {
             vertical: 16.0,
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Organizer
               Row(
@@ -164,10 +168,83 @@ class CampaignAboutTabContent extends StatelessWidget {
                   text: campaignResult.data.description,
                   maxLines: 5,
                 ),
+              20.kH,
+              // Scam Report
+              ScamReportContent(),
             ],
           ),
         );
       },
+    );
+  }
+}
+
+class ScamReportContent extends StatelessWidget {
+  const ScamReportContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: CustomColors.containerBorderSlate),
+        boxShadow: CustomColors.containerSlateShadow,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              HeroIcon(
+                HeroIcons.shieldExclamation,
+                size: 20,
+                color: CustomColors.textBlack,
+              ),
+              6.kW,
+              const Text(
+                'Scam Report',
+                style: CustomFonts.labelMedium,
+              ),
+            ],
+          ),
+          8.kH,
+          Text(
+            'Feeling this campaign is a scam? Don’t feel hesitate to reach out us. Our community team will verify based on your provided evidence.',
+            style: CustomFonts.bodySmall,
+          ),
+          8.kH,
+          SizedBox(
+            width: double.maxFinite,
+            child: CustomButton(
+              height: 40,
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: CustomColors.alert),
+              backgroundColor: CustomColors.alert.withOpacity(0.1),
+              onPressed: () {
+                showModalBottomSheet(
+                  isScrollControlled: true,
+                  isDismissible: true,
+                  elevation: 0,
+                  context: context,
+                  builder: (modalContext) {
+                    return BlocProvider.value(
+                      value: BlocProvider.of<CampaignDetailsBloc>(context),
+                      child: ScamReportBottomSheet(),
+                    );
+                  },
+                );
+              },
+              child: Text(
+                'Report this campaign',
+                style:
+                    CustomFonts.titleSmall.copyWith(color: CustomColors.alert),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

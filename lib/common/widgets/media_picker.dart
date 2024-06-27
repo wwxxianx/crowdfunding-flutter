@@ -229,7 +229,7 @@ class _MediaPickerState<T> extends State<MediaPicker> {
         // multiple images
         return selectedImages.map((image) {
           return ImagePreviewContainer(
-            canRemove: widget.canRemove,
+              canRemove: widget.canRemove,
               onRemove: () {
                 setState(() {
                   selectedImages.remove(image);
@@ -274,7 +274,7 @@ class _MediaPickerState<T> extends State<MediaPicker> {
         ..._buildContent(),
         InkWell(
           onTap: _handlePickButtonPressed,
-          child: Ink(
+          child: Container(
             width: 84,
             height: 84,
             decoration: BoxDecoration(
@@ -399,28 +399,28 @@ class ImagePreviewContainer extends StatelessWidget {
           ),
         ),
         if (canRemove)
-        Positioned(
-          right: -5,
-          top: -5,
-          child: GestureDetector(
-            onTap: onRemove,
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white,
-                border: Border.all(color: Color(0xFFFEFEFE)),
-                boxShadow: CustomColors.cardShadow,
-              ),
-              padding: const EdgeInsets.all(4.0),
-              child: const HeroIcon(
-                HeroIcons.xMark,
-                style: HeroIconStyle.mini,
-                color: Color(0xFFAEAEAE),
-                size: 16.0,
+          Positioned(
+            right: -5,
+            top: -5,
+            child: GestureDetector(
+              onTap: onRemove,
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                  border: Border.all(color: Color(0xFFFEFEFE)),
+                  boxShadow: CustomColors.cardShadow,
+                ),
+                padding: const EdgeInsets.all(4.0),
+                child: const HeroIcon(
+                  HeroIcons.xMark,
+                  style: HeroIconStyle.mini,
+                  color: Color(0xFFAEAEAE),
+                  size: 16.0,
+                ),
               ),
             ),
           ),
-        ),
       ],
     );
   }

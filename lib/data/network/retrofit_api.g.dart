@@ -11,9 +11,9 @@ part of 'retrofit_api.dart';
 class _RestClient implements RestClient {
   _RestClient(
     this._dio, {
-    this.baseUrl,
+  this.baseUrl,
   }) {
-    baseUrl ??= 'https://e033-180-74-225-11.ngrok-free.app/';
+    baseUrl ??= 'https://b318-180-74-225-120.ngrok-free.app/';
   }
 
   final Dio _dio;
@@ -1613,6 +1613,64 @@ class _RestClient implements RestClient {
               baseUrl,
             ))));
     final value = ChallengeParticipant.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<ScamReport> createScamReport({
+    List<File>? evidenceImageFiles,
+    List<File>? documentFiles,
+    required String campaignId,
+    required String description,
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    final _data = FormData();
+    if (evidenceImageFiles != null) {
+      _data.files.addAll(evidenceImageFiles.map((i) => MapEntry(
+          'evidenceImageFiles',
+          MultipartFile.fromFileSync(
+            i.path,
+            filename: i.path.split(Platform.pathSeparator).last,
+          ))));
+    }
+    if (documentFiles != null) {
+      _data.files.addAll(documentFiles.map((i) => MapEntry(
+          'documentFiles',
+          MultipartFile.fromFileSync(
+            i.path,
+            filename: i.path.split(Platform.pathSeparator).last,
+          ))));
+    }
+    _data.fields.add(MapEntry(
+      'campaignId',
+      campaignId,
+    ));
+    _data.fields.add(MapEntry(
+      'description',
+      description,
+    ));
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<ScamReport>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: 'multipart/form-data',
+    )
+            .compose(
+              _dio.options,
+              'scam-reports',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ScamReport.fromJson(_result.data!);
     return value;
   }
 

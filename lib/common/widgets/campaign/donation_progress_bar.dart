@@ -14,7 +14,7 @@ class DonationProgressBar extends StatelessWidget {
     required this.current,
     required this.total,
     this.height = 10.0,
-    this.showDonationStatusText = true,
+    this.showDonationStatusText = false,
   });
 
   @override

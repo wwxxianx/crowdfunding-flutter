@@ -267,8 +267,8 @@ class CampaignCard extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 DonationProgressBar(
-                                  total: 10.0,
-                                  current: 7.5,
+                                  total: campaign.targetAmount,
+                                  current: campaign.currentAmount.toDouble(),
                                   height: isSmall ? 8 : 10,
                                   showDonationStatusText: !isSmall,
                                 ),

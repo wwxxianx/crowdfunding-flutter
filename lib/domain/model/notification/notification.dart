@@ -11,6 +11,7 @@ enum NotificationType {
   CAMPAIGN_DONATION,
   CAMPAIGN_COMMENT,
   COIN,
+  COMMUNITY_CHALLENGE_REWARD,
 }
 
 @JsonSerializable()

@@ -10,7 +10,7 @@ class CustomColors {
   static const containerLightGreen = Color(0xFFF5FFF4);
   static const informationContainerGreen = Color(0xFFECFFEA);
 
-  static const textBlack = Color(0xFF232323);
+  static const textBlack = Color(0xFF0F172A);
   static const textGrey = Color(0xFF8D8D8D);
   static const textDarkGreen = Color(0xFF1A3E01);
 
@@ -26,6 +26,7 @@ class CustomColors {
 
   static const containerBorderGrey = Color(0xFFE2E2EA);
   static const containerBorderGreen = Color(0xFF235600);
+  static const containerBorderSlate = Color(0xFFCBD5E1);
 
   static final containerLightShadow = [
     BoxShadow(
@@ -58,17 +59,30 @@ class CustomColors {
       color: CustomColors.primaryGreen,
     )
   ];
+  static final containerSlateShadow = [
+    BoxShadow(
+      blurRadius: 6,
+      offset: const Offset(0, 4),
+      color: Colors.black.withOpacity(0.09),
+    ),
+  ];
 
   // Color Theme
   static const amber50 = Color(0xFFFFFFEC);
   static const amber100 = Color(0xFFFEF3C7);
+  static const amber400 = Color(0xFFfbbf24);
   static const amber500 = Color(0xFFFFEEC3);
   static const amber700 = Color(0xFF92400E);
 
+  static const red50 = Color(0xFFfef2f2);
   static const red100 = Color(0xFFFEE2E2);
+  static const red400 = Color(0xFFf87171);
+  static const red700 = Color(0xFFb91c1c);
 
+  static const slate50 = Color(0xFFf8fafc);
   static const slate100 = Color(0xFFF1F5F9);
   static const slate300 = Color(0xFFCBD5E1);
+  static const slate400 = Color(0xFF94a3b8);
   static const slate700 = Color(0xFF334155);
 
   static const purple200 = Color(0xFFE3E9FF);

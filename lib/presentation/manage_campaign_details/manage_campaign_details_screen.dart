@@ -235,10 +235,11 @@ class _ManageCampaignDetailsScreenState
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => CampaignDetailsBloc(
-          createCampaignComment: serviceLocator(),
-          createCampaignReply: serviceLocator(),
-          fetchCampaign: serviceLocator())
-        ..add(OnFetchCampaign(widget.campaignId)),
+        createCampaignComment: serviceLocator(),
+        createCampaignReply: serviceLocator(),
+        fetchCampaign: serviceLocator(),
+        createScamReport: serviceLocator(),
+      )..add(OnFetchCampaign(widget.campaignId)),
       child: BlocBuilder<CampaignDetailsBloc, CampaignDetailsState>(
         builder: (context, state) {
           final campaignResult = state.campaignResult;

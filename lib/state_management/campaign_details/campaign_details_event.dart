@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_comment_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_reply_payload.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
@@ -44,4 +46,28 @@ final class OnToggleCommentBottomBar extends CampaignDetailsEvent {
   final bool isShow;
 
   const OnToggleCommentBottomBar({required this.isShow});
+}
+
+final class OnCreateScamReport extends CampaignDetailsEvent {
+  final VoidCallback onSuccess;
+
+  const OnCreateScamReport({required this.onSuccess});
+}
+
+final class OnScamReportImageFilesChanged extends CampaignDetailsEvent {
+  final List<File> imageFiles;
+
+  const OnScamReportImageFilesChanged({required this.imageFiles});
+}
+
+final class OnScamReportDocumentFilesChanged extends CampaignDetailsEvent {
+  final List<File> documentFiles;
+
+  const OnScamReportDocumentFilesChanged({required this.documentFiles});
+}
+
+final class OnScamReportDescriptionChanged extends CampaignDetailsEvent {
+  final String value;
+
+  const OnScamReportDescriptionChanged({required this.value});
 }

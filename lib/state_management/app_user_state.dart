@@ -20,11 +20,13 @@ final class AppUserState extends Equatable {
   final UserModel? currentUser;
   final bool isConnectingStripeAccount;
   final List<NotificationModel> notifications;
+  final NotificationModel? realtimeNotification;
 
   const AppUserState._({
     this.currentUser,
     this.isConnectingStripeAccount = false,
     this.notifications = const [],
+    this.realtimeNotification,
   });
 
   const AppUserState.initial() : this._();
@@ -33,12 +35,14 @@ final class AppUserState extends Equatable {
     UserModel? currentUser,
     bool? isConnectingStripeAccount,
     List<NotificationModel>? notifications,
+    NotificationModel? realtimeNotification,
   }) {
     return AppUserState._(
       currentUser: currentUser ?? this.currentUser,
       isConnectingStripeAccount:
           isConnectingStripeAccount ?? this.isConnectingStripeAccount,
       notifications: notifications ?? this.notifications,
+      realtimeNotification: realtimeNotification ?? this.realtimeNotification,
     );
   }
 
@@ -47,5 +51,6 @@ final class AppUserState extends Equatable {
         currentUser,
         isConnectingStripeAccount,
         notifications,
+        realtimeNotification,
       ];
 }

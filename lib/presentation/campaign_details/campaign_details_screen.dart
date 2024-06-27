@@ -51,6 +51,7 @@ class _CampaignDetailsScreenState extends State<CampaignDetailsScreen> {
         fetchCampaign: serviceLocator(),
         createCampaignComment: serviceLocator(),
         createCampaignReply: serviceLocator(),
+        createScamReport: serviceLocator(),
       )..add(OnFetchCampaign(widget.campaignId)),
       child: BlocBuilder<CampaignDetailsBloc, CampaignDetailsState>(
         builder: (context, state) {

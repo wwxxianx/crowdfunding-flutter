@@ -31,6 +31,7 @@ import 'package:crowdfunding_flutter/domain/model/gift_card/gift_cards_response.
 import 'package:crowdfunding_flutter/domain/model/gift_card/num_gift_card_response.dart';
 import 'package:crowdfunding_flutter/domain/model/notification/notification.dart';
 import 'package:crowdfunding_flutter/domain/model/organization/organization.dart';
+import 'package:crowdfunding_flutter/domain/model/scam_report/scam_report.dart';
 import 'package:crowdfunding_flutter/domain/model/state/state_region.dart';
 import 'package:crowdfunding_flutter/domain/model/stripe/stripe_account.dart';
 import 'package:crowdfunding_flutter/domain/model/tokens_response.dart';
@@ -302,5 +303,15 @@ abstract class RestClient {
   Future<ChallengeParticipant> updateChallengeParticipant({
     @Part(name: 'imageFile') File? imageFile,
     @Part(name: 'communityChallengeId') required String communityChallengeId,
+  });
+
+  // Scam Report
+  @POST("scam-reports")
+  @MultiPart()
+  Future<ScamReport> createScamReport({
+    @Part(name: 'evidenceImageFiles') List<File>? evidenceImageFiles,
+    @Part(name: 'documentFiles') List<File>? documentFiles,
+    @Part(name: 'campaignId') required String campaignId,
+    @Part(name: 'description') required String description,
   });
 }

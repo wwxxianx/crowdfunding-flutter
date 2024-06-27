@@ -1,4 +1,5 @@
 import 'package:crowdfunding_flutter/common/usecase/usecase.dart';
+import 'package:crowdfunding_flutter/domain/model/notification/notification.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:crowdfunding_flutter/domain/usecases/auth/get_current_user.dart';
 import 'package:crowdfunding_flutter/domain/usecases/auth/sign_out.dart';
@@ -8,7 +9,9 @@ import 'package:crowdfunding_flutter/domain/usecases/stripe/connect_account.dart
 import 'package:crowdfunding_flutter/state_management/app_user_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:logger/logger.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AppUserCubit extends Cubit<AppUserState> {
   final logger = Logger();
@@ -17,6 +20,7 @@ class AppUserCubit extends Cubit<AppUserState> {
   final SignOut _signOut;
   final FetchNotifications _fetchNotifications;
   final ToggleReadNotification _toggleReadNotification;
+  final SupabaseClient _supabase;
 
   AppUserCubit({
     required GetCurrentUser getCurrentUser,
@@ -24,12 +28,46 @@ class AppUserCubit extends Cubit<AppUserState> {
     required ConnectAccount connectAccount,
     required FetchNotifications fetchNotifications,
     required ToggleReadNotification toggleReadNotification,
+    required SupabaseClient supabase,
   })  : _getCurrentUser = getCurrentUser,
         _signOut = signOut,
         _connectAccount = connectAccount,
         _fetchNotifications = fetchNotifications,
         _toggleReadNotification = toggleReadNotification,
+        _supabase = supabase,
         super(const AppUserState.initial());
+
+  Future<void> listenToRealtimeNotification() async {
+    final currentUser = state.currentUser;
+    if (currentUser == null) {
+      return;
+    }
+    _supabase
+        .from('notifications')
+        .stream(primaryKey: ['id'])
+        .eq('receiverId', currentUser.id)
+        .listen(
+          (data) {
+            if (data.isEmpty) {
+              return;
+            }
+            final notifications = data.map((json) {
+              return NotificationModel.fromJson(json);
+            }).toList();
+            final unreadChallengeRewardNotification = notifications
+                .filter((element) =>
+                    element.type ==
+                        NotificationType.COMMUNITY_CHALLENGE_REWARD.name &&
+                    !element.isRead)
+                .toList();
+            if (unreadChallengeRewardNotification.isNotEmpty) {
+              emit(state.copyWith(
+                  realtimeNotification:
+                      unreadChallengeRewardNotification.first));
+            }
+          },
+        );
+  }
 
   Future<void> toggleReadNotification({required String notificationId}) async {
     final res = await _toggleReadNotification.call(notificationId);

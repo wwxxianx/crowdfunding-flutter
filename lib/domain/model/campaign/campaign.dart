@@ -3,6 +3,7 @@ import 'package:crowdfunding_flutter/domain/model/campaign/campaign_category.dar
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update.dart';
+import 'package:crowdfunding_flutter/domain/model/community_challenge/community_challenge.dart';
 import 'package:crowdfunding_flutter/domain/model/image/image_model.dart';
 import 'package:crowdfunding_flutter/domain/model/organization/organization.dart';
 import 'package:crowdfunding_flutter/domain/model/state/state_region.dart';
@@ -16,6 +17,7 @@ class Campaign {
   final String id;
   final String title;
   final String description;
+  final int raisedAmount;
   final List<ImageModel> images;
   final String? videoUrl;
   final String thumbnailUrl;
@@ -23,18 +25,25 @@ class Campaign {
   final double targetAmount;
   final String contactPhoneNumber;
   final bool isPublished;
-  final String beneficiaryName;
-  final String? beneficiaryImageUrl;
-  final AgeGroup? beneficiaryAgeGroup;
   final CampaignCategory campaignCategory;
   final Organization? organization;
   final UserModel user;
+  // Beneficiary
+  final String beneficiaryName;
+  final String? beneficiaryImageUrl;
+  final AgeGroup? beneficiaryAgeGroup;
+  final String createdAt;
+  final String updatedAt;
+  // Fundraiser Identity
+  final String? fundraiserIdentityNumber;
+  final String? fundraiserIdentificationStatus;
+  final String? fundraiserIdentificationRejectReason;
+  final String? fundraiserSignaturFileUrl;
+  // Data
   final int numOfDonations;
   final int numOfLikes;
   final int numOfComments;
   final int numOfUpdates;
-  final String createdAt;
-  final String updatedAt;
   final List<CampaignDonation> donations;
   final List<CampaignUpdate> campaignUpdates;
   final List<CampaignComment> comments;
@@ -45,6 +54,7 @@ class Campaign {
     required this.id,
     required this.title,
     required this.description,
+    this.raisedAmount = 0,
     this.images = const [],
     this.videoUrl,
     required this.thumbnailUrl,
@@ -69,6 +79,10 @@ class Campaign {
     this.comments = const [],
     this.topThreeDonations = const [],
     this.recentThreeDonations = const [],
+    this.fundraiserIdentityNumber,
+    this.fundraiserIdentificationStatus,
+    this.fundraiserIdentificationRejectReason,
+    this.fundraiserSignaturFileUrl,
   });
 
   factory Campaign.fromJson(Map<String, dynamic> json) =>
@@ -80,6 +94,7 @@ class Campaign {
     String? id,
     String? title,
     String? description,
+    int? raisedAmount,
     List<ImageModel>? images,
     String? videoUrl,
     String? thumbnailUrl,
@@ -104,6 +119,10 @@ class Campaign {
     List<CampaignComment>? comments,
     List<CampaignDonation>? topThreeDonations,
     List<CampaignDonation>? recentThreeDonations,
+    String? fundraiserIdentityNumber,
+    String? fundraiserIdentificationStatus,
+    String? fundraiserIdentificationRejectReason,
+    String? fundraiserSignaturFileUrl,
   }) {
     return Campaign(
       id: id ?? this.id,
@@ -133,6 +152,16 @@ class Campaign {
       comments: comments ?? this.comments,
       topThreeDonations: topThreeDonations ?? this.topThreeDonations,
       recentThreeDonations: recentThreeDonations ?? this.recentThreeDonations,
+      raisedAmount: raisedAmount ?? this.raisedAmount,
+      fundraiserIdentityNumber:
+          fundraiserIdentityNumber ?? this.fundraiserIdentityNumber,
+      fundraiserIdentificationStatus:
+          fundraiserIdentificationStatus ?? this.fundraiserIdentificationStatus,
+      fundraiserIdentificationRejectReason:
+          fundraiserIdentificationRejectReason ??
+              this.fundraiserIdentificationRejectReason,
+      fundraiserSignaturFileUrl:
+          fundraiserSignaturFileUrl ?? this.fundraiserSignaturFileUrl,
     );
   }
 
