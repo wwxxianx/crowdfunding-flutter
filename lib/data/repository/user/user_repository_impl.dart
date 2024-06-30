@@ -17,7 +17,6 @@ import 'package:crowdfunding_flutter/domain/service/auth_service.dart';
 import 'package:dio/dio.dart';
 import 'package:fpdart/src/either.dart';
 import 'package:fpdart/src/unit.dart';
-import 'package:logger/logger.dart';
 
 class UserRepositoryImpl implements UserRepository {
   final RestClient api;

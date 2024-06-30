@@ -1,25 +1,20 @@
+import 'package:appinio_video_player/appinio_video_player.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/string.dart';
+import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_category_tag.dart';
 import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_favourite_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/campaign/donation_progress_bar.dart';
 import 'package:crowdfunding_flutter/common/widgets/campaign/match_offer_content.dart';
-import 'package:crowdfunding_flutter/common/widgets/campaign/match_offer_tag.dart';
-import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_category_tag.dart';
 import 'package:crowdfunding_flutter/common/widgets/skeleton.dart';
 import 'package:crowdfunding_flutter/common/widgets/tag/custom_tag.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:heroicons/heroicons.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:video_player/video_player.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 import 'package:video_player/video_player.dart' as videoPlayer;
-import 'package:appinio_video_player/appinio_video_player.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class AutoPlayVisibleVideoPlayer extends StatefulWidget {
   final String videoUrl;
@@ -268,7 +263,7 @@ class CampaignCard extends StatelessWidget {
                               children: [
                                 DonationProgressBar(
                                   total: campaign.targetAmount,
-                                  current: campaign.currentAmount.toDouble(),
+                                  current: campaign.raisedAmount.toDouble(),
                                   height: isSmall ? 8 : 10,
                                   showDonationStatusText: !isSmall,
                                 ),

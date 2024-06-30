@@ -2,7 +2,6 @@ import 'package:crowdfunding_flutter/common/error/failure.dart';
 import 'package:crowdfunding_flutter/data/network/payload/organization/create_organization_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/organization/get_organizations_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/organization/join_organization_payload.dart';
-import 'package:crowdfunding_flutter/data/network/response/create_organization_response.dart';
 import 'package:crowdfunding_flutter/domain/model/organization/organization.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:fpdart/fpdart.dart';

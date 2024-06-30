@@ -9,11 +9,9 @@ import 'package:crowdfunding_flutter/data/network/payload/collaboration/create_c
 import 'package:crowdfunding_flutter/data/network/payload/collaboration/update_collaboration_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/community_challenge/create_challenge_participant_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/donation/create_campaign_donation_payload.dart';
-import 'package:crowdfunding_flutter/data/network/payload/organization/create_organization_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/organization/join_organization_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/stripe/update_connect_account_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/user/favourite_campaign/favourite_campaign_payload.dart';
-import 'package:crowdfunding_flutter/data/network/response/create_organization_response.dart';
 import 'package:crowdfunding_flutter/data/network/response/donation/giftcard_donation_response.dart';
 import 'package:crowdfunding_flutter/data/network/response/payment/connect_account_response.dart';
 import 'package:crowdfunding_flutter/data/service/payment/campaign_donation/create_campaign_donation_payment_intent_payload.dart';
@@ -23,6 +21,7 @@ import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_category.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign_fundraiser.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update.dart';
 import 'package:crowdfunding_flutter/domain/model/collaboration/collaboration.dart';
 import 'package:crowdfunding_flutter/domain/model/community_challenge/challenge_participant.dart';
@@ -70,6 +69,17 @@ abstract class RestClient {
 
   @GET("campaigns/{id}")
   Future<Campaign> getCampaign(@Path('id') String campaignId);
+
+  @GET("campaigns/{id}/fundraiser")
+  Future<CampaignFundraiser> getCampaignFundraiser(
+      @Path('id') String campaignId);
+
+  @PATCH("campaigns/{id}/fundraiser")
+  Future<CampaignFundraiser> updateCampaignFundraiser({
+    @Path('id') required String campaignId,
+    @Part(name: "fundraiserIdentityNumber") String? idNumber,
+    @Part(name: "signatureFile") File? signatureFile,
+  });
 
   @POST("campaigns")
   @MultiPart()

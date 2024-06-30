@@ -8,6 +8,7 @@ import 'package:crowdfunding_flutter/data/network/payload/campaign/campaign_upda
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_comment_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_reply_payload.dart';
+import 'package:crowdfunding_flutter/data/network/payload/campaign/update_campaign_fundraiser_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/update_campaign_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/donation/create_campaign_donation_payload.dart';
 import 'package:crowdfunding_flutter/data/network/response/donation/giftcard_donation_response.dart';
@@ -16,6 +17,7 @@ import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_category.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign_fundraiser.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update.dart';
 import 'package:crowdfunding_flutter/domain/repository/campaign/campaign_repository.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaigns.dart';
@@ -207,9 +209,44 @@ class CampaignRepositoryImpl implements CampaignRepository {
   }
 
   @override
-  Future<Either<Failure, GiftCardDonationResponse>> createGiftCardDonation(CreateGiftCardDonationPayload payload) async {
+  Future<Either<Failure, GiftCardDonationResponse>> createGiftCardDonation(
+      CreateGiftCardDonationPayload payload) async {
     try {
       final res = await api.createGiftCardDonation(payload);
+      return right(res);
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException().errorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, CampaignFundraiser>> getCampaignFundraiser(
+      String campaignId) async {
+    try {
+      final res = await api.getCampaignFundraiser(campaignId);
+      return right(res);
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException().errorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, CampaignFundraiser>> updateCampaignFundraiser(
+      UpdateCampaignFundraiserPaylaod payload) async {
+    try {
+      final res = await api.updateCampaignFundraiser(
+        campaignId: payload.campaignId,
+        idNumber: payload.idNumber,
+        signatureFile: payload.signatureFile,
+      );
       return right(res);
     } on Exception catch (e) {
       if (e is DioException) {

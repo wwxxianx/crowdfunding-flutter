@@ -4,7 +4,6 @@ import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/string.dart';
 import 'package:crowdfunding_flutter/common/widgets/avatar/avatar.dart';
-import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/skeleton.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
@@ -107,14 +106,14 @@ class DonationItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final displayName =
-        donation.isAnonymous ? "Anonymous" : donation.user.fullName;
+        donation.isAnonymous ? "Anonymous" : donation.user?.fullName ?? '';
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Avatar(
-          imageUrl: donation.user.profileImageUrl,
-          placeholder: donation.user.fullName[0],
+          imageUrl: donation.user?.profileImageUrl,
+          placeholder: donation.user?.fullName[0] ?? '',
         ),
         16.kW,
         Column(

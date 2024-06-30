@@ -6,7 +6,7 @@ part 'campaign_donation.g.dart';
 @JsonSerializable()
 class CampaignDonation {
   final String id;
-  final UserModel user;
+  final UserModel? user;
   final int amount;
   final String createdAt;
   final bool isAnonymous;
@@ -14,7 +14,7 @@ class CampaignDonation {
 
   const CampaignDonation({
     required this.id,
-    required this.user,
+    this.user,
     required this.amount,
     required this.createdAt,
     required this.isAnonymous,

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
@@ -5,16 +7,13 @@ import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension
 import 'package:crowdfunding_flutter/common/widgets/avatar/avatar.dart';
 import 'package:crowdfunding_flutter/common/widgets/input/outlined_text_field.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
-import 'package:crowdfunding_flutter/domain/model/image/image_model.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:crowdfunding_flutter/state_management/purchase_gift_card/purchase_gift_card_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/purchase_gift_card/purchase_gift_card_event.dart';
 import 'package:crowdfunding_flutter/state_management/purchase_gift_card/purchase_gift_card_state.dart';
 import 'package:flutter/material.dart';
-import 'package:heroicons/heroicons.dart';
-import 'dart:async';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:heroicons/heroicons.dart';
 
 class UserSearchFieldAndMenu extends StatefulWidget {
   final FocusNode focusNode;

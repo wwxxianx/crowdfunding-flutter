@@ -1,9 +1,10 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:crowdfunding_flutter/domain/model/age_group.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_category.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update.dart';
-import 'package:crowdfunding_flutter/domain/model/community_challenge/community_challenge.dart';
 import 'package:crowdfunding_flutter/domain/model/image/image_model.dart';
 import 'package:crowdfunding_flutter/domain/model/organization/organization.dart';
 import 'package:crowdfunding_flutter/domain/model/state/state_region.dart';
@@ -11,6 +12,27 @@ import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'campaign.g.dart';
+
+enum FundraiserIdentificationStatusEnum {
+  PENDING,
+  UNDER_REVIEW,
+  VERIFIED,
+  REJECTED;
+
+  @override
+  String toString() {
+    switch (this) {
+      case FundraiserIdentificationStatusEnum.PENDING:
+        return 'Pending';
+      case FundraiserIdentificationStatusEnum.UNDER_REVIEW:
+        return 'Under Review';
+      case FundraiserIdentificationStatusEnum.VERIFIED:
+        return 'Verified';
+      case FundraiserIdentificationStatusEnum.REJECTED:
+        return 'Rejected';
+    }
+  }
+}
 
 @JsonSerializable()
 class Campaign {
@@ -36,7 +58,7 @@ class Campaign {
   final String updatedAt;
   // Fundraiser Identity
   final String? fundraiserIdentityNumber;
-  final String? fundraiserIdentificationStatus;
+  final String fundraiserIdentificationStatus;
   final String? fundraiserIdentificationRejectReason;
   final String? fundraiserSignaturFileUrl;
   // Data
@@ -80,7 +102,7 @@ class Campaign {
     this.topThreeDonations = const [],
     this.recentThreeDonations = const [],
     this.fundraiserIdentityNumber,
-    this.fundraiserIdentificationStatus,
+    this.fundraiserIdentificationStatus = 'PENDING',
     this.fundraiserIdentificationRejectReason,
     this.fundraiserSignaturFileUrl,
   });
@@ -189,6 +211,7 @@ class Campaign {
     numOfComments: 0,
     numOfLikes: 0,
     numOfUpdates: 0,
+    fundraiserIdentificationStatus: 'UNDER_REVIEW',
   );
 
   static const samples = [

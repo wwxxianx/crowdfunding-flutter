@@ -4,7 +4,6 @@ import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/avatar/avatar.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
-import 'package:crowdfunding_flutter/common/widgets/file_picker.dart';
 import 'package:crowdfunding_flutter/common/widgets/skeleton.dart';
 import 'package:crowdfunding_flutter/common/widgets/text/expandable_text.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';

@@ -2,35 +2,30 @@ import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
-import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_category_tag.dart';
 import 'package:crowdfunding_flutter/common/widgets/campaign/donation_progress_bar.dart';
-import 'package:crowdfunding_flutter/common/widgets/container/custom_bottom_sheet.dart';
+import 'package:crowdfunding_flutter/common/widgets/container/fundraiser_identification_card.dart';
 import 'package:crowdfunding_flutter/common/widgets/image_carousel.dart';
 import 'package:crowdfunding_flutter/common/widgets/skeleton.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/di/init_dependencies.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
-import 'package:crowdfunding_flutter/domain/model/stripe/stripe_account.dart';
 import 'package:crowdfunding_flutter/presentation/campaign_details/tabs/tab_view.dart';
 import 'package:crowdfunding_flutter/presentation/campaign_details/widgets/protect_info_banner.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/collaborate_with_npo_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/create_campaign_update_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/edit_campaign_screen.dart';
+import 'package:crowdfunding_flutter/presentation/manage_campaign_details/widgets/prerequisite_content.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/widgets/reply_bottom_sheet.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/widgets/setup_bank_account_bottom_sheet.dart';
-import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:crowdfunding_flutter/state_management/campaign_details/campaign_details_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/campaign_details/campaign_details_event.dart';
 import 'package:crowdfunding_flutter/state_management/campaign_details/campaign_details_state.dart';
-import 'package:crowdfunding_flutter/state_management/connected_bank_account/connected_bank_account_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons/heroicons.dart';
-import 'package:toastification/toastification.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ManageCampaignDetailsScreen extends StatefulWidget {
   static const route = "/manage-campaign-details/:campaignId";
@@ -85,17 +80,6 @@ class _ManageCampaignDetailsScreenState
       return;
     }
     // context.push('/connected-bank-account');
-  }
-
-  void _showSetupBankAccountBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      elevation: 0,
-      isDismissible: true,
-      context: context,
-      builder: (modalContext) {
-        return SetupBankAccountBottomSheet();
-      },
-    );
   }
 
   Widget _buildBottomNavigationBar(BuildContext context) {
@@ -327,63 +311,18 @@ class _ManageCampaignDetailsScreenState
                           ],
                         ),
                       ),
-                      8.kH,
+                      12.kH,
                       const Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: Dimensions.screenHorizontalPadding),
                         child: Text(
-                          "What to do next?",
+                          "Before starting your campaign",
                           style: CustomFonts.labelMedium,
                         ),
                       ),
-                      12.kH,
-                      SizedBox(
-                        height: 150,
-                        child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: Dimensions.screenHorizontalPadding),
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 3,
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                              onTap: () {
-                                _showSetupBankAccountBottomSheet(context);
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.only(right: 16),
-                                width: MediaQuery.of(context).size.width / 1.4,
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFE3E9FF),
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: Colors.black),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        SvgPicture.asset(
-                                            'assets/icons/bank-transfer.svg'),
-                                        4.kW,
-                                        Text(
-                                          "Setup Your Back Account",
-                                          style: CustomFonts.labelSmall,
-                                        ),
-                                      ],
-                                    ),
-                                    6.kH,
-                                    Text(
-                                      'Before you receive any donation, please set up a valid bank account in order to receive donation.',
-                                      style: CustomFonts.bodySmall,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
+                      8.kH,
+                      if (campaignResult is ApiResultSuccess<Campaign>)
+                        PrerequisiteContent(campaignId: widget.campaignId,),
                       20.kH,
                       CampaignDetailsTabView(
                         onReplyButtonPreesed: (commentID) {
@@ -406,3 +345,4 @@ class _ManageCampaignDetailsScreenState
     );
   }
 }
+

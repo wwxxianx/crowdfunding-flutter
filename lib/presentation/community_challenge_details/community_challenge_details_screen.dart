@@ -7,14 +7,11 @@ import 'package:crowdfunding_flutter/common/widgets/avatar/avatar.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/animated_bg_container.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/dialog.dart';
-import 'package:crowdfunding_flutter/common/widgets/media_picker.dart';
-import 'package:crowdfunding_flutter/common/widgets/single_image_picker.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/di/init_dependencies.dart';
 import 'package:crowdfunding_flutter/domain/model/community_challenge/challenge_participant.dart';
 import 'package:crowdfunding_flutter/domain/model/community_challenge/community_challenge.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
-import 'package:crowdfunding_flutter/presentation/community_challenge_details/widgets/custom_stepper.dart';
 import 'package:crowdfunding_flutter/presentation/community_challenge_details/widgets/challenge_stepper.dart';
 import 'package:crowdfunding_flutter/state_management/community_challenge_details/community_challenge_details_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/community_challenge_details/community_challenge_details_event.dart';
@@ -24,7 +21,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons/heroicons.dart';
-import 'package:logger/logger.dart';
 
 class CommunityChallengeDetailsScreen extends StatelessWidget {
   final String id;
@@ -48,7 +44,7 @@ class CommunityChallengeDetailsScreen extends StatelessWidget {
               onPressed: () {
                 bloc.add(OnParticipateChallenge(communityChallengeId: id));
               },
-              child: Text('Accept Challenge'),
+              child: const Text('Accept Challenge'),
             ),
           ),
         ],
@@ -72,7 +68,7 @@ class CommunityChallengeDetailsScreen extends StatelessWidget {
       }
       // Can get reward
     }
-    return SizedBox();
+    return const SizedBox();
   }
 
   Widget _buildBottomSheetRewardButton(
@@ -168,7 +164,7 @@ class CommunityChallengeDetailsScreen extends StatelessWidget {
           }
       }
     }
-    return SizedBox();
+    return const SizedBox();
   }
 
   Widget _buildSponsorContent(
@@ -192,7 +188,7 @@ class CommunityChallengeDetailsScreen extends StatelessWidget {
         ],
       );
     }
-    return SizedBox();
+    return const SizedBox();
   }
 
   @override
@@ -221,7 +217,7 @@ class CommunityChallengeDetailsScreen extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               padding: const EdgeInsets.symmetric(
                   horizontal: Dimensions.screenHorizontalPadding, vertical: 8),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 border: Border.symmetric(
                   horizontal:
                       BorderSide(color: CustomColors.containerBorderGrey),
@@ -293,8 +289,8 @@ class CommunityChallengeDetailsScreen extends StatelessWidget {
                             ),
                           8.kH,
                           AnimatedBGContainer(
-                            startColor: Color(0xFFF1FAEA),
-                            endColor: Color(0xFFB7FF87),
+                            startColor: const Color(0xFFF1FAEA),
+                            endColor: const Color(0xFFB7FF87),
                             borderRadius: BorderRadius.circular(6),
                             border: Border.all(color: Colors.black),
                             child: Column(
@@ -330,10 +326,10 @@ class CommunityChallengeDetailsScreen extends StatelessWidget {
                             value:
                                 BlocProvider.of<CommunityChallengeDetailsBloc>(
                                     context),
-                            child: ChallengeStepper(),
+                            child: const ChallengeStepper(),
                           ),
                           20.kH,
-                          Text(
+                          const Text(
                             'How it works?',
                             style: CustomFonts.labelMedium,
                           ),

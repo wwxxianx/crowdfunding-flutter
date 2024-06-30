@@ -1,27 +1,27 @@
 import 'dart:convert';
+
+import 'package:crowdfunding_flutter/app_router.dart';
+import 'package:crowdfunding_flutter/common/constants/constants.dart';
 import 'package:crowdfunding_flutter/domain/model/tokens_response.dart';
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:crowdfunding_flutter/common/constants/constants.dart';
 import 'package:http/http.dart' as http;
-import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DioNetwork {
-  // static const baseUrl = "https://fixed-elisabeth-ngustudio.koyeb.app/";
   static Dio provideDio() {
     Dio dio = Dio();
 
-    // Interceptor for jwt refresh
-    dio.interceptors.add(AppInterceptors(dio: dio));
+    // Interceptor for jwt
+    dio.interceptors.add(NetworkInterceptorJWT(dio: dio));
     return dio;
   }
 }
 
 // Interceptor for jwt refresh
-class AppInterceptors extends Interceptor {
+class NetworkInterceptorJWT extends Interceptor {
   final Dio dio;
 
-  AppInterceptors({required this.dio});
+  NetworkInterceptorJWT({required this.dio});
 
   @override
   void onRequest(
@@ -36,8 +36,8 @@ class AppInterceptors extends Interceptor {
   }
 
   @override
-  void onError(DioException e, ErrorInterceptorHandler handler) async {
-    if (e.response?.statusCode == 401) {
+  void onError(DioException err, ErrorInterceptorHandler handler) async {
+    if (err.response?.statusCode == 401) {
       // If a 401 response is received, refresh the access token
       SharedPreferences sp = await SharedPreferences.getInstance();
       var refreshToken =
@@ -53,20 +53,28 @@ class AppInterceptors extends Interceptor {
           'Authorization': 'Bearer $refreshToken',
         },
       );
-      TokensResponse token = TokensResponse.fromJson(
-          jsonDecode(tokenRes.body) as Map<String, dynamic>);
-      // Save new tokens to sp
-      sp.setString(
-          Constants.sharedPreferencesKey.refreshToken, token.refreshToken);
-      sp.setString(
-          Constants.sharedPreferencesKey.accessToken, token.accessToken);
+      if (tokenRes.statusCode == 200) {
+        // Reresh token success
+        TokensResponse token = TokensResponse.fromJson(
+            jsonDecode(tokenRes.body) as Map<String, dynamic>);
+        // Save new tokens to sp
+        sp.setString(
+            Constants.sharedPreferencesKey.refreshToken, token.refreshToken);
+        sp.setString(
+            Constants.sharedPreferencesKey.accessToken, token.accessToken);
 
-      // Update the request header with the new access token
-      e.requestOptions.headers['Authorization'] = 'Bearer ${token.accessToken}';
+        // Update the request header with the new access token
+        err.requestOptions.headers['Authorization'] =
+            'Bearer ${token.accessToken}';
 
-      // Repeat the request with the updated header
-      return handler.resolve(await dio.fetch(e.requestOptions));
+        // Repeat the request with the updated header
+        return handler.resolve(await dio.fetch(err.requestOptions));
+      } else {
+        // Refresh token failed (expired)
+        // Ask user to login
+        AppRouter.navigateAndClearStack('login');
+      }
     }
-    return handler.next(e);
+    return handler.next(err);
   }
 }

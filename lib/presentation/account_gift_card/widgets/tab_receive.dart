@@ -8,7 +8,6 @@ import 'package:crowdfunding_flutter/common/widgets/avatar/avatar.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/animated_bg_container.dart';
 import 'package:crowdfunding_flutter/domain/model/gift_card/gift_card.dart';
-import 'package:crowdfunding_flutter/domain/model/image/image_model.dart';
 import 'package:crowdfunding_flutter/presentation/account_gift_card/screens/open_gift_card_screen.dart';
 import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_state.dart';

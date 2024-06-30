@@ -1,4 +1,3 @@
-import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/image/image_model.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:json_annotation/json_annotation.dart';

@@ -3,11 +3,10 @@ import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
+import 'package:crowdfunding_flutter/common/widgets/container/fundraiser_identification_card.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:heroicons/heroicons.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 class CreateCampaignSuccessScreen extends StatelessWidget {
@@ -22,7 +21,7 @@ class CreateCampaignSuccessScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Your fundraiser will be published once it’s verified!',
           style: CustomFonts.labelMedium,
         ),
@@ -73,39 +72,12 @@ class CreateCampaignSuccessScreen extends StatelessWidget {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'What to do next?',
                       style: CustomFonts.labelMedium,
                     ),
                     8.kH,
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: CustomColors.purple200,
-                        borderRadius: BorderRadius.circular(6),
-                        border: Border.all(color: Colors.black),
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              SvgPicture.asset(
-                                  'assets/icons/bank-transfer.svg'),
-                              4.kW,
-                              Text(
-                                'Setup Your Bank Account',
-                                style: CustomFonts.labelMedium,
-                              ),
-                            ],
-                          ),
-                          6.kH,
-                          Text(
-                            'Before you receive any donation, please set up a valid bank account in order to receive donation.',
-                            style: CustomFonts.bodySmall,
-                          ),
-                        ],
-                      ),
-                    ),
+                    const FundraiserIdentificationCard(),
                   ],
                 );
               },

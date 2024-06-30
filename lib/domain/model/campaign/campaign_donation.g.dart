@@ -9,7 +9,9 @@ part of 'campaign_donation.dart';
 CampaignDonation _$CampaignDonationFromJson(Map<String, dynamic> json) =>
     CampaignDonation(
       id: json['id'] as String,
-      user: UserModel.fromJson(json['user'] as Map<String, dynamic>),
+      user: json['user'] == null
+          ? null
+          : UserModel.fromJson(json['user'] as Map<String, dynamic>),
       amount: (json['amount'] as num).toInt(),
       createdAt: json['createdAt'] as String,
       isAnonymous: json['isAnonymous'] as bool,

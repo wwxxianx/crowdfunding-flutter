@@ -3,6 +3,7 @@ import 'package:crowdfunding_flutter/data/network/payload/campaign/campaign_upda
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_comment_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_reply_payload.dart';
+import 'package:crowdfunding_flutter/data/network/payload/campaign/update_campaign_fundraiser_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/update_campaign_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/donation/create_campaign_donation_payload.dart';
 import 'package:crowdfunding_flutter/data/network/response/donation/giftcard_donation_response.dart';
@@ -10,6 +11,7 @@ import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_category.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign_fundraiser.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaigns.dart';
 import 'package:fpdart/fpdart.dart';
@@ -18,6 +20,7 @@ abstract interface class CampaignRepository {
   Future<Either<Failure, List<Campaign>>> getCampaigns(
       FetchCampaignsPayload payload);
   Future<Either<Failure, Campaign>> getCampaign(String campaignId);
+  Future<Either<Failure, CampaignFundraiser>> getCampaignFundraiser(String campaignId);
 
   Future<Either<Failure, List<CampaignCategory>>> getCampaignCategories();
 
@@ -35,6 +38,10 @@ abstract interface class CampaignRepository {
 
   Future<Either<Failure, Campaign>> updateCampaign(
     UpdateCampaignPayload payload,
+  );
+
+  Future<Either<Failure, CampaignFundraiser>> updateCampaignFundraiser(
+    UpdateCampaignFundraiserPaylaod payload,
   );
 
   // Campaign update

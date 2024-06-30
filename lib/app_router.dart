@@ -24,6 +24,7 @@ import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screen
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/connected_bank_account_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/create_campaign_update_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/edit_campaign_screen.dart';
+import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/fundraiser_identification_screen.dart';
 import 'package:crowdfunding_flutter/presentation/notification/notification_screen.dart';
 import 'package:crowdfunding_flutter/presentation/onboarding/pages/npo_onboarding/join_npo_success_page.dart';
 import 'package:crowdfunding_flutter/presentation/onboarding/widgets/create_organization_page_view.dart';
@@ -45,17 +46,22 @@ import 'package:logger/logger.dart';
 import 'package:toastification/toastification.dart';
 
 class AppRouter {
-  final GlobalKey<NavigatorState> _rootNavigatorKey =
+  static final GlobalKey<NavigatorState> rootNavigatorKey =
       GlobalKey<NavigatorState>(debugLabel: 'root');
   final GlobalKey<NavigatorState> _shellNavigatorKey =
       GlobalKey<NavigatorState>(debugLabel: 'shell');
 
+  static void navigateAndClearStack(String routeName) {
+    rootNavigatorKey.currentState?.pushNamedAndRemoveUntil(routeName, (route) => false);
+  }
+
   GoRouter get router => GoRouter(
-        navigatorKey: _rootNavigatorKey,
+        navigatorKey: rootNavigatorKey,
         // initialLocation: EditCampaignScreen.generateRoute(campaignId: '123'),
         // initialLocation:
         //     OrganizationProfileScreen.generateRoute(organizationId: 'asd'),
-        initialLocation: '/loading',
+        initialLocation:
+            '/loading',
         routes: [
           GoRoute(
             path: '/testing',
@@ -84,7 +90,7 @@ class AppRouter {
                     builder: (context, state) => const ExploreScreen(),
                     routes: [
                       GoRoute(
-                        parentNavigatorKey: _rootNavigatorKey,
+                        parentNavigatorKey: rootNavigatorKey,
                         path: CampaignDetailsScreen.route,
                         builder: (context, state) => CampaignDetailsScreen(
                           campaignId: state.pathParameters['campaignId'] ?? '',
@@ -231,6 +237,16 @@ class AppRouter {
             builder: (context, state) => ManageCampaignDetailsScreen(
               campaignId: state.pathParameters['campaignId'] ?? '',
             ),
+            routes: [
+              GoRoute(
+                path: 'fundraiser-identification',
+                builder: (context, state) {
+                  return FundraiserIdentificationScreen(
+                    campaignId: state.pathParameters['campaignId'] ?? '',
+                  );
+                },
+              ),
+            ],
           ),
           GoRoute(
             name: "connected-bank-account",

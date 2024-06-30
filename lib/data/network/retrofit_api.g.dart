@@ -11,9 +11,9 @@ part of 'retrofit_api.dart';
 class _RestClient implements RestClient {
   _RestClient(
     this._dio, {
-  this.baseUrl,
+    this.baseUrl,
   }) {
-    baseUrl ??= 'https://b318-180-74-225-120.ngrok-free.app/';
+    baseUrl ??= 'https://1d7d-180-74-225-120.ngrok-free.app/';
   }
 
   final Dio _dio;
@@ -196,6 +196,80 @@ class _RestClient implements RestClient {
               baseUrl,
             ))));
     final value = Campaign.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<CampaignFundraiser> getCampaignFundraiser(String campaignId) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<CampaignFundraiser>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'campaigns/${campaignId}/fundraiser',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = CampaignFundraiser.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<CampaignFundraiser> updateCampaignFundraiser({
+    required String campaignId,
+    String? idNumber,
+    File? signatureFile,
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    final _data = FormData();
+    if (idNumber != null) {
+      _data.fields.add(MapEntry(
+        'fundraiserIdentityNumber',
+        idNumber,
+      ));
+    }
+    if (signatureFile != null) {
+      _data.files.add(MapEntry(
+        'signatureFile',
+        MultipartFile.fromFileSync(
+          signatureFile.path,
+          filename: signatureFile.path.split(Platform.pathSeparator).last,
+        ),
+      ));
+    }
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<CampaignFundraiser>(Options(
+      method: 'PATCH',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'campaigns/${campaignId}/fundraiser',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = CampaignFundraiser.fromJson(_result.data!);
     return value;
   }
 

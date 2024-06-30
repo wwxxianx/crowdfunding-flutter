@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:json_annotation/json_annotation.dart';
-
 class CreateCampaignUpdatePayload {
   final String title;
   final String description;

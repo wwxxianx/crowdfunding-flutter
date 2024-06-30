@@ -1,6 +1,5 @@
 import 'package:crowdfunding_flutter/data/local/shared_preference.dart';
 import 'package:crowdfunding_flutter/data/network/dio.dart';
-import 'package:crowdfunding_flutter/data/network/payload/community_challenge/create_challenge_participant_payload.dart';
 import 'package:crowdfunding_flutter/data/network/retrofit_api.dart';
 import 'package:crowdfunding_flutter/data/repository/auth_repository_impl.dart';
 import 'package:crowdfunding_flutter/data/repository/campaign/campaign_repository_impl.dart';
@@ -33,9 +32,11 @@ import 'package:crowdfunding_flutter/domain/usecases/campaign/campaign_update/cr
 import 'package:crowdfunding_flutter/domain/usecases/campaign/create_campaign.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/donation/create_giftcard_donation.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaign.dart';
-import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaigns.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaign_categories.dart';
+import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaign_fundraiser.dart';
+import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaigns.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/update_campaign.dart';
+import 'package:crowdfunding_flutter/domain/usecases/campaign/update_campaign_fundraiser.dart';
 import 'package:crowdfunding_flutter/domain/usecases/collaboration/create_campaign_collaboration.dart';
 import 'package:crowdfunding_flutter/domain/usecases/collaboration/fetch_campaign_collaboration.dart';
 import 'package:crowdfunding_flutter/domain/usecases/collaboration/fetch_pending_collaborations.dart';
@@ -225,6 +226,10 @@ void _initCampaign() {
         () => CreateCampaignUpdate(campaignRepository: serviceLocator()))
     ..registerFactory(
         () => CreateGiftCardDonation(campaignRepository: serviceLocator()))
+    ..registerFactory(
+        () => FetchCampaignFundraiser(campaignRepository: serviceLocator()))
+    ..registerFactory(
+        () => UpdateCampaignFundraiser(campaignRepository: serviceLocator()))
     // Bloc
     ..registerLazySingleton(() => HomeBloc(
         fetchCampaign: serviceLocator(), paymentService: serviceLocator()));

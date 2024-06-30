@@ -1,5 +1,4 @@
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_category.dart';
-import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user_preference.g.dart';

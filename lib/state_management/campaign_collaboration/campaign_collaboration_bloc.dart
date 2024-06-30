@@ -89,31 +89,31 @@ class CampaignCollaborationBloc
     OnFetchCampaignCollaboration event,
     Emitter<CampaignCollaborationState> emit,
   ) async {
-    emit(state.copyWith(
-      campaignCollaborationResult:
-          ApiResultSuccess(Collaboration.samples.first),
-    ));
-    // final res = await _fetchCampaignCollaboration.call(event.campaignId);
-    // res.fold(
-    //   (l) => null,
-    //   (campaignCollaboration) {
-    //     if (campaignCollaboration == null) {
-    //       emit(
-    //         state.copyWith(
-    //           campaignCollaborationResult: const ApiResultInitial(),
-    //           isCollarationNull: true,
-    //         ),
-    //       );
-    //       return;
-    //     }
-    //     emit(
-    //       state.copyWith(
-    //         campaignCollaborationResult:
-    //             ApiResultSuccess(campaignCollaboration),
-    //         isCollarationNull: false,
-    //       ),
-    //     );
-    //   },
-    // );
+    // emit(state.copyWith(
+    //   campaignCollaborationResult:
+    //       ApiResultSuccess(Collaboration.samples.first),
+    // ));
+    final res = await _fetchCampaignCollaboration.call(event.campaignId);
+    res.fold(
+      (l) => null,
+      (campaignCollaboration) {
+        if (campaignCollaboration == null) {
+          emit(
+            state.copyWith(
+              campaignCollaborationResult: const ApiResultInitial(),
+              isCollarationNull: true,
+            ),
+          );
+          return;
+        }
+        emit(
+          state.copyWith(
+            campaignCollaborationResult:
+                ApiResultSuccess(campaignCollaboration),
+            isCollarationNull: false,
+          ),
+        );
+      },
+    );
   }
 }

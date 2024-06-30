@@ -19,8 +19,6 @@ class PaymentService {
 
   Future<Either<Failure, ConnectAccountResponse>> getUpdateConnectAccountLink(
       {required UpdateConnectAccountPayload payload}) async {
-    final res = await api.updateConnectAccount(payload);
-    return right(res);
     try {
       final res = await api.updateConnectAccount(payload);
       return right(res);
@@ -31,9 +29,6 @@ class PaymentService {
 
   Future<Either<Failure, StripeAccount>> getConnectedAccount(
       {required String connectedAccountId}) async {
-    final res =
-        await api.getConnectedAccount(connectedAccountId: connectedAccountId);
-    return right(res);
     try {
       final res =
           await api.getConnectedAccount(connectedAccountId: connectedAccountId);

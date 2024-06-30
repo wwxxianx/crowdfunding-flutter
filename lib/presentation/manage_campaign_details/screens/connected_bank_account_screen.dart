@@ -15,6 +15,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:logger/logger.dart';
+import 'package:toastification/toastification.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ConnectedBankAccountScreen extends StatelessWidget {
   final String? connectedAccountId;
@@ -180,7 +182,27 @@ class ConnectedBankAccountScreen extends StatelessWidget {
                 Expanded(
                   child: CustomButton(
                     onPressed: () {
-                      _showConnectAccountBottomSheet(context);
+                      context
+                          .read<ConnectedAccountBloc>()
+                          .add(OnUpdateConnectAccount(
+                            stripeConnectAccountId: connectedAccountId ?? '',
+                            onSuccess: (onboardLink) async {
+                              final url = Uri.parse(onboardLink);
+                              if (!await launchUrl(url)) {
+                                toastification.show(
+                                  type: ToastificationType.error,
+                                  title: Text(
+                                    "Failed to connect to Stripe",
+                                    style: CustomFonts.labelSmall,
+                                  ),
+                                  description: Text(
+                                    "Please try again later.",
+                                    style: CustomFonts.bodySmall,
+                                  ),
+                                );
+                              }
+                            },
+                          ));
                     },
                     child: Text("Finish set up my bank account"),
                   ),

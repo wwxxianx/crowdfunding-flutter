@@ -1,7 +1,6 @@
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
-import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
 import 'package:crowdfunding_flutter/presentation/campaign_details/widgets/comment.dart';
 import 'package:flutter/material.dart';

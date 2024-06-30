@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:crowdfunding_flutter/common/constants/constants.dart';
 import 'package:crowdfunding_flutter/common/error/exceptions.dart';
 import 'package:crowdfunding_flutter/data/local/shared_preference.dart';
 import 'package:crowdfunding_flutter/data/network/payload/auth/login_be_payload.dart';
@@ -8,9 +9,7 @@ import 'package:crowdfunding_flutter/data/network/retrofit_api.dart';
 import 'package:crowdfunding_flutter/domain/model/tokens_response.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:crowdfunding_flutter/domain/service/auth_service.dart';
-import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:crowdfunding_flutter/common/constants/constants.dart';
 
 class AuthServiceImpl implements AuthService {
   final SupabaseClient supabaseClient;
@@ -42,30 +41,6 @@ class AuthServiceImpl implements AuthService {
   @override
   Future<UserModel> createUserWithEmailPassword(
       {required String email, required String password}) async {
-        final res = await supabaseClient.auth.signUp(
-        password: password,
-        email: email,
-      );
-      final user = res.user;
-      if (user == null) {
-        throw const ServerException("Failed to create account.");
-      }
-      final fullName = user.email?.split("@").first ?? "";
-      // Create user record in db
-      final signUpPayload = SignUpPayload(
-          id: user.id, email: user.email ?? "", fullName: fullName);
-      final tokens = await api.signUp(signUpPayload);
-      await _saveTokens(tokens);
-
-      // cache user
-      final userModel = UserModel(
-        id: user.id,
-        fullName: fullName,
-        email: email,
-        isOnboardingCompleted: false,
-      );
-      _cacheUser(userModel);
-      return userModel;
     try {
       final res = await supabaseClient.auth.signUp(
         password: password,

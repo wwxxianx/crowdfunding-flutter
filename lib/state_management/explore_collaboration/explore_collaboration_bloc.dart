@@ -1,6 +1,5 @@
 import 'package:crowdfunding_flutter/common/usecase/usecase.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
-import 'package:crowdfunding_flutter/domain/model/collaboration/collaboration.dart';
 import 'package:crowdfunding_flutter/domain/usecases/collaboration/fetch_pending_collaborations.dart';
 import 'package:crowdfunding_flutter/state_management/explore_collaboration/explore_collaboration_event.dart';
 import 'package:crowdfunding_flutter/state_management/explore_collaboration/explore_collaboration_state.dart';
@@ -40,19 +39,19 @@ class ExploreCollaborationBloc
     OnFetchPendingCollaborations event,
     Emitter<ExploreCollaborationState> emit,
   ) async {
-    emit(state.copyWith(collaborationsResult: ApiResultSuccess(Collaboration.samples)));
-    // emit(state.copyWith(collaborationsResult: const ApiResultLoading()));
+    // emit(state.copyWith(collaborationsResult: ApiResultSuccess(Collaboration.samples)));
+    emit(state.copyWith(collaborationsResult: const ApiResultLoading()));
 
-    // final res = await _fetchPendingCollaborations.call(NoPayload());
-    // res.fold(
-    //   (failure) {
-    //     emit(state.copyWith(
-    //         collaborationsResult: ApiResultFailure(failure.errorMessage)));
-    //   },
-    //   (collaborations) {
-    //     emit(state.copyWith(
-    //         collaborationsResult: ApiResultSuccess(collaborations)));
-    //   },
-    // );
+    final res = await _fetchPendingCollaborations.call(NoPayload());
+    res.fold(
+      (failure) {
+        emit(state.copyWith(
+            collaborationsResult: ApiResultFailure(failure.errorMessage)));
+      },
+      (collaborations) {
+        emit(state.copyWith(
+            collaborationsResult: ApiResultSuccess(collaborations)));
+      },
+    );
   }
 }

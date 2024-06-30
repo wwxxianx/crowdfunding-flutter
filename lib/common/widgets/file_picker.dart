@@ -5,17 +5,23 @@ import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/utils/show_snackbar.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
+import 'package:crowdfunding_flutter/common/widgets/media_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:logger/logger.dart';
 
 class CustomFilePicker extends StatefulWidget {
   final int limit;
+  final bool canRemove;
+  final List<String> previewFileUrls;
   final void Function(List<File> files)? onSelected;
   const CustomFilePicker({
     super.key,
-    this.limit = 3,
+    this.limit = 1,
     this.onSelected,
+    this.canRemove = true,
+    this.previewFileUrls = const [],
   });
 
   @override
@@ -24,9 +30,28 @@ class CustomFilePicker extends StatefulWidget {
 
 class _CustomFilePickerState extends State<CustomFilePicker> {
   List<PlatformFile> selectedFiles = [];
+  List<String> previewFileUrls = [];
+  final logger = Logger();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(CustomFilePicker oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (selectedFiles.isNotEmpty) return;
+    if (oldWidget.previewFileUrls != widget.previewFileUrls) {
+      setState(() {
+        previewFileUrls = widget.previewFileUrls;
+      });
+    }
+  }
 
   void _handleSelectFile() async {
-    final hasExceedLimit = selectedFiles.length >= widget.limit;
+    final hasExceedLimit =
+        selectedFiles.length + previewFileUrls.length >= widget.limit;
     if (hasExceedLimit) {
       context.showSnackBar(
           "You can only select ${widget.limit} file${widget.limit > 1 ? 's' : ''}");
@@ -63,6 +88,26 @@ class _CustomFilePickerState extends State<CustomFilePicker> {
     }
   }
 
+  List<Widget> _buildPreview() {
+    if (previewFileUrls.isNotEmpty) {
+      return previewFileUrls.map((url) {
+        return ImagePreviewContainer(
+          canRemove: widget.canRemove,
+          onRemove: () {
+            // if (widget.onRemovePreviewImageModel != null) {
+            //   widget.onRemovePreviewImageModel!(image);
+            // }
+            setState(() {
+              previewFileUrls.remove(url);
+            });
+          },
+          imageUrl: url,
+        );
+      }).toList();
+    }
+    return [const SizedBox()];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -73,8 +118,10 @@ class _CustomFilePickerState extends State<CustomFilePicker> {
         runSpacing: 8,
         spacing: 12,
         children: [
+          if (widget.previewFileUrls.isNotEmpty) ..._buildPreview(),
           ...selectedFiles.map((file) {
             return FileItem(
+              canRemove: widget.canRemove,
               file: file,
               onRemove: () {
                 setState(() {

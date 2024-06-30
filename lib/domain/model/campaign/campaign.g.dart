@@ -10,6 +10,7 @@ Campaign _$CampaignFromJson(Map<String, dynamic> json) => Campaign(
       id: json['id'] as String,
       title: json['title'] as String,
       description: json['description'] as String,
+      raisedAmount: (json['raisedAmount'] as num?)?.toInt() ?? 0,
       images: (json['images'] as List<dynamic>?)
               ?.map((e) => ImageModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -57,12 +58,19 @@ Campaign _$CampaignFromJson(Map<String, dynamic> json) => Campaign(
               ?.map((e) => CampaignDonation.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      fundraiserIdentityNumber: json['fundraiserIdentityNumber'] as String?,
+      fundraiserIdentificationStatus:
+          json['fundraiserIdentificationStatus'] as String? ?? 'PENDING',
+      fundraiserIdentificationRejectReason:
+          json['fundraiserIdentificationRejectReason'] as String?,
+      fundraiserSignaturFileUrl: json['fundraiserSignaturFileUrl'] as String?,
     );
 
 Map<String, dynamic> _$CampaignToJson(Campaign instance) => <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
       'description': instance.description,
+      'raisedAmount': instance.raisedAmount,
       'images': instance.images,
       'videoUrl': instance.videoUrl,
       'thumbnailUrl': instance.thumbnailUrl,
@@ -70,18 +78,23 @@ Map<String, dynamic> _$CampaignToJson(Campaign instance) => <String, dynamic>{
       'targetAmount': instance.targetAmount,
       'contactPhoneNumber': instance.contactPhoneNumber,
       'isPublished': instance.isPublished,
-      'beneficiaryName': instance.beneficiaryName,
-      'beneficiaryImageUrl': instance.beneficiaryImageUrl,
-      'beneficiaryAgeGroup': _$AgeGroupEnumMap[instance.beneficiaryAgeGroup],
       'campaignCategory': instance.campaignCategory,
       'organization': instance.organization,
       'user': instance.user,
+      'beneficiaryName': instance.beneficiaryName,
+      'beneficiaryImageUrl': instance.beneficiaryImageUrl,
+      'beneficiaryAgeGroup': _$AgeGroupEnumMap[instance.beneficiaryAgeGroup],
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
+      'fundraiserIdentityNumber': instance.fundraiserIdentityNumber,
+      'fundraiserIdentificationStatus': instance.fundraiserIdentificationStatus,
+      'fundraiserIdentificationRejectReason':
+          instance.fundraiserIdentificationRejectReason,
+      'fundraiserSignaturFileUrl': instance.fundraiserSignaturFileUrl,
       'numOfDonations': instance.numOfDonations,
       'numOfLikes': instance.numOfLikes,
       'numOfComments': instance.numOfComments,
       'numOfUpdates': instance.numOfUpdates,
-      'createdAt': instance.createdAt,
-      'updatedAt': instance.updatedAt,
       'donations': instance.donations,
       'campaignUpdates': instance.campaignUpdates,
       'comments': instance.comments,
@@ -95,85 +108,3 @@ const _$AgeGroupEnumMap = {
   AgeGroup.youngAdult: 'youngAdult',
   AgeGroup.midAndAgedAdult: 'midAndAgedAdult',
 };
-
-ExplorePageCampaignDonation _$ExplorePageCampaignDonationFromJson(
-        Map<String, dynamic> json) =>
-    ExplorePageCampaignDonation(
-      amount: (json['amount'] as num).toInt(),
-    );
-
-Map<String, dynamic> _$ExplorePageCampaignDonationToJson(
-        ExplorePageCampaignDonation instance) =>
-    <String, dynamic>{
-      'amount': instance.amount,
-    };
-
-ExplorePageCampaign _$ExplorePageCampaignFromJson(Map<String, dynamic> json) =>
-    ExplorePageCampaign(
-      id: json['id'] as String,
-      title: json['title'] as String,
-      description: json['description'] as String,
-      currentAmount: (json['currentAmount'] as num).toInt(),
-      videoUrl: json['videoUrl'] as String?,
-      thumbnailUrl: json['thumbnailUrl'] as String,
-      stateAndRegion: StateAndRegion.fromJson(
-          json['stateAndRegion'] as Map<String, dynamic>),
-      targetAmount: (json['targetAmount'] as num).toDouble(),
-      contactPhoneNumber: json['contactPhoneNumber'] as String,
-      isPublished: json['isPublished'] as bool,
-      beneficiaryName: json['beneficiaryName'] as String,
-      beneficiaryImageUrl: json['beneficiaryImageUrl'] as String?,
-      beneficiaryAgeGroup:
-          $enumDecodeNullable(_$AgeGroupEnumMap, json['beneficiaryAgeGroup']),
-      campaignCategory: CampaignCategory.fromJson(
-          json['campaignCategory'] as Map<String, dynamic>),
-      organization: json['organization'] == null
-          ? null
-          : Organization.fromJson(json['organization'] as Map<String, dynamic>),
-      user: UserModel.fromJson(json['user'] as Map<String, dynamic>),
-      numOfDonations: (json['numOfDonations'] as num).toInt(),
-      numOfLikes: (json['numOfLikes'] as num).toInt(),
-      numOfComments: (json['numOfComments'] as num).toInt(),
-      numOfUpdates: (json['numOfUpdates'] as num).toInt(),
-      createdAt: json['createdAt'] as String,
-      updatedAt: json['updatedAt'] as String,
-      donations: (json['donations'] as List<dynamic>?)
-              ?.map((e) => ExplorePageCampaignDonation.fromJson(
-                  e as Map<String, dynamic>))
-              .toList() ??
-          const [],
-      firstMatchedCommunityChallenge: json['firstMatchedCommunityChallenge'] ==
-              null
-          ? null
-          : CommunityChallenge.fromJson(
-              json['firstMatchedCommunityChallenge'] as Map<String, dynamic>),
-    );
-
-Map<String, dynamic> _$ExplorePageCampaignToJson(
-        ExplorePageCampaign instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'title': instance.title,
-      'description': instance.description,
-      'currentAmount': instance.currentAmount,
-      'videoUrl': instance.videoUrl,
-      'thumbnailUrl': instance.thumbnailUrl,
-      'stateAndRegion': instance.stateAndRegion,
-      'targetAmount': instance.targetAmount,
-      'contactPhoneNumber': instance.contactPhoneNumber,
-      'isPublished': instance.isPublished,
-      'beneficiaryName': instance.beneficiaryName,
-      'beneficiaryImageUrl': instance.beneficiaryImageUrl,
-      'beneficiaryAgeGroup': _$AgeGroupEnumMap[instance.beneficiaryAgeGroup],
-      'campaignCategory': instance.campaignCategory,
-      'organization': instance.organization,
-      'user': instance.user,
-      'numOfDonations': instance.numOfDonations,
-      'numOfLikes': instance.numOfLikes,
-      'numOfComments': instance.numOfComments,
-      'numOfUpdates': instance.numOfUpdates,
-      'createdAt': instance.createdAt,
-      'updatedAt': instance.updatedAt,
-      'donations': instance.donations,
-      'firstMatchedCommunityChallenge': instance.firstMatchedCommunityChallenge,
-    };

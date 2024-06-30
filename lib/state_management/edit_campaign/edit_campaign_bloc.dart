@@ -7,7 +7,6 @@ import 'package:crowdfunding_flutter/domain/usecases/campaign/update_campaign.da
 import 'package:crowdfunding_flutter/state_management/edit_campaign/edit_campaign_event.dart';
 import 'package:crowdfunding_flutter/state_management/edit_campaign/edit_campaign_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logger/logger.dart';
 
 class EditCampaignBloc extends Bloc<EditCampaignEvent, EditCampaignState> {
   final FetchCampaign _fetchCampaign;
@@ -234,10 +233,6 @@ class EditCampaignBloc extends Bloc<EditCampaignEvent, EditCampaignState> {
   }
 
   void _initDataFields(Campaign campaign, Emitter<EditCampaignState> emit) {
-    var logger = Logger();
-    logger.w(campaign);
-    logger.w(campaign.campaignCategory);
-    logger.w(campaign.campaignCategory.id);
     emit(state.copyWith(
       targetAmountText: campaign.targetAmount.toInt().toString(),
       selectedCategoryId: campaign.campaignCategory.id,
