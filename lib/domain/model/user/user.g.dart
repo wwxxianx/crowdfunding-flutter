@@ -21,6 +21,9 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
           ? null
           : UserPreference.fromJson(json['preference'] as Map<String, dynamic>),
       stripeConnectId: json['stripeConnectId'] as String?,
+      bankAccount: json['bankAccount'] == null
+          ? null
+          : BankAccount.fromJson(json['bankAccount'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
@@ -34,6 +37,7 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'organization': instance.organization,
       'preference': instance.preference,
       'stripeConnectId': instance.stripeConnectId,
+      'bankAccount': instance.bankAccount,
     };
 
 UserModelWithAccessToken _$UserModelWithAccessTokenFromJson(

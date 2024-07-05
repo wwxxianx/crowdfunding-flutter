@@ -19,8 +19,10 @@ import 'package:fpdart/fpdart.dart';
 abstract interface class CampaignRepository {
   Future<Either<Failure, List<Campaign>>> getCampaigns(
       FetchCampaignsPayload payload);
+  Future<Either<Failure, List<Campaign>>> getSuccessfulCampaigns();
   Future<Either<Failure, Campaign>> getCampaign(String campaignId);
-  Future<Either<Failure, CampaignFundraiser>> getCampaignFundraiser(String campaignId);
+  Future<Either<Failure, CampaignFundraiser>> getCampaignFundraiser(
+      String campaignId);
 
   Future<Either<Failure, List<CampaignCategory>>> getCampaignCategories();
 
@@ -50,5 +52,6 @@ abstract interface class CampaignRepository {
   );
 
   // Donation
-  Future<Either<Failure, GiftCardDonationResponse>> createGiftCardDonation(CreateGiftCardDonationPayload payload);
+  Future<Either<Failure, GiftCardDonationResponse>> createGiftCardDonation(
+      CreateGiftCardDonationPayload payload);
 }

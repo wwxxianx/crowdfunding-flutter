@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:crowdfunding_flutter/common/utils/input_validator.dart';
+import 'package:crowdfunding_flutter/data/network/api_result.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dart';
 import 'package:equatable/equatable.dart';
 
 final class CreateCampaignState extends Equatable with InputValidator {
@@ -32,8 +34,7 @@ final class CreateCampaignState extends Equatable with InputValidator {
   final File? campaignVideoFile;
 
   // Create campaign
-  final String? createCampaignError;
-  final bool isCreatingCampaign;
+  final ApiResult<CampaignSummary> createCampaignResult;
 
   const CreateCampaignState._({
     this.targetAmountText,
@@ -54,8 +55,7 @@ final class CreateCampaignState extends Equatable with InputValidator {
     this.titleError,
     this.descriptionError,
     this.campaignImageError,
-    this.createCampaignError,
-    this.isCreatingCampaign = false,
+    this.createCampaignResult = const ApiResultInitial(),
   });
 
   const CreateCampaignState.initial() : this._();
@@ -79,8 +79,7 @@ final class CreateCampaignState extends Equatable with InputValidator {
     String? titleError,
     String? descriptionError,
     String? campaignImageError,
-    String? createCampaignError,
-    bool? isCreatingCampaign,
+    ApiResult<CampaignSummary>? createCampaignResult,
   }) {
     return CreateCampaignState._(
       targetAmountText: targetAmountText ?? this.targetAmountText,
@@ -100,9 +99,8 @@ final class CreateCampaignState extends Equatable with InputValidator {
       campaignVideoFile: campaignVideoFile ?? this.campaignVideoFile,
       titleError: titleError,
       descriptionError: descriptionError,
-      createCampaignError: createCampaignError,
       campaignImageError: campaignImageError,
-      isCreatingCampaign: isCreatingCampaign ?? this.isCreatingCampaign,
+      createCampaignResult: createCampaignResult ?? this.createCampaignResult,
     );
   }
 
@@ -125,8 +123,7 @@ final class CreateCampaignState extends Equatable with InputValidator {
         campaignVideoFile,
         titleError,
         descriptionError,
-        createCampaignError,
         campaignImageError,
-        isCreatingCampaign,
+        createCampaignResult,
       ];
 }

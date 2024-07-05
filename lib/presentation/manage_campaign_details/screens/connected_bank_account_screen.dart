@@ -135,7 +135,7 @@ class ConnectedBankAccountScreen extends StatelessWidget {
   }
 
   Widget _buildContent(BuildContext context) {
-    if (connectedAccountId == null) {
+    if (connectedAccountId == null || connectedAccountId?.isEmpty == true) {
       // No account
       return Column(
         children: [

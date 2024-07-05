@@ -43,6 +43,8 @@ class CampaignRepositoryImpl implements CampaignRepository {
         categoryIds: payload.categoryIds,
         stateIds: payload.stateIds,
         searchQuery: payload.searchQuery,
+        isPublished: payload.isPublished,
+        identificationStatus: payload.identificationStatus,
       );
       return right(campaignsRes);
     } on Exception catch (e) {
@@ -247,6 +249,20 @@ class CampaignRepositoryImpl implements CampaignRepository {
         idNumber: payload.idNumber,
         signatureFile: payload.signatureFile,
       );
+      return right(res);
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException().errorMessage));
+    }
+  }
+  
+  @override
+  Future<Either<Failure, List<Campaign>>> getSuccessfulCampaigns() async {
+    try {
+      final res = await api.getSuccessfulCampaigns();
       return right(res);
     } on Exception catch (e) {
       if (e is DioException) {

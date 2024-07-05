@@ -19,7 +19,7 @@ class DonationProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double progress = (current / total);
+    final double progress = (current / total) > 1 ? 1.0 : current / total;
     String formattedTotal = NumberFormat('#,###').format(total);
     String formattedCurrent = NumberFormat('#,###').format(current);
 

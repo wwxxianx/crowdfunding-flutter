@@ -10,7 +10,7 @@ class Organization {
   final String id;
   final String name;
   final String email;
-  final String? description;
+  final String? slogan;
   final String contactPhoneNumber;
   final bool isVerified;
   final String imageUrl;
@@ -25,7 +25,7 @@ class Organization {
     required this.id,
     required this.name,
     required this.email,
-    this.description,
+    this.slogan,
     required this.imageUrl,
     required this.contactPhoneNumber,
     required this.invitationCode,

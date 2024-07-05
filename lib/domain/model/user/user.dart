@@ -1,4 +1,5 @@
 import 'package:crowdfunding_flutter/domain/model/organization/organization.dart';
+import 'package:crowdfunding_flutter/domain/model/user/bank_account.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user_preference.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -16,6 +17,7 @@ class UserModel {
   final Organization? organization;
   final UserPreference? preference;
   final String? stripeConnectId;
+  final BankAccount? bankAccount;
   // List<CampaignDonation> campaignDonations;
   // List<Campaign> campaigns;
   // List<CampaignComment> campaignComments;
@@ -35,6 +37,7 @@ class UserModel {
     this.organization,
     this.preference,
     this.stripeConnectId,
+    this.bankAccount,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>

@@ -5,6 +5,8 @@ import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/media_picker.dart';
+import 'package:crowdfunding_flutter/data/network/api_result.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dart';
 import 'package:crowdfunding_flutter/presentation/create_campaign/widgets/tips_button.dart';
 import 'package:crowdfunding_flutter/state_management/create_campaign/create_campaign_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/create_campaign/create_campaign_event.dart';
@@ -51,7 +53,16 @@ class _FundraiserMediaUploadPageState extends State<FundraiserMediaUploadPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CreateCampaignBloc, CreateCampaignState>(
+    return BlocConsumer<CreateCampaignBloc, CreateCampaignState>(
+      listener: (context, state) {
+        final createCampaignResult = state.createCampaignResult;
+        if (createCampaignResult is ApiResultFailure<CampaignSummary>) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+                createCampaignResult.errorMessage ?? 'Something went wrong'),
+          ));
+        }
+      },
       builder: (context, state) {
         return WillPopScope(
           onWillPop: () async {
@@ -106,8 +117,9 @@ class _FundraiserMediaUploadPageState extends State<FundraiserMediaUploadPage> {
                   children: [
                     Expanded(
                       child: CustomButton(
-                        isLoading: state.isCreatingCampaign,
-                        enabled: !state.isCreatingCampaign,
+                        isLoading:
+                            state.createCampaignResult is ApiResultLoading,
+                        enabled: state is! ApiResultLoading,
                         onPressed: _onCreateCampaign,
                         child: const Text("Done"),
                       ),

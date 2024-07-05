@@ -45,7 +45,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final AppRouter _appRouter = AppRouter();
+  // final AppRouter _appRouter = AppRouter();
 
   // This widget is the root of your application.
   @override
@@ -55,7 +55,7 @@ class _MyAppState extends State<MyApp> {
         title: 'Crowdfunding App',
         theme: appTheme,
         // home: SplashScreen(),
-        routerConfig: _appRouter.router,
+        routerConfig: AppRouter.router,
         // home: BlocBuilder<AppUserCubit, AppUserState>(
         //   builder: (context, state) {
         //     if (state is AppUserInitial) {

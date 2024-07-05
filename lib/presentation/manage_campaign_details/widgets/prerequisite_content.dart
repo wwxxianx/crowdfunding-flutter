@@ -2,9 +2,11 @@ import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
+import 'package:crowdfunding_flutter/common/widgets/container/chip.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/fundraiser_identification_card.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
+import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/widgets/setup_bank_account_bottom_sheet.dart';
 import 'package:crowdfunding_flutter/state_management/campaign_details/campaign_details_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/campaign_details/campaign_details_state.dart';
@@ -93,14 +95,16 @@ class PrerequisiteContent extends StatelessWidget {
                           children: [
                             SvgPicture.asset('assets/icons/bank-transfer.svg'),
                             4.kW,
-                            Text(
-                              "Setup Your Back Account",
+                            const Text(
+                              "Bank Account",
                               style: CustomFonts.labelSmall,
                             ),
+                            const Spacer(),
+                            BankAccountChip(user: campaignResult.data.user),
                           ],
                         ),
                         6.kH,
-                        Text(
+                        const Text(
                           'Before you receive any donation, please set up a valid bank account in order to receive donation.',
                           style: CustomFonts.bodySmall,
                         )
@@ -114,6 +118,46 @@ class PrerequisiteContent extends StatelessWidget {
         }
         return Container();
       },
+    );
+  }
+}
+
+class BankAccountChip extends StatelessWidget {
+  final UserModel user;
+  const BankAccountChip({
+    super.key,
+    required this.user,
+  });
+
+  String get statusText {
+    final bankAccount = user.bankAccount;
+    if (bankAccount != null &&
+        bankAccount.detailsSubmitted &&
+        bankAccount.chargesEnabled &&
+        bankAccount.payoutsEnabled) {
+      return 'Verified';
+    }
+    return 'Pending';
+  }
+
+  CustomChipStyle get chipStyle {
+    final bankAccount = user.bankAccount;
+    if (bankAccount != null &&
+        bankAccount.detailsSubmitted &&
+        bankAccount.chargesEnabled &&
+        bankAccount.payoutsEnabled) {
+      return CustomChipStyle.green;
+    }
+    return CustomChipStyle.slate;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomChip(
+      style: chipStyle,
+      child: Text(
+        statusText,
+      ),
     );
   }
 }

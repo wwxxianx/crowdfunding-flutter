@@ -53,7 +53,7 @@ class NetworkInterceptorJWT extends Interceptor {
           'Authorization': 'Bearer $refreshToken',
         },
       );
-      if (tokenRes.statusCode == 200) {
+      if (tokenRes.statusCode == 201) {
         // Reresh token success
         TokensResponse token = TokensResponse.fromJson(
             jsonDecode(tokenRes.body) as Map<String, dynamic>);
@@ -72,7 +72,8 @@ class NetworkInterceptorJWT extends Interceptor {
       } else {
         // Refresh token failed (expired)
         // Ask user to login
-        AppRouter.navigateAndClearStack('login');
+        AppRouter.router.pushNamed('login');
+        return;
       }
     }
     return handler.next(err);

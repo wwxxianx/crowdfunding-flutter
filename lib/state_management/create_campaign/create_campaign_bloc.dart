@@ -1,4 +1,5 @@
 import 'package:crowdfunding_flutter/common/utils/input_validator.dart';
+import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_payload.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/create_campaign.dart';
 import 'package:crowdfunding_flutter/state_management/create_campaign/create_campaign_event.dart';
@@ -41,12 +42,9 @@ class CreateCampaignBloc extends Bloc<CreateCampaignEvent, CreateCampaignState>
     OnCreateCampaign event,
     Emitter emit,
   ) async {
-    emit(state.copyWith(isCreatingCampaign: true));
+    emit(state.copyWith(createCampaignResult: const ApiResultLoading()));
     if (state.campaignImageFiles.isEmpty) {
-      emit(state.copyWith(
-        campaignImageError: 'Please select at least one image',
-        isCreatingCampaign: false,
-      ));
+      emit(state.copyWith(createCampaignResult: ApiResultFailure('Please upload campaign images')));
       return;
     }
     final payload = CreateCampaignPayload(
@@ -63,11 +61,11 @@ class CreateCampaignBloc extends Bloc<CreateCampaignEvent, CreateCampaignState>
     );
     final res = await _createCampaign.call(payload);
     res.fold(
-      (l) => emit(state.copyWith(
-          createCampaignError: l.errorMessage, isCreatingCampaign: false)),
+      (failure) => emit(state.copyWith(
+          createCampaignResult: ApiResultFailure(failure.errorMessage))),
       (campaign) {
         emit(state.copyWith(
-            createCampaignError: null, isCreatingCampaign: false));
+            createCampaignResult: ApiResultSuccess(campaign)));
         event.onSuccess(campaign.id);
       },
     );

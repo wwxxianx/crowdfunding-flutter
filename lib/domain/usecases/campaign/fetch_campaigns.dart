@@ -9,12 +9,18 @@ class FetchCampaignsPayload {
   final List<String> categoryIds;
   final List<String> stateIds;
   final String? searchQuery;
+  final bool? isPublished;
+  final FundraiserIdentificationStatusEnum? identificationStatus;
+  final bool isCompleted;
 
   const FetchCampaignsPayload({
     this.userId,
     this.categoryIds = const [],
     this.stateIds = const [],
     this.searchQuery,
+    this.isPublished,
+    this.identificationStatus,
+    this.isCompleted = false,
   });
 }
 
@@ -26,6 +32,9 @@ class FetchCampaigns implements UseCase<List<Campaign>, FetchCampaignsPayload> {
   @override
   Future<Either<Failure, List<Campaign>>> call(
       FetchCampaignsPayload payload) async {
+    if (payload.isCompleted) {
+      return await campaignRepository.getSuccessfulCampaigns();
+    }
     return await campaignRepository.getCampaigns(payload);
   }
 }

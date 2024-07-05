@@ -109,6 +109,7 @@ class CampaignCard extends StatelessWidget {
   final Widget? headerTrailingTag;
   final Widget? footerAction;
   final VoidCallback? onPressed;
+  final bool showMatchChallengeBar;
   const CampaignCard({
     this.campaign = Campaign.sample,
     super.key,
@@ -118,6 +119,7 @@ class CampaignCard extends StatelessWidget {
     this.headerLeadingTag,
     this.headerTrailingTag,
     this.footerAction,
+    this.showMatchChallengeBar = false,
   });
 
   Widget _buildMedia() {
@@ -258,16 +260,11 @@ class CampaignCard extends StatelessWidget {
                               right: isSmall ? 8.0 : 12.0,
                               bottom: isSmall ? 8.0 : 0.0,
                             ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                DonationProgressBar(
-                                  total: campaign.targetAmount,
-                                  current: campaign.raisedAmount.toDouble(),
-                                  height: isSmall ? 8 : 10,
-                                  showDonationStatusText: !isSmall,
-                                ),
-                              ],
+                            child: DonationProgressBar(
+                              total: campaign.targetAmount,
+                              current: campaign.raisedAmount.toDouble(),
+                              height: isSmall ? 8 : 10,
+                              showDonationStatusText: !isSmall,
                             ),
                           ),
                           if (footerAction != null)
@@ -281,13 +278,16 @@ class CampaignCard extends StatelessWidget {
                             ),
                           if (!isSmall) 12.kH,
                           // Top border for Match Offer container
-                          if (!isSmall)
+                          if (showMatchChallengeBar &&
+                              campaign.firstMatchedCommunityChallenge != null)
                             Container(
                               width: double.maxFinite,
                               height: 1,
                               color: Colors.black,
                             ),
-                          if (!isSmall) MatchOfferContent()
+                          if (showMatchChallengeBar &&
+                              campaign.firstMatchedCommunityChallenge != null)
+                            MatchOfferContent()
                         ],
                       ),
                     ),

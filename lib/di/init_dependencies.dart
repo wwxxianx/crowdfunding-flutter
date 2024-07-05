@@ -52,6 +52,7 @@ import 'package:crowdfunding_flutter/domain/usecases/notification/read_notificat
 import 'package:crowdfunding_flutter/domain/usecases/organization/create_organization.dart';
 import 'package:crowdfunding_flutter/domain/usecases/organization/fetch_organization.dart';
 import 'package:crowdfunding_flutter/domain/usecases/organization/fetch_organization_members.dart';
+import 'package:crowdfunding_flutter/domain/usecases/organization/fetch_organizations.dart';
 import 'package:crowdfunding_flutter/domain/usecases/organization/fetch_organization_with_code.dart';
 import 'package:crowdfunding_flutter/domain/usecases/organization/join_organization.dart';
 import 'package:crowdfunding_flutter/domain/usecases/organization/update_organization.dart';
@@ -232,7 +233,10 @@ void _initCampaign() {
         () => UpdateCampaignFundraiser(campaignRepository: serviceLocator()))
     // Bloc
     ..registerLazySingleton(() => HomeBloc(
-        fetchCampaign: serviceLocator(), paymentService: serviceLocator()));
+          fetchCampaign: serviceLocator(),
+          paymentService: serviceLocator(),
+          fetchOrganizations: serviceLocator(),
+        ));
 }
 
 void _initConstant() {
@@ -279,6 +283,8 @@ void _initOrganization() {
         () => JoinOrganization(organizationRepository: serviceLocator()))
     ..registerFactory(
         () => FetchOrganization(organizationRepository: serviceLocator()))
+    ..registerFactory(
+        () => FetchOrganizations(organizationRepository: serviceLocator()))
     ..registerFactory(() =>
         FetchOrganizationMembers(organizationRepository: serviceLocator()))
     ..registerFactory(

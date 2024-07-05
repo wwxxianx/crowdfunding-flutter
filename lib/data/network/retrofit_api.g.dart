@@ -13,7 +13,7 @@ class _RestClient implements RestClient {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://1d7d-180-74-225-120.ngrok-free.app/';
+    baseUrl ??= 'https://b533-202-184-8-138.ngrok-free.app/';
   }
 
   final Dio _dio;
@@ -138,6 +138,8 @@ class _RestClient implements RestClient {
     List<String> categoryIds = const [],
     List<String> stateIds = const [],
     String? searchQuery,
+    bool? isPublished,
+    FundraiserIdentificationStatusEnum? identificationStatus,
   }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
@@ -145,6 +147,8 @@ class _RestClient implements RestClient {
       r'categoryIds': categoryIds,
       r'stateIds': stateIds,
       r'searchQuery': searchQuery,
+      r'isPublished': isPublished,
+      r'identification': identificationStatus?.name,
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
@@ -158,6 +162,35 @@ class _RestClient implements RestClient {
             .compose(
               _dio.options,
               'campaigns',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    var value = _result.data!
+        .map((dynamic i) => Campaign.fromJson(i as Map<String, dynamic>))
+        .toList();
+    return value;
+  }
+
+  @override
+  Future<List<Campaign>> getSuccessfulCampaigns() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result =
+        await _dio.fetch<List<dynamic>>(_setStreamType<List<Campaign>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'campaigns/successful',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -1023,7 +1056,8 @@ class _RestClient implements RestClient {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = payload;
+    final _data = <String, dynamic>{};
+    _data.addAll(payload.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<ConnectAccountResponse>(Options(
       method: 'POST',

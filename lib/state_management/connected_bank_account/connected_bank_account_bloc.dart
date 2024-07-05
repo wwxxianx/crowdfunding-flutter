@@ -53,7 +53,7 @@ class ConnectedAccountBloc
     var logger = Logger();
     final connectedAccountId = event.stripeConnectAccountId;
     emit(state.copyWith(stripeAccountResult: const ApiResultLoading()));
-    if (connectedAccountId == null) {
+    if (connectedAccountId == null || connectedAccountId.isEmpty) {
       // No account
       emit(state.copyWith(stripeAccountResult: const ApiResultInitial()));
       return;

@@ -5,6 +5,7 @@ import 'package:crowdfunding_flutter/domain/model/campaign/campaign_category.dar
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update.dart';
+import 'package:crowdfunding_flutter/domain/model/community_challenge/community_challenge.dart';
 import 'package:crowdfunding_flutter/domain/model/image/image_model.dart';
 import 'package:crowdfunding_flutter/domain/model/organization/organization.dart';
 import 'package:crowdfunding_flutter/domain/model/state/state_region.dart';
@@ -71,6 +72,7 @@ class Campaign {
   final List<CampaignComment> comments;
   final List<CampaignDonation> topThreeDonations;
   final List<CampaignDonation> recentThreeDonations;
+  final CommunityChallenge? firstMatchedCommunityChallenge;
 
   const Campaign({
     required this.id,
@@ -105,6 +107,7 @@ class Campaign {
     this.fundraiserIdentificationStatus = 'PENDING',
     this.fundraiserIdentificationRejectReason,
     this.fundraiserSignaturFileUrl,
+    this.firstMatchedCommunityChallenge,
   });
 
   factory Campaign.fromJson(Map<String, dynamic> json) =>
@@ -145,6 +148,7 @@ class Campaign {
     String? fundraiserIdentificationStatus,
     String? fundraiserIdentificationRejectReason,
     String? fundraiserSignaturFileUrl,
+    CommunityChallenge? firstMatchedCommunityChallenge,
   }) {
     return Campaign(
       id: id ?? this.id,
@@ -184,6 +188,8 @@ class Campaign {
               this.fundraiserIdentificationRejectReason,
       fundraiserSignaturFileUrl:
           fundraiserSignaturFileUrl ?? this.fundraiserSignaturFileUrl,
+      firstMatchedCommunityChallenge:
+          firstMatchedCommunityChallenge ?? this.firstMatchedCommunityChallenge,
     );
   }
 

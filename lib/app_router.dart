@@ -1,4 +1,3 @@
-import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/domain/model/gift_card/gift_card.dart';
 import 'package:crowdfunding_flutter/domain/model/organization/organization.dart';
@@ -18,6 +17,7 @@ import 'package:crowdfunding_flutter/presentation/edit_organization/edit_organiz
 import 'package:crowdfunding_flutter/presentation/explore/explore_screen.dart';
 import 'package:crowdfunding_flutter/presentation/explore_collaboration/explore_collaboration_screen.dart';
 import 'package:crowdfunding_flutter/presentation/home/home_screen.dart';
+import 'package:crowdfunding_flutter/presentation/login/login_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign/manage_campaign_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/manage_campaign_details_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/collaborate_with_npo_screen.dart';
@@ -25,6 +25,7 @@ import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screen
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/create_campaign_update_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/edit_campaign_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/fundraiser_identification_screen.dart';
+import 'package:crowdfunding_flutter/presentation/navigation/navigation_screen.dart';
 import 'package:crowdfunding_flutter/presentation/notification/notification_screen.dart';
 import 'package:crowdfunding_flutter/presentation/onboarding/pages/npo_onboarding/join_npo_success_page.dart';
 import 'package:crowdfunding_flutter/presentation/onboarding/widgets/create_organization_page_view.dart';
@@ -40,22 +41,19 @@ import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:crowdfunding_flutter/presentation/login/login_screen.dart';
-import 'package:crowdfunding_flutter/presentation/navigation/navigation_screen.dart';
 import 'package:logger/logger.dart';
-import 'package:toastification/toastification.dart';
 
 class AppRouter {
   static final GlobalKey<NavigatorState> rootNavigatorKey =
       GlobalKey<NavigatorState>(debugLabel: 'root');
-  final GlobalKey<NavigatorState> _shellNavigatorKey =
+  static final GlobalKey<NavigatorState> _shellNavigatorKey =
       GlobalKey<NavigatorState>(debugLabel: 'shell');
 
   static void navigateAndClearStack(String routeName) {
     rootNavigatorKey.currentState?.pushNamedAndRemoveUntil(routeName, (route) => false);
   }
 
-  GoRouter get router => GoRouter(
+  static GoRouter get router => GoRouter(
         navigatorKey: rootNavigatorKey,
         // initialLocation: EditCampaignScreen.generateRoute(campaignId: '123'),
         // initialLocation:

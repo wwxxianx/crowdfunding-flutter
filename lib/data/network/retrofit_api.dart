@@ -65,7 +65,12 @@ abstract class RestClient {
     @Query("categoryIds") List<String> categoryIds = const [],
     @Query("stateIds") List<String> stateIds = const [],
     @Query("searchQuery") String? searchQuery,
+    @Query("isPublished") bool? isPublished,
+    @Query("identification") FundraiserIdentificationStatusEnum? identificationStatus,
   });
+
+  @GET("campaigns/successful")
+  Future<List<Campaign>> getSuccessfulCampaigns();
 
   @GET("campaigns/{id}")
   Future<Campaign> getCampaign(@Path('id') String campaignId);

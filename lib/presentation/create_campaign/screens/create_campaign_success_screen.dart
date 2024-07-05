@@ -63,12 +63,6 @@ class CreateCampaignSuccessScreen extends StatelessWidget {
             ),
             Builder(
               builder: (context) {
-                final currentUser =
-                    context.watch<AppUserCubit>().state.currentUser;
-                if (currentUser != null &&
-                    currentUser.stripeConnectId != null) {
-                  return SizedBox();
-                }
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
