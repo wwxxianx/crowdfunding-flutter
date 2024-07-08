@@ -4,6 +4,7 @@ import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/chip.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/enum/campaign_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

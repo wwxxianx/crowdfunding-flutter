@@ -2,6 +2,7 @@ import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/data/network/payload/organization/get_organizations_payload.dart';
 import 'package:crowdfunding_flutter/data/service/payment/payment_service.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/enum/campaign_enum.dart';
 import 'package:crowdfunding_flutter/domain/model/organization/organization.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaigns.dart';
 import 'package:crowdfunding_flutter/domain/usecases/organization/fetch_organizations.dart';

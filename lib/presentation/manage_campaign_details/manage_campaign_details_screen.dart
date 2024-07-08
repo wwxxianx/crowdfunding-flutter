@@ -4,12 +4,12 @@ import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_category_tag.dart';
 import 'package:crowdfunding_flutter/common/widgets/campaign/donation_progress_bar.dart';
-import 'package:crowdfunding_flutter/common/widgets/container/fundraiser_identification_card.dart';
 import 'package:crowdfunding_flutter/common/widgets/image_carousel.dart';
 import 'package:crowdfunding_flutter/common/widgets/skeleton.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/di/init_dependencies.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/enum/campaign_enum.dart';
 import 'package:crowdfunding_flutter/presentation/campaign_details/tabs/tab_view.dart';
 import 'package:crowdfunding_flutter/presentation/campaign_details/widgets/protect_info_banner.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/collaborate_with_npo_screen.dart';
@@ -17,7 +17,6 @@ import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screen
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/screens/edit_campaign_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/widgets/prerequisite_content.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/widgets/reply_bottom_sheet.dart';
-import 'package:crowdfunding_flutter/presentation/manage_campaign_details/widgets/setup_bank_account_bottom_sheet.dart';
 import 'package:crowdfunding_flutter/state_management/campaign_details/campaign_details_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/campaign_details/campaign_details_event.dart';
 import 'package:crowdfunding_flutter/state_management/campaign_details/campaign_details_state.dart';
@@ -80,6 +79,11 @@ class _ManageCampaignDetailsScreenState
       return;
     }
     // context.push('/connected-bank-account');
+  }
+
+  Widget _buildPublishStatusContent(Campaign campaign) {
+    final statusEnum = CampaignPublishStatusEnum.values.byName(campaign.status);
+    return statusEnum.buildStatusWidget();
   }
 
   Widget _buildBottomNavigationBar(BuildContext context) {
@@ -275,6 +279,8 @@ class _ManageCampaignDetailsScreenState
                           // mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            if (campaignResult is ApiResultSuccess<Campaign>)
+                              _buildPublishStatusContent(campaignResult.data),
                             if (campaignResult is ApiResultLoading)
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -296,11 +302,14 @@ class _ManageCampaignDetailsScreenState
                                 style: CustomFonts.titleExtraLarge,
                               ),
                             16.kH,
-                            const DonationProgressBar(
-                              current: 3799,
-                              total: 10000,
-                              height: 12.0,
-                            ),
+                            if (campaignResult is ApiResultSuccess<Campaign>)
+                              DonationProgressBar(
+                                current:
+                                    campaignResult.data.raisedAmount.toDouble(),
+                                total:
+                                    campaignResult.data.raisedAmount.toDouble(),
+                                height: 12.0,
+                              ),
                             16.kH,
                             if (campaignResult is ApiResultSuccess<Campaign>)
                               CampaignCategoryTag(
@@ -322,7 +331,9 @@ class _ManageCampaignDetailsScreenState
                       ),
                       8.kH,
                       if (campaignResult is ApiResultSuccess<Campaign>)
-                        PrerequisiteContent(campaignId: widget.campaignId,),
+                        PrerequisiteContent(
+                          campaignId: widget.campaignId,
+                        ),
                       20.kH,
                       CampaignDetailsTabView(
                         onReplyButtonPreesed: (commentID) {
@@ -345,4 +356,3 @@ class _ManageCampaignDetailsScreenState
     );
   }
 }
-

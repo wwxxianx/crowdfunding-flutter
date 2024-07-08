@@ -12,6 +12,7 @@ import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/di/init_dependencies.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_fundraiser.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/enum/campaign_enum.dart';
 import 'package:crowdfunding_flutter/state_management/fundraiser_identification/fundraiser_identification_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/fundraiser_identification/fundraiser_identification_event.dart';
 import 'package:crowdfunding_flutter/state_management/fundraiser_identification/fundraiser_identification_state.dart';

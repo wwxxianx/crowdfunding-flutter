@@ -21,7 +21,6 @@ Campaign _$CampaignFromJson(Map<String, dynamic> json) => Campaign(
           json['stateAndRegion'] as Map<String, dynamic>),
       targetAmount: (json['targetAmount'] as num).toDouble(),
       contactPhoneNumber: json['contactPhoneNumber'] as String,
-      isPublished: json['isPublished'] as bool,
       beneficiaryName: json['beneficiaryName'] as String,
       beneficiaryImageUrl: json['beneficiaryImageUrl'] as String?,
       beneficiaryAgeGroup:
@@ -64,10 +63,19 @@ Campaign _$CampaignFromJson(Map<String, dynamic> json) => Campaign(
       fundraiserIdentificationRejectReason:
           json['fundraiserIdentificationRejectReason'] as String?,
       fundraiserSignaturFileUrl: json['fundraiserSignaturFileUrl'] as String?,
+      firstMatchedCommunityChallenge: json['firstMatchedCommunityChallenge'] ==
+              null
+          ? null
+          : CommunityChallenge.fromJson(
+              json['firstMatchedCommunityChallenge'] as Map<String, dynamic>),
+      status: json['status'] as String? ?? "PENDING",
+      suspendReason: json['suspendReason'] as String?,
     );
 
 Map<String, dynamic> _$CampaignToJson(Campaign instance) => <String, dynamic>{
       'id': instance.id,
+      'status': instance.status,
+      'suspendReason': instance.suspendReason,
       'title': instance.title,
       'description': instance.description,
       'raisedAmount': instance.raisedAmount,
@@ -77,7 +85,6 @@ Map<String, dynamic> _$CampaignToJson(Campaign instance) => <String, dynamic>{
       'stateAndRegion': instance.stateAndRegion,
       'targetAmount': instance.targetAmount,
       'contactPhoneNumber': instance.contactPhoneNumber,
-      'isPublished': instance.isPublished,
       'campaignCategory': instance.campaignCategory,
       'organization': instance.organization,
       'user': instance.user,
@@ -100,6 +107,7 @@ Map<String, dynamic> _$CampaignToJson(Campaign instance) => <String, dynamic>{
       'comments': instance.comments,
       'topThreeDonations': instance.topThreeDonations,
       'recentThreeDonations': instance.recentThreeDonations,
+      'firstMatchedCommunityChallenge': instance.firstMatchedCommunityChallenge,
     };
 
 const _$AgeGroupEnumMap = {

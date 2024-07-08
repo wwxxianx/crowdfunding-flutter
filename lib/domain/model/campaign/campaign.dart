@@ -14,30 +14,11 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'campaign.g.dart';
 
-enum FundraiserIdentificationStatusEnum {
-  PENDING,
-  UNDER_REVIEW,
-  VERIFIED,
-  REJECTED;
-
-  @override
-  String toString() {
-    switch (this) {
-      case FundraiserIdentificationStatusEnum.PENDING:
-        return 'Pending';
-      case FundraiserIdentificationStatusEnum.UNDER_REVIEW:
-        return 'Under Review';
-      case FundraiserIdentificationStatusEnum.VERIFIED:
-        return 'Verified';
-      case FundraiserIdentificationStatusEnum.REJECTED:
-        return 'Rejected';
-    }
-  }
-}
-
 @JsonSerializable()
 class Campaign {
   final String id;
+  final String status;
+  final String? suspendReason;
   final String title;
   final String description;
   final int raisedAmount;
@@ -47,7 +28,6 @@ class Campaign {
   final StateAndRegion stateAndRegion;
   final double targetAmount;
   final String contactPhoneNumber;
-  final bool isPublished;
   final CampaignCategory campaignCategory;
   final Organization? organization;
   final UserModel user;
@@ -85,7 +65,6 @@ class Campaign {
     required this.stateAndRegion,
     required this.targetAmount,
     required this.contactPhoneNumber,
-    required this.isPublished,
     required this.beneficiaryName,
     this.beneficiaryImageUrl,
     this.beneficiaryAgeGroup,
@@ -108,6 +87,8 @@ class Campaign {
     this.fundraiserIdentificationRejectReason,
     this.fundraiserSignaturFileUrl,
     this.firstMatchedCommunityChallenge,
+    this.status = "PENDING",
+    this.suspendReason,
   });
 
   factory Campaign.fromJson(Map<String, dynamic> json) =>
@@ -160,7 +141,6 @@ class Campaign {
       stateAndRegion: stateAndRegion ?? this.stateAndRegion,
       targetAmount: targetAmount ?? this.targetAmount,
       contactPhoneNumber: contactPhoneNumber ?? this.contactPhoneNumber,
-      isPublished: isPublished ?? this.isPublished,
       beneficiaryName: beneficiaryName ?? this.beneficiaryName,
       beneficiaryImageUrl: beneficiaryImageUrl ?? this.beneficiaryImageUrl,
       beneficiaryAgeGroup: beneficiaryAgeGroup ?? this.beneficiaryAgeGroup,
@@ -204,7 +184,6 @@ class Campaign {
     stateAndRegion: StateAndRegion.sample,
     targetAmount: 1000.0,
     contactPhoneNumber: '112189387',
-    isPublished: true,
     beneficiaryName: 'Sample Beneficiary',
     beneficiaryImageUrl:
         'https://yyavkrjmlxoqxeeybxuc.supabase.co/storage/v1/object/public/campaign/thumbnail/larm-rmah-AEaTUnvneik-unsplash.jpg',
@@ -232,7 +211,6 @@ class Campaign {
       stateAndRegion: StateAndRegion.sample,
       targetAmount: 1000.0,
       contactPhoneNumber: '112189387',
-      isPublished: true,
       beneficiaryName: 'Sample Beneficiary',
       beneficiaryImageUrl:
           'https://yyavkrjmlxoqxeeybxuc.supabase.co/storage/v1/object/public/campaign/thumbnail/larm-rmah-AEaTUnvneik-unsplash.jpg',
@@ -257,7 +235,6 @@ class Campaign {
       stateAndRegion: StateAndRegion.sample,
       targetAmount: 1000.0,
       contactPhoneNumber: '112189387',
-      isPublished: true,
       beneficiaryName: 'Sample Beneficiary',
       beneficiaryImageUrl:
           'https://yyavkrjmlxoqxeeybxuc.supabase.co/storage/v1/object/public/campaign/thumbnail/larm-rmah-AEaTUnvneik-unsplash.jpg',

@@ -1,5 +1,6 @@
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/enum/campaign_enum.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaigns.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_event.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_state.dart';

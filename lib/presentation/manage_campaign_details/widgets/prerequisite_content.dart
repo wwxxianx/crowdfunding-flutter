@@ -6,6 +6,7 @@ import 'package:crowdfunding_flutter/common/widgets/container/chip.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/fundraiser_identification_card.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/enum/campaign_enum.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/widgets/setup_bank_account_bottom_sheet.dart';
 import 'package:crowdfunding_flutter/state_management/campaign_details/campaign_details_bloc.dart';

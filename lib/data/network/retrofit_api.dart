@@ -23,6 +23,7 @@ import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_fundraiser.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/enum/campaign_enum.dart';
 import 'package:crowdfunding_flutter/domain/model/collaboration/collaboration.dart';
 import 'package:crowdfunding_flutter/domain/model/community_challenge/challenge_participant.dart';
 import 'package:crowdfunding_flutter/domain/model/community_challenge/community_challenge.dart';
