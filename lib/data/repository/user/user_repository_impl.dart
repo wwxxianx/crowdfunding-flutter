@@ -6,10 +6,14 @@ import 'package:crowdfunding_flutter/data/local/shared_preference.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/data/network/payload/user/favourite_campaign/favourite_campaign_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/user/get_users_payload.dart';
+import 'package:crowdfunding_flutter/data/network/payload/user/tax_receipt/get_tax_receipt_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/user/user_profile_payload.dart';
 import 'package:crowdfunding_flutter/data/network/retrofit_api.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dart';
+import 'package:crowdfunding_flutter/domain/model/community_challenge/challenge_participant.dart';
 import 'package:crowdfunding_flutter/domain/model/gift_card/gift_cards_response.dart';
 import 'package:crowdfunding_flutter/domain/model/gift_card/num_gift_card_response.dart';
+import 'package:crowdfunding_flutter/domain/model/tax_receipt/tax_receipt.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user_favourite_campaign.dart';
 import 'package:crowdfunding_flutter/domain/repository/user/user_repository.dart';
@@ -56,7 +60,7 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Failure, UserModel>> getUserProfile() async {
+  Future<Either<Failure, UserModel>> getCurrentUser() async {
     try {
       // Get from local cache
       final user = await authService.getCurrentUser();
@@ -153,6 +157,63 @@ class UserRepositoryImpl implements UserRepository {
   Future<Either<Failure, GiftCardsResponse>> getAllGiftCards() async {
     try {
       final res = await api.getAllGiftCards();
+      return right(res);
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException(error: e).errorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ChallengeParticipant>>>
+      getParticipatedChallenges() async {
+    try {
+      final res = await api.getParticipatedChallenges();
+      return right(res);
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException(error: e).errorMessage));
+    }
+  }
+  
+  @override
+  Future<Either<Failure, UserModel>> getCurrentUserProfile() async {
+    try {
+      final res = await api.getUserProfile();
+      return right(res);
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException(error: e).errorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<CampaignDonation>>> getUserDonations() async {
+    try {
+      final res = await api.getUserDonations();
+      return right(res);
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException(error: e).errorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, TaxReceipt>> getUserTaxReceipt(GetTaxReceiptPayload payload) async {
+    try {
+      final res = await api.getUserTaxReceipt(year: payload.year);
       return right(res);
     } on Exception catch (e) {
       if (e is DioException) {

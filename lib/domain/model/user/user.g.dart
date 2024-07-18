@@ -20,10 +20,13 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       preference: json['preference'] == null
           ? null
           : UserPreference.fromJson(json['preference'] as Map<String, dynamic>),
-      stripeConnectId: json['stripeConnectId'] as String?,
       bankAccount: json['bankAccount'] == null
           ? null
-          : BankAccount.fromJson(json['bankAccount'] as Map<String, dynamic>),
+          : UserBankAccount.fromJson(
+              json['bankAccount'] as Map<String, dynamic>),
+      identityNumber: json['identityNumber'] as String?,
+      identificationStatus: json['identificationStatus'] as String,
+      identificationRejectReason: json['identificationRejectReason'] as String?,
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
@@ -34,9 +37,11 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'phoneNumber': instance.phoneNumber,
       'refreshToken': instance.refreshToken,
       'isOnboardingCompleted': instance.isOnboardingCompleted,
+      'identityNumber': instance.identityNumber,
+      'identificationStatus': instance.identificationStatus,
+      'identificationRejectReason': instance.identificationRejectReason,
       'organization': instance.organization,
       'preference': instance.preference,
-      'stripeConnectId': instance.stripeConnectId,
       'bankAccount': instance.bankAccount,
     };
 
@@ -52,9 +57,13 @@ UserModelWithAccessToken _$UserModelWithAccessTokenFromJson(
       preference: json['preference'] == null
           ? null
           : UserPreference.fromJson(json['preference'] as Map<String, dynamic>),
+      identificationStatus: json['identificationStatus'] as String,
       isOnboardingCompleted: json['isOnboardingCompleted'] as bool? ?? false,
       accessToken: json['accessToken'] as String,
-      stripeConnectId: json['stripeConnectId'] as String?,
+      bankAccount: json['bankAccount'] == null
+          ? null
+          : UserBankAccount.fromJson(
+              json['bankAccount'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$UserModelWithAccessTokenToJson(
@@ -67,7 +76,8 @@ Map<String, dynamic> _$UserModelWithAccessTokenToJson(
       'phoneNumber': instance.phoneNumber,
       'refreshToken': instance.refreshToken,
       'isOnboardingCompleted': instance.isOnboardingCompleted,
+      'identificationStatus': instance.identificationStatus,
       'preference': instance.preference,
-      'stripeConnectId': instance.stripeConnectId,
+      'bankAccount': instance.bankAccount,
       'accessToken': instance.accessToken,
     };

@@ -9,8 +9,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     required Login login,
   })  : _login = login,
         super(LoginInitial()) {
-    on<LoginEvent>((event, emit) => emit(LoginInitial()));
-    on<OnLogin>(_onLogin);
+    on<LoginEvent>(_onEvent);
+  }
+
+  Future<void> _onEvent(
+    LoginEvent event,
+    Emitter<LoginState> emit,
+  ) async {
+    return switch (event) {
+      final OnLogin e => _onLogin(e, emit),
+    };
   }
 
   Future<void> _onLogin(
@@ -23,12 +31,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       password: event.password,
     ));
     res.fold(
-      (l) {
-        emit(LoginFailure(l.errorMessage));
+      (failure) {
+        emit(LoginFailure(failure.errorMessage));
       },
-      (r) {
-        emit(LoginSuccess(r));
-        event.onSuccess(r);
+      (user) {
+        emit(LoginSuccess(user));
+        event.onSuccess(user);
       },
     );
   }

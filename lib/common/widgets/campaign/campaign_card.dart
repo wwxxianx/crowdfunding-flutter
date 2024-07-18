@@ -111,7 +111,7 @@ class CampaignCard extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool showMatchChallengeBar;
   const CampaignCard({
-    this.campaign = Campaign.sample,
+    required this.campaign,
     super.key,
     this.isSmall = false,
     this.onPressed,

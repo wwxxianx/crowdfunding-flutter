@@ -71,26 +71,32 @@ final class OnCampaignVideoFileChanged extends CreateCampaignEvent {
   const OnCampaignVideoFileChanged({required this.videoFile});
 }
 
-final class ValidateStepOne extends CreateCampaignEvent {
+final class ValidateDetailsData extends CreateCampaignEvent {
   final VoidCallback onSuccess;
 
-  const ValidateStepOne({required this.onSuccess});
+  const ValidateDetailsData({required this.onSuccess});
 }
 
-final class ValidateStepTwo extends CreateCampaignEvent {
+final class ValidateBeneficiaryData extends CreateCampaignEvent {
   final VoidCallback onSuccess;
 
-  const ValidateStepTwo({required this.onSuccess});
+  const ValidateBeneficiaryData({required this.onSuccess});
 }
 
-final class ValidateStepThree extends CreateCampaignEvent {
+final class ValidateDescriptionData extends CreateCampaignEvent {
   final VoidCallback onSuccess;
 
-  const ValidateStepThree({required this.onSuccess});
+  const ValidateDescriptionData({required this.onSuccess});
 }
 
 final class OnCreateCampaign extends CreateCampaignEvent {
   final void Function(String campaignId) onSuccess;
 
   const OnCreateCampaign({required this.onSuccess});
+}
+
+final class OnExpirationDateChanged extends CreateCampaignEvent {
+  final DateTime date;
+
+  const OnExpirationDateChanged({required this.date});
 }

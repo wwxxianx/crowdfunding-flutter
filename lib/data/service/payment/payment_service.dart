@@ -85,7 +85,7 @@ class PaymentService {
       final PaymentIntentResponse paymentIntentRes = await api
           .createCampaignDonationPaymentIntent(createPaymentIntentPayload);
       // Set to campaign launcher's stripe account id to receive donation
-      Stripe.stripeAccountId = paymentIntentRes.stripeAccountId;
+      // Stripe.stripeAccountId = paymentIntentRes.stripeAccountId;
       // 2. initialize the payment sheet
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(

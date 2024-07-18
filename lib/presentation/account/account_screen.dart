@@ -10,6 +10,9 @@ import 'package:crowdfunding_flutter/common/widgets/text/text_bg_gradient_shape.
 import 'package:crowdfunding_flutter/presentation/account_gift_card/charity_gift_card_screen.dart';
 import 'package:crowdfunding_flutter/presentation/account_preferences/account_preferences_screen.dart';
 import 'package:crowdfunding_flutter/presentation/account_saved_campaigns/saved_campaigns_screen.dart';
+import 'package:crowdfunding_flutter/presentation/account_tax/account_tax_screen.dart';
+import 'package:crowdfunding_flutter/presentation/account_user_donations/account_user_donations_screen.dart';
+import 'package:crowdfunding_flutter/presentation/redirects/organization_redirect_screen.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_bloc.dart';
 import 'package:flutter/material.dart';
@@ -87,34 +90,35 @@ class AccountScreen extends StatelessWidget {
                 ],
               ),
               24.kH,
-              if (currentUser.organization != null)
-                CustomCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const TextWithGradientBGShape(
-                        text: Text(
-                          "My Team",
-                          style: CustomFonts.titleMedium,
-                        ),
-                        width: 80,
+              CustomCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const TextWithGradientBGShape(
+                      text: Text(
+                        "My Team",
+                        style: CustomFonts.titleMedium,
                       ),
-                      4.kH,
-                      CustomListTile(
-                        onTap: () {},
-                        leading: SvgPicture.asset("assets/icons/building.svg"),
-                        title: Text(
-                          currentUser.organization!.name,
-                          style: CustomFonts.labelSmall,
-                        ),
-                        trailing: const HeroIcon(
-                          HeroIcons.chevronRight,
-                          size: 16.0,
-                        ),
-                      )
-                    ],
-                  ),
+                      width: 80,
+                    ),
+                    4.kH,
+                    CustomListTile(
+                      onTap: () {
+                        context.push(OrganizationRedirectScreen.route);
+                      },
+                      leading: SvgPicture.asset("assets/icons/building.svg"),
+                      title: Text(
+                        currentUser?.organization?.name ?? "My Team",
+                        style: CustomFonts.labelSmall,
+                      ),
+                      trailing: const HeroIcon(
+                        HeroIcons.chevronRight,
+                        size: 16.0,
+                      ),
+                    )
+                  ],
                 ),
+              ),
               20.kH,
               CustomCard(
                 child: Column(
@@ -129,7 +133,9 @@ class AccountScreen extends StatelessWidget {
                     ),
                     4.kH,
                     CustomListTile(
-                      onTap: () {},
+                      onTap: () {
+                        context.push(MyDonationsScreen.route);
+                      },
                       leading: SvgPicture.asset("assets/icons/hand-money.svg"),
                       title: Text(
                         "My Donations",
@@ -214,7 +220,9 @@ class AccountScreen extends StatelessWidget {
                     ),
                     4.kH,
                     CustomListTile(
-                      onTap: () {},
+                      onTap: () {
+                        context.push(AccountTaxScreen.route);
+                      },
                       leading: SvgPicture.asset("assets/icons/bill-list.svg"),
                       title: Text(
                         "Tax Deduction Receipt",

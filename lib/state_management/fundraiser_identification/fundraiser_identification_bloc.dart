@@ -66,7 +66,7 @@ class FundraiserIdentificationBloc
         emit(
           state.copyWith(
             fundraiserResult: ApiResultSuccess(campaignFundraiser),
-            idNumberText: campaignFundraiser.fundraiserIdentityNumber ?? '',
+            idNumberText: campaignFundraiser.user.identityNumber ?? '',
           ),
         );
         if (event.onSuccess != null) event.onSuccess!(campaignFundraiser);

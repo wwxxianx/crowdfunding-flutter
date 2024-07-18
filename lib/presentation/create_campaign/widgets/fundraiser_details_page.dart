@@ -1,9 +1,11 @@
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
+import 'package:crowdfunding_flutter/common/utils/extensions/date_time.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/utils/phone_input_formatter.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/campaign_category_toggle_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
+import 'package:crowdfunding_flutter/common/widgets/button/date_picker_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/dropdown_menu/state_dropdown_menu.dart';
 import 'package:crowdfunding_flutter/common/widgets/input/money_input.dart';
 import 'package:crowdfunding_flutter/common/widgets/input/outlined_text_field.dart';
@@ -66,8 +68,12 @@ class _FundraiserDetailsFormPageState extends State<FundraiserDetailsFormPage> {
         .add(OnPhoneNumberChanged(phoneNumber: phoneNumber));
   }
 
+  void _handleDateChanged(DateTime date) {
+    context.read<CreateCampaignBloc>().add(OnExpirationDateChanged(date: date));
+  }
+
   void _navigateToNextPage() {
-    context.read<CreateCampaignBloc>().add(ValidateStepOne(
+    context.read<CreateCampaignBloc>().add(ValidateDetailsData(
       onSuccess: () {
         widget.onNextPage();
       },
@@ -122,6 +128,19 @@ class _FundraiserDetailsFormPageState extends State<FundraiserDetailsFormPage> {
                           selectedCategoryIds: state.selectedCategoryId != null
                               ? List.from([state.selectedCategoryId])
                               : [],
+                        ),
+                        28.kH,
+                        const Text(
+                          "Campaign expiration date",
+                          style: CustomFonts.bodyMedium,
+                        ),
+                        8.kH,
+                        DatePickerButton(
+                          onSelected: _handleDateChanged,
+                          placeholder:
+                              state.selectedExpirationDate?.toISODate() ??
+                                  "Pick a date",
+                          errorMessage: state.expirationDateError,
                         ),
                         28.kH,
                         const Text(

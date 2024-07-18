@@ -11,7 +11,7 @@ class FetchCampaignsPayload {
   final List<String> stateIds;
   final String? searchQuery;
   final bool? isPublished;
-  final FundraiserIdentificationStatusEnum? identificationStatus;
+  final IdentificationStatusEnum? identificationStatus;
   final bool isCompleted;
 
   const FetchCampaignsPayload({

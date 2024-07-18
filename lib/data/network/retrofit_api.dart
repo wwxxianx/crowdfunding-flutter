@@ -34,6 +34,7 @@ import 'package:crowdfunding_flutter/domain/model/organization/organization.dart
 import 'package:crowdfunding_flutter/domain/model/scam_report/scam_report.dart';
 import 'package:crowdfunding_flutter/domain/model/state/state_region.dart';
 import 'package:crowdfunding_flutter/domain/model/stripe/stripe_account.dart';
+import 'package:crowdfunding_flutter/domain/model/tax_receipt/tax_receipt.dart';
 import 'package:crowdfunding_flutter/domain/model/tokens_response.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user_favourite_campaign.dart';
@@ -67,7 +68,7 @@ abstract class RestClient {
     @Query("stateIds") List<String> stateIds = const [],
     @Query("searchQuery") String? searchQuery,
     @Query("isPublished") bool? isPublished,
-    @Query("identification") FundraiserIdentificationStatusEnum? identificationStatus,
+    @Query("identification") IdentificationStatusEnum? identificationStatus,
   });
 
   @GET("campaigns/successful")
@@ -100,6 +101,7 @@ abstract class RestClient {
     @Part(name: "campaignImages") required List<File> campaignImageFiles,
     @Part(name: "campaignVideo") File? campaignVideoFile,
     @Part(name: "beneficiaryImage") File? beneficiaryImageFile,
+    @Part(name: "expiredAt") required String expiredAt,
   });
 
   @PATCH("campaigns/{id}")
@@ -166,6 +168,12 @@ abstract class RestClient {
     @Query("userName") String? userName,
     @Query("email") String? email,
   });
+
+  @GET("users/donations")
+  Future<List<CampaignDonation>> getUserDonations();
+
+  @GET("users/tax-receipts")
+  Future<TaxReceipt> getUserTaxReceipt({@Query('year') int? year});
 
   // Users gift card
   @GET("users/received-gift-card-num")
@@ -284,15 +292,18 @@ abstract class RestClient {
   });
 
   @GET("collaborations")
-  Future<List<Collaboration>> getCollaborations();
-
-  @GET("collaborations/pending")
-  Future<List<Collaboration>> getPendingCollaborations();
+  Future<List<Collaboration>> getCollaborations(
+      {@Query("isPending") bool? isPending});
 
   @PATCH("collaborations/{id}")
   Future<Collaboration> updateCollaboration({
     @Path('id') required String collaborationId,
     @Body() required UpdateCollaborationPayload payload,
+  });
+
+  @PATCH("collaborations/{id}/accept")
+  Future<Collaboration> organizationAcceptCollaboration({
+    @Path('id') required String collaborationId,
   });
 
   // Community Challenge
@@ -320,6 +331,9 @@ abstract class RestClient {
     @Part(name: 'imageFile') File? imageFile,
     @Part(name: 'communityChallengeId') required String communityChallengeId,
   });
+
+  @GET('users/community-challenges')
+  Future<List<ChallengeParticipant>> getParticipatedChallenges();
 
   // Scam Report
   @POST("scam-reports")

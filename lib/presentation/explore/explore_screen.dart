@@ -1,19 +1,17 @@
+import 'package:badges/badges.dart' as badges;
 import 'package:crowdfunding_flutter/common/theme/app_theme.dart';
 import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/badge.dart';
-import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_outlined_icon_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_card.dart';
 import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_loading_card.dart';
-import 'package:crowdfunding_flutter/common/widgets/container/dialog.dart';
 import 'package:crowdfunding_flutter/common/widgets/scaffold_mask.dart';
 import 'package:crowdfunding_flutter/common/widgets/tab/custom_tab_button.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/di/init_dependencies.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
-import 'package:crowdfunding_flutter/domain/model/gift_card/gift_card.dart';
 import 'package:crowdfunding_flutter/presentation/campaign_details/campaign_details_screen.dart';
 import 'package:crowdfunding_flutter/presentation/explore/widgets/animated_search_bar.dart';
 import 'package:crowdfunding_flutter/presentation/explore/widgets/animated_search_result_container.dart';
@@ -22,15 +20,13 @@ import 'package:crowdfunding_flutter/presentation/home/widgets/header.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_event.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_state.dart';
-import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_bloc.dart';
-import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:fpdart/fpdart.dart' as fpdart;
 import 'package:go_router/go_router.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:badges/badges.dart' as badges;
 
 class ExploreScreen extends StatefulWidget {
   static const String route = 'explore';
@@ -116,73 +112,72 @@ class _ExploreScreenState extends State<ExploreScreen>
   Widget _buildCampaignsContentLayout(ExploreCampaignsState state) {
     final campaignsResult = state.campaignsResult;
     if (isGridView) {
-      return AnimationLimiter(
-        key: ValueKey<bool>(isGridView),
-        child: GridView.count(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          physics: const NeverScrollableScrollPhysics(),
-          childAspectRatio: 0.65,
-          mainAxisSpacing: 12,
-          crossAxisSpacing: 12,
-          shrinkWrap: true,
-          crossAxisCount: 2,
-          children: List.generate(
-            20,
-            (int index) {
-              return AnimationConfiguration.staggeredGrid(
+      if (campaignsResult is ApiResultSuccess<List<Campaign>> &&
+          campaignsResult.data.isNotEmpty) {
+        return AnimationLimiter(
+            key: ValueKey<bool>(isGridView),
+            child: GridView.count(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                physics: const NeverScrollableScrollPhysics(),
+                childAspectRatio: 0.65,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 12,
+                shrinkWrap: true,
+                crossAxisCount: 2,
+                children: campaignsResult.data.mapWithIndex((campaign, index) {
+                  return AnimationConfiguration.staggeredGrid(
+                    position: index,
+                    duration: const Duration(milliseconds: 375),
+                    columnCount: 2,
+                    child: ScaleAnimation(
+                      child: FadeInAnimation(
+                        child: CampaignCard(
+                          campaign: Campaign.sample,
+                          isSmall: true,
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList()));
+      }
+      // Other states
+      return SizedBox();
+    } else {
+      if (campaignsResult is ApiResultSuccess<List<Campaign>> &&
+          campaignsResult.data.isNotEmpty) {
+        return AnimationLimiter(
+          key: ValueKey<bool>(isGridView),
+          child: ListView.builder(
+            padding: const EdgeInsets.symmetric(
+              horizontal: Dimensions.screenHorizontalPadding,
+            ),
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: campaignsResult.data.length,
+            itemBuilder: (BuildContext context, int index) {
+              return AnimationConfiguration.staggeredList(
                 position: index,
                 duration: const Duration(milliseconds: 375),
-                columnCount: 2,
-                child: ScaleAnimation(
+                delay: const Duration(milliseconds: 200),
+                child: SlideAnimation(
+                  verticalOffset: 50.0,
                   child: FadeInAnimation(
-                    child: CampaignCard(
-                      isSmall: true,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 12.0),
+                      child: CampaignCard(
+                        campaign: campaignsResult.data[index],
+                        onPressed: () {
+                          context.push(CampaignDetailsScreen.generateRoute(
+                              campaignId: campaignsResult.data[index].id));
+                        },
+                      ),
                     ),
                   ),
                 ),
               );
             },
           ),
-        ),
-      );
-    } else {
-      if (campaignsResult is ApiResultSuccess<List<Campaign>>) {
-        if (campaignsResult.data.isNotEmpty) {
-          return AnimationLimiter(
-            key: ValueKey<bool>(isGridView),
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(
-                horizontal: Dimensions.screenHorizontalPadding,
-              ),
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: campaignsResult.data.length,
-              itemBuilder: (BuildContext context, int index) {
-                return AnimationConfiguration.staggeredList(
-                  position: index,
-                  duration: const Duration(milliseconds: 375),
-                  delay: const Duration(milliseconds: 200),
-                  child: SlideAnimation(
-                    verticalOffset: 50.0,
-                    child: FadeInAnimation(
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 12.0),
-                        child: CampaignCard(
-                          campaign: campaignsResult.data[index],
-                          onPressed: () {
-                            context.push(CampaignDetailsScreen.generateRoute(
-                                campaignId: campaignsResult.data[index].id));
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          );
-        }
-        return Text("Can't find any campaigns. Please try again");
+        );
       }
 
       if (campaignsResult is ApiResultFailure) {

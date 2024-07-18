@@ -105,6 +105,7 @@ class OrganizationRepositoryImpl implements OrganizationRepository {
   Future<Either<Failure, List<Organization>>> getOrganizations(
       GetOrganizationsPayload payload) async {
     try {
+      return right(Organization.samples);
       final res = await api.getOrganizations(limit: payload.limit ?? 0);
       return right(res);
     } catch (e) {

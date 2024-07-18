@@ -1,3 +1,4 @@
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dart';
 import 'package:crowdfunding_flutter/domain/model/organization/organization.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -7,7 +8,7 @@ part 'collaboration.g.dart';
 @JsonSerializable()
 class Collaboration {
   final String id;
-  final CampaignSummary campaign;
+  final Campaign campaign;
   final Organization? organization;
   final double reward;
   final String createdAt;
@@ -38,7 +39,7 @@ class Collaboration {
   static final samples = [
     Collaboration(
       id: '1',
-      campaign: CampaignSummary.samples[0],
+      campaign: Campaign.sample,
       organization: Organization.samples.first,
       reward: 0.01,
       createdAt: '2024-06-01T00:00:00.000Z',
@@ -47,7 +48,7 @@ class Collaboration {
     ),
     Collaboration(
       id: '1',
-      campaign: CampaignSummary.samples[0],
+      campaign: Campaign.sample,
       organization: null,
       reward: 0.01,
       createdAt: '2024-06-01T00:00:00.000Z',
@@ -56,7 +57,7 @@ class Collaboration {
     ),
     Collaboration(
       id: '1',
-      campaign: CampaignSummary.samples[0],
+      campaign: Campaign.sample,
       organization: null,
       reward: 0.01,
       createdAt: '2024-06-01T00:00:00.000Z',
@@ -65,7 +66,7 @@ class Collaboration {
     ),
     Collaboration(
       id: '1',
-      campaign: CampaignSummary.samples[0],
+      campaign: Campaign.sample,
       organization: null,
       reward: 0.01,
       createdAt: '2024-06-01T00:00:00.000Z',
@@ -74,7 +75,7 @@ class Collaboration {
     ),
     Collaboration(
       id: '1',
-      campaign: CampaignSummary.samples[0],
+      campaign: Campaign.sample,
       organization: null,
       reward: 0.01,
       createdAt: '2024-06-01T00:00:00.000Z',

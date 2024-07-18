@@ -74,21 +74,21 @@ class _FundraiserIdentificationScreenState
   }
 
   Widget _buildStatusContent(CampaignFundraiser fundraiser) {
-    final status = FundraiserIdentificationStatusEnum.values
-        .byName(fundraiser.fundraiserIdentificationStatus);
+    final status = IdentificationStatusEnum.values
+        .byName(fundraiser.user.identificationStatus);
     switch (status) {
-      case FundraiserIdentificationStatusEnum.PENDING:
+      case IdentificationStatusEnum.PENDING:
         return CustomChip(
           style: CustomChipStyle.slate,
           child: Text(status.toString()),
         );
-      case FundraiserIdentificationStatusEnum.UNDER_REVIEW:
+      case IdentificationStatusEnum.UNDER_REVIEW:
         return CustomChip(
           style: CustomChipStyle.amber,
           child: Text(status.toString()),
         );
 
-      case FundraiserIdentificationStatusEnum.VERIFIED:
+      case IdentificationStatusEnum.VERIFIED:
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -104,7 +104,7 @@ class _FundraiserIdentificationScreenState
             ),
           ],
         );
-      case FundraiserIdentificationStatusEnum.REJECTED:
+      case IdentificationStatusEnum.REJECTED:
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -114,7 +114,7 @@ class _FundraiserIdentificationScreenState
             ),
             8.kH,
             Text(
-              fundraiser.fundraiserIdentificationRejectReason ?? '',
+              fundraiser.user.identificationRejectReason ?? '',
               style:
                   CustomFonts.labelSmall.copyWith(color: CustomColors.red700),
             ),
@@ -133,7 +133,7 @@ class _FundraiserIdentificationScreenState
           campaignId: widget.campaignId,
           onSuccess: (data) {
             if (data != null) {
-              idNumberTextController.text = data.fundraiserIdentityNumber ?? '';
+              idNumberTextController.text = data.user.identityNumber ?? '';
             }
           },
         )),
@@ -220,7 +220,7 @@ class _FundraiserIdentificationScreenState
                               canRemove: fundraiserResult
                                       is ApiResultSuccess<CampaignFundraiser> &&
                                   fundraiserResult.data
-                                          .fundraiserIdentificationStatus !=
+                                          .user.identificationStatus !=
                                       'VERIFIED',
                               previewFileUrls: fundraiserResult
                                           is ApiResultSuccess<
@@ -233,7 +233,6 @@ class _FundraiserIdentificationScreenState
                                           .data.fundraiserSignaturFileUrl!
                                     ]
                                   : [],
-                              
                             ),
                             Text(
                               'By checking this, you’ve read and agree to the Terms and Conditions of launching and hosting a fundraising campaign on our platform',
@@ -253,7 +252,7 @@ class _FundraiserIdentificationScreenState
                           enabled: fundraiserResult
                                   is ApiResultSuccess<CampaignFundraiser> &&
                               fundraiserResult
-                                      .data.fundraiserIdentificationStatus !=
+                                      .data.user.identificationStatus !=
                                   "VERIFIED",
                           child: const Text('Submit'),
                           onPressed: () {

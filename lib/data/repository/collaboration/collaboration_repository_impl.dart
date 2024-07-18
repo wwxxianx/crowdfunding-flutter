@@ -1,6 +1,7 @@
 import 'package:crowdfunding_flutter/common/error/failure.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/data/network/payload/collaboration/create_collaboration_payload.dart';
+import 'package:crowdfunding_flutter/data/network/payload/collaboration/fetch_collaboration_filter.dart';
 import 'package:crowdfunding_flutter/data/network/payload/collaboration/update_collaboration_payload.dart';
 import 'package:crowdfunding_flutter/data/network/retrofit_api.dart';
 import 'package:crowdfunding_flutter/domain/model/collaboration/collaboration.dart';
@@ -29,9 +30,9 @@ class CollaborationRepositoryImpl implements CollaborationRepository {
   }
 
   @override
-  Future<Either<Failure, List<Collaboration>>> getCollaborations() async {
+  Future<Either<Failure, List<Collaboration>>> getCollaborations(FetchCollaborationFilter filter) async {
     try {
-      final res = await api.getCollaborations();
+      final res = await api.getCollaborations(isPending: filter.isPending);
       return right(res);
     } on Exception catch (e) {
       if (e is DioException) {
@@ -74,9 +75,10 @@ class CollaborationRepositoryImpl implements CollaborationRepository {
   }
   
   @override
-  Future<Either<Failure, List<Collaboration>>> getPendingCollaborations() async {
+  Future<Either<Failure, Collaboration>> organizationAcceptCollaboration({required String collaborationId}) async {
     try {
-      final res = await api.getPendingCollaborations();
+      final res = await api.organizationAcceptCollaboration(
+          collaborationId: collaborationId);
       return right(res);
     } on Exception catch (e) {
       if (e is DioException) {

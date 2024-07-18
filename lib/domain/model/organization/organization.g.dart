@@ -25,6 +25,10 @@ Organization _$OrganizationFromJson(Map<String, dynamic> json) => Organization(
               .toList() ??
           const [],
       createdBy: UserModel.fromJson(json['createdBy'] as Map<String, dynamic>),
+      bankAccount: json['bankAccount'] == null
+          ? null
+          : OrganizationBankAccount.fromJson(
+              json['bankAccount'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$OrganizationToJson(Organization instance) =>
@@ -42,4 +46,5 @@ Map<String, dynamic> _$OrganizationToJson(Organization instance) =>
       'updatedAt': instance.updatedAt,
       'campaigns': instance.campaigns,
       'createdBy': instance.createdBy,
+      'bankAccount': instance.bankAccount,
     };

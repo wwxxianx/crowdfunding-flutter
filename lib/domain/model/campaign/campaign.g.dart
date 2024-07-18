@@ -57,11 +57,6 @@ Campaign _$CampaignFromJson(Map<String, dynamic> json) => Campaign(
               ?.map((e) => CampaignDonation.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
-      fundraiserIdentityNumber: json['fundraiserIdentityNumber'] as String?,
-      fundraiserIdentificationStatus:
-          json['fundraiserIdentificationStatus'] as String? ?? 'PENDING',
-      fundraiserIdentificationRejectReason:
-          json['fundraiserIdentificationRejectReason'] as String?,
       fundraiserSignaturFileUrl: json['fundraiserSignaturFileUrl'] as String?,
       firstMatchedCommunityChallenge: json['firstMatchedCommunityChallenge'] ==
               null
@@ -70,6 +65,7 @@ Campaign _$CampaignFromJson(Map<String, dynamic> json) => Campaign(
               json['firstMatchedCommunityChallenge'] as Map<String, dynamic>),
       status: json['status'] as String? ?? "PENDING",
       suspendReason: json['suspendReason'] as String?,
+      expiredAt: json['expiredAt'] as String?,
     );
 
 Map<String, dynamic> _$CampaignToJson(Campaign instance) => <String, dynamic>{
@@ -93,10 +89,7 @@ Map<String, dynamic> _$CampaignToJson(Campaign instance) => <String, dynamic>{
       'beneficiaryAgeGroup': _$AgeGroupEnumMap[instance.beneficiaryAgeGroup],
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
-      'fundraiserIdentityNumber': instance.fundraiserIdentityNumber,
-      'fundraiserIdentificationStatus': instance.fundraiserIdentificationStatus,
-      'fundraiserIdentificationRejectReason':
-          instance.fundraiserIdentificationRejectReason,
+      'expiredAt': instance.expiredAt,
       'fundraiserSignaturFileUrl': instance.fundraiserSignaturFileUrl,
       'numOfDonations': instance.numOfDonations,
       'numOfLikes': instance.numOfLikes,

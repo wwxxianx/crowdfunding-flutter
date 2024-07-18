@@ -3,6 +3,20 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'campaign_donation.g.dart';
 
+extension CampaignDonationListExtension on List<CampaignDonation> {
+  Map<int, List<CampaignDonation>> groupDonationsByYear() {
+    return fold<Map<int, List<CampaignDonation>>>({}, (acc, donation) {
+      final year = DateTime.parse(donation.createdAt).year;
+      // final year = donation.createdAt.substring(0, 4);
+      if (acc[year] == null) {
+        acc[year] = [];
+      }
+      acc[year]!.add(donation);
+      return acc;
+    });
+  }
+}
+
 @JsonSerializable()
 class CampaignDonation {
   final String id;
@@ -11,6 +25,10 @@ class CampaignDonation {
   final String createdAt;
   final bool isAnonymous;
   final CampaignSummary? campaign;
+
+  String get displayAmount {
+    return "RM $amount";
+  }
 
   const CampaignDonation({
     required this.id,

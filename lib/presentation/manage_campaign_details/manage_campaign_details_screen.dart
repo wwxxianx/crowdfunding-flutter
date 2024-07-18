@@ -73,7 +73,7 @@ class _ManageCampaignDetailsScreenState
     final campaignResult =
         context.read<CampaignDetailsBloc>().state.campaignResult;
     if (campaignResult is ApiResultSuccess<Campaign>) {
-      final stripeConnectId = campaignResult.data.user.stripeConnectId;
+      final stripeConnectId = campaignResult.data.user.bankAccount?.id ?? "";
       context.pushNamed('connected-bank-account',
           queryParameters: {'connectedAccountId': stripeConnectId});
       return;
@@ -82,8 +82,7 @@ class _ManageCampaignDetailsScreenState
   }
 
   Widget _buildPublishStatusContent(Campaign campaign) {
-    final statusEnum = CampaignPublishStatusEnum.values.byName(campaign.status);
-    return statusEnum.buildStatusWidget();
+    return campaign.statusEnum.buildStatusWidget();
   }
 
   Widget _buildBottomNavigationBar(BuildContext context) {
@@ -307,7 +306,7 @@ class _ManageCampaignDetailsScreenState
                                 current:
                                     campaignResult.data.raisedAmount.toDouble(),
                                 total:
-                                    campaignResult.data.raisedAmount.toDouble(),
+                                    campaignResult.data.targetAmount.toDouble(),
                                 height: 12.0,
                               ),
                             16.kH,

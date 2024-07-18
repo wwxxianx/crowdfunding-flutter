@@ -37,9 +37,10 @@ import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaign_fun
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaigns.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/update_campaign.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/update_campaign_fundraiser.dart';
+import 'package:crowdfunding_flutter/domain/usecases/collaboration/accept_collaboration.dart';
 import 'package:crowdfunding_flutter/domain/usecases/collaboration/create_campaign_collaboration.dart';
 import 'package:crowdfunding_flutter/domain/usecases/collaboration/fetch_campaign_collaboration.dart';
-import 'package:crowdfunding_flutter/domain/usecases/collaboration/fetch_pending_collaborations.dart';
+import 'package:crowdfunding_flutter/domain/usecases/collaboration/fetch_collaborations.dart';
 import 'package:crowdfunding_flutter/domain/usecases/collaboration/update_campaign_collaboration.dart';
 import 'package:crowdfunding_flutter/domain/usecases/community_challenge/create_challenge_participant.dart';
 import 'package:crowdfunding_flutter/domain/usecases/community_challenge/fetch_challenge_progress.dart';
@@ -60,12 +61,16 @@ import 'package:crowdfunding_flutter/domain/usecases/scam_report/create_scam_rep
 import 'package:crowdfunding_flutter/domain/usecases/stripe/connect_account.dart';
 import 'package:crowdfunding_flutter/domain/usecases/stripe/fetch_connected_account.dart';
 import 'package:crowdfunding_flutter/domain/usecases/stripe/update_connect_account.dart';
+import 'package:crowdfunding_flutter/domain/usecases/user/community_challenge/fetch_participated_challenges.dart';
+import 'package:crowdfunding_flutter/domain/usecases/user/donation/fetch_user_donations.dart';
 import 'package:crowdfunding_flutter/domain/usecases/user/favourite_campaign/create_favourite_campaign.dart';
 import 'package:crowdfunding_flutter/domain/usecases/user/favourite_campaign/delete_favourite_campaign.dart';
 import 'package:crowdfunding_flutter/domain/usecases/user/favourite_campaign/fetch_favourite_campaigns.dart';
+import 'package:crowdfunding_flutter/domain/usecases/user/fetch_user_profile.dart';
 import 'package:crowdfunding_flutter/domain/usecases/user/fetch_users.dart';
 import 'package:crowdfunding_flutter/domain/usecases/user/gift_card/fetch_all_gift_cards.dart';
 import 'package:crowdfunding_flutter/domain/usecases/user/gift_card/fetch_num_received_unused_gift_card.dart';
+import 'package:crowdfunding_flutter/domain/usecases/user/tax_receipt/fetch_tax_receipt.dart';
 import 'package:crowdfunding_flutter/domain/usecases/user/update_user_profile.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_bloc.dart';
@@ -95,6 +100,7 @@ Future<void> initDependencies() async {
           connectAccount: serviceLocator(),
           toggleReadNotification: serviceLocator(),
           supabase: serviceLocator(),
+          fetchUserProfile: serviceLocator(),
         ))
     ..registerLazySingleton(() => NavigationCubit())
     ..registerLazySingleton(() => DioNetwork.provideDio())
@@ -156,7 +162,9 @@ void _initCollaboration() {
     ..registerFactory(() =>
         UpdateCampaignCollaboration(collaborationRepository: serviceLocator()))
     ..registerFactory(() =>
-        FetchPendingCollaborations(collaborationRepository: serviceLocator()));
+        FetchCollaborations(collaborationRepository: serviceLocator()))
+    ..registerFactory(() =>
+        AcceptCollaboration(collaborationRepository: serviceLocator()));
 }
 
 void _initNotification() {
@@ -198,10 +206,6 @@ void _initAuth() {
     ..registerFactory(() => Login(authRepository: serviceLocator()))
     //Bloc
     ..registerLazySingleton(() => SignUpBloc(
-          // login: serviceLocator(),
-          // getCurrentUser: serviceLocator(),
-          appUserCubit: serviceLocator(),
-          signOut: serviceLocator(),
           signUp: serviceLocator(),
         ));
 }
@@ -266,7 +270,15 @@ void _initUser() {
         () => DeleteFavouriteCampaign(userRepository: serviceLocator()))
     ..registerFactory(() => FetchUsers(userRepository: serviceLocator()))
     ..registerFactory(() =>
-        FetchNumOfReceivedUnusedGiftCards(userRepository: serviceLocator()));
+        FetchNumOfReceivedUnusedGiftCards(userRepository: serviceLocator()))
+    ..registerFactory(() =>
+        FetchUserProfile(userRepository: serviceLocator()))
+    ..registerFactory(() =>
+        FetchParticipatedChallenges(userRepository: serviceLocator()))
+    ..registerFactory(() =>
+        FetchUserDonations(userRepository: serviceLocator()))
+    ..registerFactory(() =>
+        FetchTaxReceipt(userRepository: serviceLocator()));
 }
 
 void _initOrganization() {

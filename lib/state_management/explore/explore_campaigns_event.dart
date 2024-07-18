@@ -7,7 +7,7 @@ sealed class ExploreCampaignsEvent {
 
 final class OnViewChange extends ExploreCampaignsEvent {
   final bool isGridView;
-  const OnViewChange(this.isGridView);
+  const OnViewChange({required this.isGridView});
 }
 
 final class OnFetchCampaigns extends ExploreCampaignsEvent {}

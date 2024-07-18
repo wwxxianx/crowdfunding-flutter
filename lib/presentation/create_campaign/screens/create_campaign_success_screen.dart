@@ -7,6 +7,7 @@ import 'package:crowdfunding_flutter/common/widgets/container/fundraiser_identif
 import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 class CreateCampaignSuccessScreen extends StatelessWidget {
@@ -81,16 +82,14 @@ class CreateCampaignSuccessScreen extends StatelessWidget {
               builder: (context) {
                 final currentUser =
                     context.watch<AppUserCubit>().state.currentUser;
-                final actionText =
-                    currentUser != null && currentUser.stripeConnectId != null
-                        ? 'See my campaign'
-                        : 'Setup my bank account';
                 return Row(
                   children: [
                     Expanded(
                         child: CustomButton(
-                      onPressed: () {},
-                      child: Text(actionText),
+                      onPressed: () {
+                        context.go("/manage-campaign-details/${campaignId}");
+                      },
+                      child: Text("See my campaign"),
                     ))
                   ],
                 );

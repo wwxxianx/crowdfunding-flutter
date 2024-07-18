@@ -5,6 +5,7 @@ import 'package:crowdfunding_flutter/common/utils/show_snackbar.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/input/outlined_text_field.dart';
 import 'package:crowdfunding_flutter/presentation/onboarding/widgets/onboarding_select_account_type_screen.dart';
+import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:crowdfunding_flutter/state_management/sign_up/sign_up_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/sign_up/sign_up_event.dart';
 import 'package:crowdfunding_flutter/state_management/sign_up/sign_up_state.dart';
@@ -32,11 +33,13 @@ class _SignUpFormState extends State<SignUpForm> with InputValidator {
 
   void _handleSignUpSubmit() {
     if (formKey.currentState!.validate()) {
+      final appUserCubit = context.read<AppUserCubit>();
       context.read<SignUpBloc>().add(
             OnSignUp(
               email: emailController.text,
               password: passwordController.text,
-              onSuccess: () {
+              onSuccess: (user) {
+                appUserCubit.updateUser(user);
                 if (widget.redirectPath != null) {
                   context.go(widget.redirectPath!);
                   return;

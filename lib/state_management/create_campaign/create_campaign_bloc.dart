@@ -16,7 +16,8 @@ class CreateCampaignBloc extends Bloc<CreateCampaignEvent, CreateCampaignState>
     on<CreateCampaignEvent>(_onEvent);
   }
 
-  Future<void> _onEvent(CreateCampaignEvent event, Emitter emit) async {
+  Future<void> _onEvent(
+      CreateCampaignEvent event, Emitter<CreateCampaignState> emit) async {
     return switch (event) {
       final OnTargetAmountTextChanged e => _onTargetAmountTextChanged(e, emit),
       final OnSelectCampaignCategory e => _onSelectCampaignCategory(e, emit),
@@ -31,11 +32,19 @@ class CreateCampaignBloc extends Bloc<CreateCampaignEvent, CreateCampaignState>
         __onCampaignImageFilesChanged(e, emit),
       final OnCampaignVideoFileChanged e =>
         _onCampaignVideoFileChanged(e, emit),
-      final ValidateStepOne e => _validateStepOne(e, emit),
-      final ValidateStepTwo e => _validateStepTwo(e, emit),
-      final ValidateStepThree e => _validateStepThree(e, emit),
+      final ValidateDetailsData e => _validateDetailsData(e, emit),
+      final ValidateBeneficiaryData e => _validateBeneficiaryData(e, emit),
+      final ValidateDescriptionData e => _validateDescriptionData(e, emit),
       final OnCreateCampaign e => _onCreateCampaign(e, emit),
+      final OnExpirationDateChanged e => _onExpirationDateChanged(e, emit),
     };
+  }
+
+  void _onExpirationDateChanged(
+    OnExpirationDateChanged event,
+    Emitter<CreateCampaignState> emit,
+  ) {
+    emit(state.copyWith(selectedExpirationDate: event.date));
   }
 
   Future<void> _onCreateCampaign(
@@ -44,28 +53,30 @@ class CreateCampaignBloc extends Bloc<CreateCampaignEvent, CreateCampaignState>
   ) async {
     emit(state.copyWith(createCampaignResult: const ApiResultLoading()));
     if (state.campaignImageFiles.isEmpty) {
-      emit(state.copyWith(createCampaignResult: ApiResultFailure('Please upload campaign images')));
+      emit(state.copyWith(
+          createCampaignResult:
+              ApiResultFailure('Please upload campaign images')));
       return;
     }
     final payload = CreateCampaignPayload(
-      title: state.titleText!,
-      description: state.descriptionText!,
-      targetAmount: int.parse(state.targetAmountText!),
-      categoryId: state.selectedCategoryId!,
-      phoneNumber: state.phoneNumberText!,
-      stateId: state.selectedStateId!,
-      beneficiaryName: state.beneficiaryNameText!,
+      title: state.titleText ?? "",
+      description: state.descriptionText ?? "",
+      targetAmount: int.parse(state.targetAmountText ?? 0.toString()),
+      categoryId: state.selectedCategoryId ?? '',
+      phoneNumber: state.phoneNumberText ?? "",
+      stateId: state.selectedStateId ?? "",
+      beneficiaryName: state.beneficiaryNameText ?? "",
       campaignImageFiles: state.campaignImageFiles,
       campaignVideoFile: state.campaignVideoFile,
       beneficiaryImageFile: state.beneficiaryImageFile,
+      expiredAt: state.selectedExpirationDate ?? DateTime.now(),
     );
     final res = await _createCampaign.call(payload);
     res.fold(
       (failure) => emit(state.copyWith(
           createCampaignResult: ApiResultFailure(failure.errorMessage))),
       (campaign) {
-        emit(state.copyWith(
-            createCampaignResult: ApiResultSuccess(campaign)));
+        emit(state.copyWith(createCampaignResult: ApiResultSuccess(campaign)));
         event.onSuccess(campaign.id);
       },
     );
@@ -141,8 +152,8 @@ class CreateCampaignBloc extends Bloc<CreateCampaignEvent, CreateCampaignState>
     emit(state.copyWith(descriptionText: event.description));
   }
 
-  void _validateStepOne(
-    ValidateStepOne event,
+  void _validateDetailsData(
+    ValidateDetailsData event,
     Emitter emit,
   ) {
     final targetAmountResult =
@@ -150,12 +161,14 @@ class CreateCampaignBloc extends Bloc<CreateCampaignEvent, CreateCampaignState>
     final phoneNumberResult = validatePhoneNumber(state.phoneNumberText);
     final stateResult = validateState(state.selectedCategoryId);
     final categoryResult = validateCampaignCategory(state.selectedCategoryId);
-
+    final expirationResult =
+        validateCampaignExpirationDate(state.selectedExpirationDate);
     final hasError = List.of([
       targetAmountResult,
       phoneNumberResult,
       stateResult,
-      categoryResult
+      categoryResult,
+      expirationResult,
     ]).any((element) => !element.successful);
 
     if (hasError) {
@@ -164,6 +177,7 @@ class CreateCampaignBloc extends Bloc<CreateCampaignEvent, CreateCampaignState>
         phoneNumberError: phoneNumberResult.errorMessage,
         stateError: stateResult.errorMessage,
         categoryError: categoryResult.errorMessage,
+        expirationDateError: expirationResult.errorMessage,
       ));
       return;
     }
@@ -172,12 +186,13 @@ class CreateCampaignBloc extends Bloc<CreateCampaignEvent, CreateCampaignState>
       phoneNumberError: null,
       stateError: null,
       categoryError: null,
+      expirationDateError: null,
     ));
     event.onSuccess();
   }
 
-  void _validateStepTwo(
-    ValidateStepTwo event,
+  void _validateBeneficiaryData(
+    ValidateBeneficiaryData event,
     Emitter emit,
   ) {
     final beneficiaryNameResult = validateFullName(state.beneficiaryNameText);
@@ -194,8 +209,8 @@ class CreateCampaignBloc extends Bloc<CreateCampaignEvent, CreateCampaignState>
     event.onSuccess();
   }
 
-  void _validateStepThree(
-    ValidateStepThree event,
+  void _validateDescriptionData(
+    ValidateDescriptionData event,
     Emitter emit,
   ) {
     final titleResult = validateStringWithMinMaxLength(

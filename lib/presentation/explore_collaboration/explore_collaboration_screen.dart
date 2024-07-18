@@ -6,6 +6,7 @@ import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_card.dart'
 import 'package:crowdfunding_flutter/common/widgets/tag/custom_tag.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/di/init_dependencies.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/collaboration/collaboration.dart';
 import 'package:crowdfunding_flutter/presentation/explore_collaboration/widgets/collaboration_details_bottom_sheet.dart';
 import 'package:crowdfunding_flutter/state_management/explore_collaboration/explore_collaboration_bloc.dart';
@@ -27,12 +28,13 @@ class ExploreCollaborationScreen extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         crossAxisCount: 2,
-        childAspectRatio: 0.58,
+        childAspectRatio: 0.52,
         mainAxisSpacing: 12,
         crossAxisSpacing: 12,
         scrollDirection: Axis.vertical,
         children: collaborationsResult.data.map((collaboration) {
           return CampaignCard(
+            campaign: collaboration.campaign,
             isSmall: true,
             footerAction: InkWell(
               onTap: () {
@@ -44,7 +46,9 @@ class ExploreCollaborationScreen extends StatelessWidget {
                   builder: (modalContext) {
                     return BlocProvider.value(
                       value: BlocProvider.of<ExploreCollaborationBloc>(context),
-                      child: CollaborationDetailsBottomSheet(collaboration: collaboration,),
+                      child: CollaborationDetailsBottomSheet(
+                        collaboration: collaboration,
+                      ),
                     );
                   },
                 );
@@ -95,9 +99,10 @@ class ExploreCollaborationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          ExploreCollaborationBloc(fetchPendingCollaborations: serviceLocator())
-            ..add(OnFetchPendingCollaborations()),
+      create: (context) => ExploreCollaborationBloc(
+        fetchPendingCollaborations: serviceLocator(),
+        acceptCollaboration: serviceLocator(),
+      )..add(OnFetchPendingCollaborations()),
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,

@@ -1,4 +1,5 @@
 import 'package:crowdfunding_flutter/common/usecase/usecase.dart';
+import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/domain/model/notification/notification.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:crowdfunding_flutter/domain/usecases/auth/get_current_user.dart';
@@ -6,6 +7,7 @@ import 'package:crowdfunding_flutter/domain/usecases/auth/sign_out.dart';
 import 'package:crowdfunding_flutter/domain/usecases/notification/fetch_notifications.dart';
 import 'package:crowdfunding_flutter/domain/usecases/notification/read_notification.dart';
 import 'package:crowdfunding_flutter/domain/usecases/stripe/connect_account.dart';
+import 'package:crowdfunding_flutter/domain/usecases/user/fetch_user_profile.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,6 +23,7 @@ class AppUserCubit extends Cubit<AppUserState> {
   final FetchNotifications _fetchNotifications;
   final ToggleReadNotification _toggleReadNotification;
   final SupabaseClient _supabase;
+  final FetchUserProfile _fetchUserProfile;
 
   AppUserCubit({
     required GetCurrentUser getCurrentUser,
@@ -29,12 +32,14 @@ class AppUserCubit extends Cubit<AppUserState> {
     required FetchNotifications fetchNotifications,
     required ToggleReadNotification toggleReadNotification,
     required SupabaseClient supabase,
+    required FetchUserProfile fetchUserProfile,
   })  : _getCurrentUser = getCurrentUser,
         _signOut = signOut,
         _connectAccount = connectAccount,
         _fetchNotifications = fetchNotifications,
         _toggleReadNotification = toggleReadNotification,
         _supabase = supabase,
+        _fetchUserProfile = fetchUserProfile,
         super(const AppUserState.initial());
 
   Future<void> listenToRealtimeNotification() async {
@@ -133,6 +138,14 @@ class AppUserCubit extends Cubit<AppUserState> {
       },
     );
     return userIsLoggedIn;
+  }
+
+  Future<void> fetchCurrentUserProfile() async {
+    final res = await _fetchUserProfile.call(NoPayload());
+    res.fold(
+      (failure) => emit(state.copyWith(userProfileResult: ApiResultFailure(failure.errorMessage))),
+      (user) => emit(state.copyWith(userProfileResult: ApiResultSuccess(user))),
+    );
   }
 
   Future<void> signOut({

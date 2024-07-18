@@ -1,11 +1,9 @@
 import 'dart:io';
 
-import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
-import 'package:crowdfunding_flutter/common/widgets/container/selectable_container.dart';
 import 'package:crowdfunding_flutter/common/widgets/input/outlined_text_field.dart';
 import 'package:crowdfunding_flutter/common/widgets/media_picker.dart';
 import 'package:crowdfunding_flutter/domain/model/age_group.dart';
@@ -55,7 +53,7 @@ class _BeneficiaryFormPageState extends State<BeneficiaryFormPage> {
   }
 
   void _navigateToNextPage() {
-    context.read<CreateCampaignBloc>().add(ValidateStepTwo(
+    context.read<CreateCampaignBloc>().add(ValidateBeneficiaryData(
       onSuccess: () {
         widget.onNextPage();
       },
@@ -111,36 +109,36 @@ class _BeneficiaryFormPageState extends State<BeneficiaryFormPage> {
                           },
                         ),
                         28.kH,
-                        const Text(
-                          "Your beneficiary age?",
-                          style: CustomFonts.bodyMedium,
-                        ),
-                        12.kH,
-                        Wrap(
-                          direction: Axis.horizontal,
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: [
-                            ...AgeGroup.values.map(
-                              (age) => SelectableContainer(
-                                isSelected: selectedAge == age,
-                                onTap: () {
-                                  setState(() {
-                                    selectedAge = age;
-                                  });
-                                },
-                                child: Text(
-                                  "${age.getAgeText()} (${age.getAgeTitle()})",
-                                  style: CustomFonts.labelSmall.copyWith(
-                                    color: selectedAge == age
-                                        ? CustomColors.accentGreen
-                                        : CustomColors.textGrey,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                        // const Text(
+                        //   "Your beneficiary age?",
+                        //   style: CustomFonts.bodyMedium,
+                        // ),
+                        // 12.kH,
+                        // Wrap(
+                        //   direction: Axis.horizontal,
+                        //   spacing: 8,
+                        //   runSpacing: 8,
+                        //   children: [
+                        //     ...AgeGroup.values.map(
+                        //       (age) => SelectableContainer(
+                        //         isSelected: selectedAge == age,
+                        //         onTap: () {
+                        //           setState(() {
+                        //             selectedAge = age;
+                        //           });
+                        //         },
+                        //         child: Text(
+                        //           "${age.getAgeText()} (${age.getAgeTitle()})",
+                        //           style: CustomFonts.labelSmall.copyWith(
+                        //             color: selectedAge == age
+                        //                 ? CustomColors.accentGreen
+                        //                 : CustomColors.textGrey,
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
                         const Spacer(),
                         Row(
                           children: [

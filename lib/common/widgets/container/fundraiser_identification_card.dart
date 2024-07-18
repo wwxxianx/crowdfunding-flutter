@@ -10,7 +10,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class FundraiserIdentificationCard extends StatelessWidget {
   final VoidCallback? onPressed;
-  final FundraiserIdentificationStatusEnum? status;
+  final IdentificationStatusEnum? status;
   const FundraiserIdentificationCard({
     super.key,
     this.status,
@@ -19,11 +19,11 @@ class FundraiserIdentificationCard extends StatelessWidget {
 
   CustomChipStyle get chipStyle {
     switch (status) {
-      case FundraiserIdentificationStatusEnum.UNDER_REVIEW:
+      case IdentificationStatusEnum.UNDER_REVIEW:
         return CustomChipStyle.amber;
-      case FundraiserIdentificationStatusEnum.VERIFIED:
+      case IdentificationStatusEnum.VERIFIED:
         return CustomChipStyle.green;
-      case FundraiserIdentificationStatusEnum.REJECTED:
+      case IdentificationStatusEnum.REJECTED:
         return CustomChipStyle.red;
       default:
         return CustomChipStyle.slate;
@@ -32,7 +32,7 @@ class FundraiserIdentificationCard extends StatelessWidget {
 
   String get actionText {
     switch (status) {
-      case FundraiserIdentificationStatusEnum.PENDING:
+      case IdentificationStatusEnum.PENDING:
         return 'Complete my identity';
       default:
         return 'Check my identity';

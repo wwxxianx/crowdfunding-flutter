@@ -13,6 +13,7 @@ class CreateCampaignPayload {
   final List<File> campaignImageFiles;
   final File? campaignVideoFile;
   final File? beneficiaryImageFile;
+  final DateTime expiredAt;
 
   CreateCampaignPayload({
     required this.title,
@@ -23,6 +24,7 @@ class CreateCampaignPayload {
     required this.stateId,
     required this.beneficiaryName,
     required this.campaignImageFiles,
+    required this.expiredAt,
     this.campaignVideoFile,
     this.beneficiaryImageFile,
   });
@@ -35,8 +37,9 @@ class CreateCampaignPayload {
     final MultipartFile? beneficiaryImageBytes = beneficiaryImageFile != null
         ? MultipartFile.fromBytes(beneficiaryImageFile!.readAsBytesSync())
         : null;
-    final List<MultipartFile> campaignImagesBytes =
-        campaignImageFiles.map((file) => MultipartFile.fromBytes(file.readAsBytesSync())).toList();
+    final List<MultipartFile> campaignImagesBytes = campaignImageFiles
+        .map((file) => MultipartFile.fromBytes(file.readAsBytesSync()))
+        .toList();
 
     // Must match with backend data structure
     return {
@@ -50,6 +53,7 @@ class CreateCampaignPayload {
       'campaignImages': campaignImagesBytes,
       'campaignVideo': campaignVideoBytes,
       'beneficiaryImage': beneficiaryImageBytes,
+      'expiredAt': expiredAt.toIso8601String(),
     };
   }
 }

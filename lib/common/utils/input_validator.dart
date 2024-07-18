@@ -123,4 +123,16 @@ mixin InputValidator {
     }
     return const InputValidationResult.success();
   }
+
+  InputValidationResult validateCampaignExpirationDate(
+      DateTime? expirationDate) {
+    if (expirationDate == null) {
+      return const InputValidationResult.fail('Expiration date is required');
+    }
+    if (expirationDate.isBefore(DateTime.now())) {
+      return const InputValidationResult.fail(
+          'Invalid date, please select a date after today');
+    }
+    return const InputValidationResult.success();
+  }
 }

@@ -63,6 +63,7 @@ class AuthServiceImpl implements AuthService {
         fullName: fullName,
         email: email,
         isOnboardingCompleted: false,
+        identificationStatus: "PENDING",
       );
       _cacheUser(userModel);
       return userModel;

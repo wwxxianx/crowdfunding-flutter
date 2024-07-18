@@ -10,6 +10,6 @@ class GetCurrentUser implements UseCase<UserModel, NoPayload> {
 
   @override
   Future<Either<Failure, UserModel>> call(NoPayload payload) async {
-    return await userRepository.getUserProfile();
+    return await userRepository.getCurrentUser();
   }
 }

@@ -4,9 +4,11 @@ import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_card.dart';
 import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_loading_card.dart';
+import 'package:crowdfunding_flutter/common/widgets/container/chip.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/di/init_dependencies.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/enum/campaign_enum.dart';
 import 'package:crowdfunding_flutter/presentation/create_campaign/create_campaign_screen.dart';
 import 'package:crowdfunding_flutter/presentation/manage_campaign_details/manage_campaign_details_screen.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
@@ -37,14 +39,19 @@ class ManageCampaignScreen extends StatelessWidget {
         shrinkWrap: true,
         itemCount: myCampaignResult.data.length,
         itemBuilder: (context, index) {
+          final campaign = myCampaignResult.data[index];
           return Container(
             margin: const EdgeInsets.only(bottom: 20),
             child: CampaignCard(
-              campaign: myCampaignResult.data[index],
+              campaign: campaign,
               onPressed: () {
                 context.push(ManageCampaignDetailsScreen.generateRoute(
                     campaignId: myCampaignResult.data[index].id));
               },
+              headerLeadingTag: CustomChip(
+                style: campaign.statusEnum.chipStyle,
+                child: Text(campaign.statusEnum.displayTitle),
+              ),
             ),
           );
         },

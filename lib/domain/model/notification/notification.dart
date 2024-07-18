@@ -72,7 +72,7 @@ class NotificationModel {
   }
 
   static final samples = [
-    const NotificationModel(
+    NotificationModel(
       id: '1',
       type: 'CAMPAIGN_UPDATE',
       title: 'title',
@@ -82,7 +82,7 @@ class NotificationModel {
       entityId: '123',
       createdAt: '2024-05-16T08:21:57.324Z',
     ),
-    const NotificationModel(
+    NotificationModel(
       id: '1',
       type: 'CAMPAIGN_UPDATE',
       title: 'title',
@@ -92,7 +92,7 @@ class NotificationModel {
       entityId: '123',
       createdAt: '2024-05-16T08:21:57.324Z',
     ),
-    const NotificationModel(
+    NotificationModel(
       id: '1',
       isRead: false,
       type: 'CAMPAIGN_UPDATE',
@@ -100,7 +100,7 @@ class NotificationModel {
       entityId: '123',
       createdAt: '2024-05-16T08:21:57.324Z',
     ),
-    const NotificationModel(
+   NotificationModel(
       id: '1',
       isRead: false,
       type: 'CAMPAIGN_UPDATE',

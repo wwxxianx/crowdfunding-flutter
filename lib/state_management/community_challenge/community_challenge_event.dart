@@ -3,3 +3,5 @@ sealed class CommunityChallengeEvent {
 }
 
 final class OnFetchCommunityChallenges extends CommunityChallengeEvent {}
+
+final class OnFetchParticipatedChallenges extends CommunityChallengeEvent {}

@@ -4,6 +4,7 @@ import 'package:crowdfunding_flutter/common/widgets/avatar/avatar.dart';
 import 'package:crowdfunding_flutter/common/widgets/skeleton.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/domain/model/organization/organization.dart';
+import 'package:crowdfunding_flutter/presentation/account/account_screen.dart';
 import 'package:crowdfunding_flutter/presentation/edit_organization/edit_organization_screen.dart';
 import 'package:crowdfunding_flutter/state_management/organization_profile/organization_profile_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/organization_profile/organization_profile_state.dart';
@@ -149,7 +150,7 @@ class _OrganizationAppBarState extends State<OrganizationAppBar>
               color: Colors.white,
             ),
             onPressed: () {
-              
+              context.go('/account');
             },
           ),
           actions: [

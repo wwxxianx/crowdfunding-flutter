@@ -17,7 +17,7 @@ class StateAndRegion {
 
   Map<String, dynamic> toJson() => _$StateAndRegionToJson(this);
 
-  static const sample = StateAndRegion(id: 'sample-id', name: 'Kuala Lumpur');
+  static const sample = StateAndRegion(id: '1', name: 'Kuala Lumpur');
   static const samples = [
     StateAndRegion(id: '1', name: 'Kuala Lumpur'),
     StateAndRegion(id: '2', name: 'Johor Bahru'),

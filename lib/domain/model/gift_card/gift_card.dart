@@ -29,7 +29,7 @@ class GiftCard {
 
   Map<String, dynamic> toJson() => _$GiftCardToJson(this);
 
-  static const sample = GiftCard(
+  static final sample = GiftCard(
     id: "1",
     amount: 500,
     createdAt: "2024-05-16T08:21:57.324Z",
@@ -38,7 +38,7 @@ class GiftCard {
     receiver: UserModel.sample,
   );
 
-  static const samples = [
+  static final samples = [
     GiftCard(
       id: "1",
       amount: 500,

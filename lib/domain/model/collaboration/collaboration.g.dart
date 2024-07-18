@@ -9,8 +9,7 @@ part of 'collaboration.dart';
 Collaboration _$CollaborationFromJson(Map<String, dynamic> json) =>
     Collaboration(
       id: json['id'] as String,
-      campaign:
-          CampaignSummary.fromJson(json['campaign'] as Map<String, dynamic>),
+      campaign: Campaign.fromJson(json['campaign'] as Map<String, dynamic>),
       organization: json['organization'] == null
           ? null
           : Organization.fromJson(json['organization'] as Map<String, dynamic>),

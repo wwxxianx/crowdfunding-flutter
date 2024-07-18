@@ -1,3 +1,4 @@
+import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/domain/model/notification/notification.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:equatable/equatable.dart';
@@ -18,6 +19,7 @@ import 'package:equatable/equatable.dart';
 
 final class AppUserState extends Equatable {
   final UserModel? currentUser;
+  final ApiResult<UserModel> userProfileResult;
   final bool isConnectingStripeAccount;
   final List<NotificationModel> notifications;
   final NotificationModel? realtimeNotification;
@@ -27,6 +29,7 @@ final class AppUserState extends Equatable {
     this.isConnectingStripeAccount = false,
     this.notifications = const [],
     this.realtimeNotification,
+    this.userProfileResult = const ApiResultInitial(),
   });
 
   const AppUserState.initial() : this._();
@@ -36,6 +39,7 @@ final class AppUserState extends Equatable {
     bool? isConnectingStripeAccount,
     List<NotificationModel>? notifications,
     NotificationModel? realtimeNotification,
+    ApiResult<UserModel>? userProfileResult,
   }) {
     return AppUserState._(
       currentUser: currentUser ?? this.currentUser,
@@ -43,6 +47,7 @@ final class AppUserState extends Equatable {
           isConnectingStripeAccount ?? this.isConnectingStripeAccount,
       notifications: notifications ?? this.notifications,
       realtimeNotification: realtimeNotification ?? this.realtimeNotification,
+      userProfileResult: userProfileResult ?? this.userProfileResult,
     );
   }
 
@@ -52,5 +57,6 @@ final class AppUserState extends Equatable {
         isConnectingStripeAccount,
         notifications,
         realtimeNotification,
+        userProfileResult,
       ];
 }

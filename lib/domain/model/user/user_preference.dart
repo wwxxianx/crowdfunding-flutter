@@ -17,6 +17,21 @@ class UserPreference {
     required this.updatedAt,
   });
 
+  static const samples = [
+    UserPreference(
+      id: '1',
+      favouriteCampaignCategories: CampaignCategory.samples,
+      createdAt: '2020-01-01T00:00:00.000Z',
+      updatedAt: '2020-01-01T00:00:00.000Z',
+    ),
+    UserPreference(
+      id: '2',
+      favouriteCampaignCategories: CampaignCategory.samples,
+      createdAt: '2020-01-01T00:00:00.000Z',
+      updatedAt: '2020-01-01T00:00:00.000Z',
+    ),
+  ];
+
   factory UserPreference.fromJson(Map<String, dynamic> json) =>
       _$UserPreferenceFromJson(json);
 

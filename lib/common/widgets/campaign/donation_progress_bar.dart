@@ -35,11 +35,11 @@ class DonationProgressBar extends StatelessWidget {
                 "RM ${formattedCurrent} / RM ${formattedTotal}",
                 style: CustomFonts.labelExtraSmall,
               ),
-              if (showDonationStatusText)
-                Text(
-                  " (800 donations)",
-                  style: CustomFonts.titleExtraSmall,
-                ),
+              // if (showDonationStatusText)
+              //   Text(
+              //     " (800 donations)",
+              //     style: CustomFonts.titleExtraSmall,
+              //   ),
             ],
           ),
         ),

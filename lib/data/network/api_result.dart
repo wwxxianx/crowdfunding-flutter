@@ -1,26 +1,39 @@
 import 'package:dio/src/dio_exception.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
-sealed class ApiResult<T> {
+sealed class ApiResult<T> extends Equatable {
   const ApiResult();
 }
 
 class ApiResultInitial<T> extends ApiResult<T> {
   const ApiResultInitial();
+  
+  @override
+  List<Object?> get props => [];
 }
 
 class ApiResultLoading<T> extends ApiResult<T> {
   const ApiResultLoading();
+  
+  @override
+  List<Object?> get props => [];
 }
 
 class ApiResultSuccess<T> extends ApiResult<T> {
   final T data;
   const ApiResultSuccess(this.data);
+  
+  @override
+  List<Object?> get props => [data];
 }
 
 class ApiResultFailure<T> extends ApiResult<T> {
   final String? errorMessage;
   ApiResultFailure(this.errorMessage);
+  
+  @override
+  List<Object?> get props => [errorMessage];
 }
 
 class ErrorHandler implements Exception {
@@ -36,7 +49,7 @@ class ErrorHandler implements Exception {
     _handleOtherException(error);
   }
 
-  get errorMessage {
+  String get errorMessage {
     return _errorMessage;
   }
 
@@ -50,6 +63,17 @@ class ErrorHandler implements Exception {
   // Dio Exception - tracked error
   _handleDioException(DioException error) {
     ErrorHandler serverError;
+
+    // Error response from BE
+    var response = error.response;
+    var data = response?.data;
+    if (data is Map && data['message'] != null) {
+      _errorMessage = data['message'];
+      serverError = ErrorHandler(data['message']);
+      return serverError;
+    }
+
+    // General error
     switch (error.type) {
       case DioExceptionType.cancel:
         _errorMessage = "Request Canceled";

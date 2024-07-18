@@ -1,5 +1,6 @@
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/image/image_model.dart';
+import 'package:crowdfunding_flutter/domain/model/user/bank_account.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -20,6 +21,7 @@ class Organization {
   final String updatedAt;
   final List<Campaign>? campaigns;
   final UserModel createdBy;
+  final OrganizationBankAccount? bankAccount;
 
   const Organization({
     required this.id,
@@ -35,6 +37,7 @@ class Organization {
     required this.updatedAt,
     this.campaigns = const [],
     required this.createdBy,
+    this.bankAccount,
   });
 
   factory Organization.fromJson(Map<String, dynamic> json) =>

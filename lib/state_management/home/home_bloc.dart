@@ -47,9 +47,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ) async {
     final res = await _fetchOrganizations(GetOrganizationsPayload());
     res.fold(
-      (failure) => emit(state.copyWith(organizationsResult: ApiResultFailure(failure.errorMessage))),
+      (failure) => emit(state.copyWith(
+          organizationsResult: ApiResultFailure(failure.errorMessage))),
       (organizations) {
-        emit(state.copyWith(organizationsResult: ApiResultSuccess(organizations)));
+        emit(state.copyWith(
+            organizationsResult: ApiResultSuccess(organizations)));
       },
     );
   }
@@ -117,7 +119,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     const payload = FetchCampaignsPayload(
       userId: null,
       isPublished: true,
-      identificationStatus: FundraiserIdentificationStatusEnum.VERIFIED,
+      identificationStatus: IdentificationStatusEnum.VERIFIED,
     );
     final res = await _fetchCampaign.call(payload);
     res.fold(

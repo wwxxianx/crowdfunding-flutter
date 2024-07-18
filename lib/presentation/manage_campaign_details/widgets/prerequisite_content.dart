@@ -43,7 +43,7 @@ class PrerequisiteContent extends StatelessWidget {
     final campaignResult =
         context.read<CampaignDetailsBloc>().state.campaignResult;
     if (campaignResult is ApiResultSuccess<Campaign>) {
-      final stripeConnectId = campaignResult.data.user.stripeConnectId;
+      final stripeConnectId = campaignResult.data.user.bankAccount?.id ?? "";
       context.pushNamed('connected-bank-account',
           queryParameters: {'connectedAccountId': stripeConnectId});
       return;
@@ -72,8 +72,8 @@ class PrerequisiteContent extends StatelessWidget {
                     onPressed: () {
                       _navigateToIdentificationScreen(context);
                     },
-                    status: FundraiserIdentificationStatusEnum.values.byName(
-                      campaignResult.data.fundraiserIdentificationStatus,
+                    status: IdentificationStatusEnum.values.byName(
+                      campaignResult.data.user.identificationStatus,
                     ),
                   ),
                 ),

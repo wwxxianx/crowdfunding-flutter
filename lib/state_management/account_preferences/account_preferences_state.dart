@@ -6,6 +6,9 @@ final class AccountPreferencesState extends Equatable {
   final List<String> selectedCategoryIds;
   final ApiResult<UserModel> updateUserResult;
 
+  const AccountPreferencesState(
+      {required this.selectedCategoryIds, required this.updateUserResult});
+
   const AccountPreferencesState._({
     this.selectedCategoryIds = const [],
     this.updateUserResult = const ApiResultInitial(),

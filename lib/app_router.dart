@@ -7,6 +7,8 @@ import 'package:crowdfunding_flutter/presentation/account_gift_card/screens/open
 import 'package:crowdfunding_flutter/presentation/account_join_team/account_join_team_screen.dart';
 import 'package:crowdfunding_flutter/presentation/account_preferences/account_preferences_screen.dart';
 import 'package:crowdfunding_flutter/presentation/account_saved_campaigns/saved_campaigns_screen.dart';
+import 'package:crowdfunding_flutter/presentation/account_tax/account_tax_screen.dart';
+import 'package:crowdfunding_flutter/presentation/account_user_donations/account_user_donations_screen.dart';
 import 'package:crowdfunding_flutter/presentation/campaign_details/campaign_details_screen.dart';
 import 'package:crowdfunding_flutter/presentation/community_challenge/community_challenge_screen.dart';
 import 'package:crowdfunding_flutter/presentation/community_challenge_details/community_challenge_details_screen.dart';
@@ -34,6 +36,7 @@ import 'package:crowdfunding_flutter/presentation/onboarding/widgets/onboarding_
 import 'package:crowdfunding_flutter/presentation/onboarding/widgets/onboarding_select_npo_join_method_screen.dart';
 import 'package:crowdfunding_flutter/presentation/onboarding/widgets/personal_account_page_view.dart';
 import 'package:crowdfunding_flutter/presentation/organization_profile/organization_profile_screen.dart';
+import 'package:crowdfunding_flutter/presentation/redirects/organization_redirect_screen.dart';
 import 'package:crowdfunding_flutter/presentation/sign_up/sign_up_screen.dart';
 import 'package:crowdfunding_flutter/presentation/splash/splash_screen.dart';
 import 'package:crowdfunding_flutter/presentation/testing/test_screen.dart';
@@ -50,7 +53,8 @@ class AppRouter {
       GlobalKey<NavigatorState>(debugLabel: 'shell');
 
   static void navigateAndClearStack(String routeName) {
-    rootNavigatorKey.currentState?.pushNamedAndRemoveUntil(routeName, (route) => false);
+    rootNavigatorKey.currentState
+        ?.pushNamedAndRemoveUntil(routeName, (route) => false);
   }
 
   static GoRouter get router => GoRouter(
@@ -58,8 +62,7 @@ class AppRouter {
         // initialLocation: EditCampaignScreen.generateRoute(campaignId: '123'),
         // initialLocation:
         //     OrganizationProfileScreen.generateRoute(organizationId: 'asd'),
-        initialLocation:
-            '/loading',
+        initialLocation: '/loading',
         routes: [
           GoRoute(
             path: '/testing',
@@ -107,6 +110,16 @@ class AppRouter {
                   GoRoute(
                     path: 'account',
                     builder: (context, state) => const AccountScreen(),
+                    routes: [
+                      GoRoute(
+                        path: 'donation',
+                        builder: (context, state) => const MyDonationsScreen(),
+                      ),
+                      GoRoute(
+                        path: 'tax-receipt',
+                        builder: (context, state) => const AccountTaxScreen(),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -343,25 +356,34 @@ class AppRouter {
             },
           ),
           GoRoute(
-              path: OrganizationProfileScreen.route,
-              builder: (context, state) {
-                final organizationId =
-                    state.pathParameters['organizationId'] ?? "";
-                return OrganizationProfileScreen(
-                  organizationId: organizationId,
-                );
-              }),
+            path: OrganizationProfileScreen.route,
+            builder: (context, state) {
+              final organizationId =
+                  state.pathParameters['organizationId'] ?? "";
+              return OrganizationProfileScreen(
+                organizationId: organizationId,
+              );
+            },
+          ),
           GoRoute(
-              path: EditOrganizationScreen.route,
-              builder: (context, state) {
-                final organizationId =
-                    state.pathParameters['organizationId'] ?? "";
-                final organization = state.extra as Organization?;
-                return EditOrganizationScreen(
-                  organization: organization,
-                  organizationId: organizationId,
-                );
-              }),
+            path: EditOrganizationScreen.route,
+            builder: (context, state) {
+              final organizationId =
+                  state.pathParameters['organizationId'] ?? "";
+              final organization = state.extra as Organization?;
+              return EditOrganizationScreen(
+                organization: organization,
+                organizationId: organizationId,
+              );
+            },
+          ),
+          // Redirect
+          GoRoute(
+            path: OrganizationRedirectScreen.route,
+            builder: (context, state) {
+              return OrganizationRedirectScreen();
+            },
+          ),
         ],
       );
 }

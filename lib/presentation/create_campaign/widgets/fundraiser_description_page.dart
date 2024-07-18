@@ -44,7 +44,7 @@ class _FundraiserDescriptionFormPageState
   }
 
   void _navigateToNextPage() {
-    context.read<CreateCampaignBloc>().add(ValidateStepThree(
+    context.read<CreateCampaignBloc>().add(ValidateDescriptionData(
       onSuccess: () {
         widget.onNextPage();
       },

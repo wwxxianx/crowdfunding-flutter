@@ -3,10 +3,11 @@ import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
+import 'package:crowdfunding_flutter/common/utils/show_snackbar.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/custom_bottom_sheet.dart';
+import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/domain/model/collaboration/collaboration.dart';
-import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:crowdfunding_flutter/state_management/explore_collaboration/explore_collaboration_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/explore_collaboration/explore_collaboration_event.dart';
 import 'package:crowdfunding_flutter/state_management/explore_collaboration/explore_collaboration_state.dart';
@@ -15,6 +16,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:toastification/toastification.dart';
 
 class CollaborationDetailsBottomSheet extends StatefulWidget {
   final Collaboration collaboration;
@@ -36,18 +38,9 @@ class _CollaborationDetailsBottomSheetState
     if (!isChecked) {
       return;
     }
-    final currentUser = context.read<AppUserCubit>().state.currentUser;
-    if (currentUser == null) {
-      return;
-    }
-    final organizationId = currentUser.organization?.id;
-    if (organizationId == null) {
-      return;
-    }
     context.read<ExploreCollaborationBloc>().add(
           OnTakeCollaboration(
             collaborationId: widget.collaboration.id,
-            organizationId: organizationId,
             onSuccess: () {
               context.pop();
             },
@@ -57,7 +50,21 @@ class _CollaborationDetailsBottomSheetState
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ExploreCollaborationBloc, ExploreCollaborationState>(
+    return BlocConsumer<ExploreCollaborationBloc, ExploreCollaborationState>(
+      listener: (context, state) {
+        final takeCollaborationResult = state.takeCollaborationResult;
+        if (takeCollaborationResult is ApiResultFailure<Collaboration>) {
+          toastification.show(
+            type: ToastificationType.error,
+            title: Text(
+              takeCollaborationResult.errorMessage ?? "Something went wrong",
+            ),
+            autoCloseDuration: const Duration(seconds: 8),
+            boxShadow: lowModeShadow,
+            showProgressBar: true,
+          );
+        }
+      },
       builder: (context, state) {
         return CustomDraggableSheet(
           initialChildSize: 0.95,
@@ -85,6 +92,13 @@ class _CollaborationDetailsBottomSheetState
                 SizedBox(
                   width: double.maxFinite,
                   child: CustomButton(
+                    isLoading:
+                        state.takeCollaborationResult is ApiResultLoading,
+                    enabled: isChecked &&
+                        state.takeCollaborationResult is! ApiResultLoading,
+                    style: isChecked
+                        ? CustomButtonStyle.gradientGreen
+                        : CustomButtonStyle.grey,
                     onPressed: () {
                       _handleSubmit(context);
                     },

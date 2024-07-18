@@ -108,6 +108,7 @@ class CampaignRepositoryImpl implements CampaignRepository {
         campaignImageFiles: payload.campaignImageFiles,
         campaignVideoFile: payload.campaignVideoFile,
         beneficiaryImageFile: payload.beneficiaryImageFile,
+        expiredAt: payload.expiredAt.toUtc().toIso8601String(),
       );
       return right(res);
     } catch (e) {
@@ -258,7 +259,7 @@ class CampaignRepositoryImpl implements CampaignRepository {
       return left(Failure(ErrorHandler.otherException().errorMessage));
     }
   }
-  
+
   @override
   Future<Either<Failure, List<Campaign>>> getSuccessfulCampaigns() async {
     try {

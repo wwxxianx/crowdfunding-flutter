@@ -5,6 +5,7 @@ import 'package:crowdfunding_flutter/domain/model/campaign/campaign_category.dar
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/enum/campaign_enum.dart';
 import 'package:crowdfunding_flutter/domain/model/community_challenge/community_challenge.dart';
 import 'package:crowdfunding_flutter/domain/model/image/image_model.dart';
 import 'package:crowdfunding_flutter/domain/model/organization/organization.dart';
@@ -37,10 +38,8 @@ class Campaign {
   final AgeGroup? beneficiaryAgeGroup;
   final String createdAt;
   final String updatedAt;
-  // Fundraiser Identity
-  final String? fundraiserIdentityNumber;
-  final String fundraiserIdentificationStatus;
-  final String? fundraiserIdentificationRejectReason;
+  final String? expiredAt;
+  // Fundraiser signature
   final String? fundraiserSignaturFileUrl;
   // Data
   final int numOfDonations;
@@ -82,14 +81,20 @@ class Campaign {
     this.comments = const [],
     this.topThreeDonations = const [],
     this.recentThreeDonations = const [],
-    this.fundraiserIdentityNumber,
-    this.fundraiserIdentificationStatus = 'PENDING',
-    this.fundraiserIdentificationRejectReason,
     this.fundraiserSignaturFileUrl,
     this.firstMatchedCommunityChallenge,
     this.status = "PENDING",
     this.suspendReason,
+    this.expiredAt,
   });
+
+  CampaignPublishStatusEnum get statusEnum {
+    try {
+      return CampaignPublishStatusEnum.values.byName(status);
+    } catch (e) {
+      return CampaignPublishStatusEnum.PENDING;
+    }
+  }
 
   factory Campaign.fromJson(Map<String, dynamic> json) =>
       _$CampaignFromJson(json);
@@ -125,11 +130,11 @@ class Campaign {
     List<CampaignComment>? comments,
     List<CampaignDonation>? topThreeDonations,
     List<CampaignDonation>? recentThreeDonations,
-    String? fundraiserIdentityNumber,
-    String? fundraiserIdentificationStatus,
-    String? fundraiserIdentificationRejectReason,
     String? fundraiserSignaturFileUrl,
     CommunityChallenge? firstMatchedCommunityChallenge,
+    String? status,
+    String? suspendReason,
+    String? expiredAt,
   }) {
     return Campaign(
       id: id ?? this.id,
@@ -159,21 +164,17 @@ class Campaign {
       topThreeDonations: topThreeDonations ?? this.topThreeDonations,
       recentThreeDonations: recentThreeDonations ?? this.recentThreeDonations,
       raisedAmount: raisedAmount ?? this.raisedAmount,
-      fundraiserIdentityNumber:
-          fundraiserIdentityNumber ?? this.fundraiserIdentityNumber,
-      fundraiserIdentificationStatus:
-          fundraiserIdentificationStatus ?? this.fundraiserIdentificationStatus,
-      fundraiserIdentificationRejectReason:
-          fundraiserIdentificationRejectReason ??
-              this.fundraiserIdentificationRejectReason,
       fundraiserSignaturFileUrl:
           fundraiserSignaturFileUrl ?? this.fundraiserSignaturFileUrl,
       firstMatchedCommunityChallenge:
           firstMatchedCommunityChallenge ?? this.firstMatchedCommunityChallenge,
+      status: status ?? this.status,
+      suspendReason: suspendReason ?? this.suspendReason,
+      expiredAt: expiredAt ?? this.expiredAt,
     );
   }
 
-  static const sample = Campaign(
+  static final sample = Campaign(
     id: 'sample-id',
     title: 'Sample Campaign',
     description: 'This is a sample campaign description.',
@@ -196,10 +197,9 @@ class Campaign {
     numOfComments: 0,
     numOfLikes: 0,
     numOfUpdates: 0,
-    fundraiserIdentificationStatus: 'UNDER_REVIEW',
   );
 
-  static const samples = [
+  static final samples = [
     Campaign(
       id: '1',
       title: 'Sample Campaign',

@@ -14,10 +14,13 @@ class UserModel {
   final String? phoneNumber;
   final String refreshToken;
   final bool isOnboardingCompleted;
+  final String? identityNumber;
+  final String identificationStatus;
+  final String? identificationRejectReason;
   final Organization? organization;
   final UserPreference? preference;
-  final String? stripeConnectId;
-  final BankAccount? bankAccount;
+  // final String? stripeConnectId;
+  final UserBankAccount? bankAccount;
   // List<CampaignDonation> campaignDonations;
   // List<Campaign> campaigns;
   // List<CampaignComment> campaignComments;
@@ -36,8 +39,11 @@ class UserModel {
     this.isOnboardingCompleted = false,
     this.organization,
     this.preference,
-    this.stripeConnectId,
+    // this.stripeConnectId,
     this.bankAccount,
+    this.identityNumber,
+    required this.identificationStatus,
+    this.identificationRejectReason,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
@@ -45,10 +51,12 @@ class UserModel {
 
   Map<String, dynamic> toJson() => _$UserModelToJson(this);
 
-  static const sample = UserModel(
+  static final sample = UserModel(
     id: 'sample-id',
     fullName: 'John Doe',
     email: 'john@gmail.com',
+    preference: UserPreference.samples.first,
+    identificationStatus: "PENDING"
   );
 
   @override
@@ -75,9 +83,11 @@ class UserModelWithAccessToken extends UserModel {
     String? phoneNumber,
     String refreshToken = "",
     UserPreference? preference,
+    required String identificationStatus,
     bool isOnboardingCompleted = false,
     required this.accessToken,
-    String? stripeConnectId,
+    // String? stripeConnectId,
+    UserBankAccount? bankAccount,
   }) : super(
           id: id,
           fullName: fullName,
@@ -87,7 +97,9 @@ class UserModelWithAccessToken extends UserModel {
           phoneNumber: phoneNumber,
           refreshToken: refreshToken,
           preference: preference,
-          stripeConnectId: stripeConnectId,
+          // stripeConnectId: stripeConnectId,
+          identificationStatus: identificationStatus,
+          bankAccount: bankAccount,
         );
 
   UserModel toUserModel() {
@@ -100,7 +112,9 @@ class UserModelWithAccessToken extends UserModel {
       refreshToken: refreshToken,
       isOnboardingCompleted: isOnboardingCompleted,
       preference: preference,
-      stripeConnectId: stripeConnectId,
+      // stripeConnectId: stripeConnectId,
+      identificationStatus: identificationStatus,
+      bankAccount: bankAccount,
     );
   }
 

@@ -9,7 +9,7 @@ final class ExploreCampaignsState extends Equatable {
   final List<String> selectedCategoryIds;
   final String? searchQuery;
 
-  const ExploreCampaignsState._({
+  const ExploreCampaignsState({
     this.isGridView = false,
     required this.campaignsResult,
     this.selectedStateIds = const [],
@@ -18,8 +18,8 @@ final class ExploreCampaignsState extends Equatable {
   });
 
   const ExploreCampaignsState.initial()
-      : this._(
-          campaignsResult: const ApiResultLoading(),
+      : this(
+          campaignsResult: const ApiResultInitial(),
         );
 
   ExploreCampaignsState copyWith({
@@ -29,7 +29,7 @@ final class ExploreCampaignsState extends Equatable {
     List<String>? selectedCategoryIds,
     String? searchQuery,
   }) {
-    return ExploreCampaignsState._(
+    return ExploreCampaignsState(
       isGridView: isGridView ?? this.isGridView,
       campaignsResult: campaignsResult ?? this.campaignsResult,
       selectedStateIds: selectedStateIds ?? this.selectedStateIds,

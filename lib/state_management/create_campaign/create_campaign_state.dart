@@ -5,9 +5,7 @@ import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dar
 import 'package:equatable/equatable.dart';
 
 final class CreateCampaignState extends Equatable with InputValidator {
-  // Fetch data
-
-  // Step1
+  // Details
   final String? targetAmountText;
   final String? targetAmountError;
   final String? selectedCategoryId;
@@ -16,19 +14,21 @@ final class CreateCampaignState extends Equatable with InputValidator {
   final String? stateError;
   final String? phoneNumberText;
   final String? phoneNumberError;
+  final DateTime? selectedExpirationDate;
+  final String? expirationDateError;
 
-  // Step2
+  // Beneficiary
   final String? beneficiaryNameText;
   final String? beneficiaryNameError;
   final File? beneficiaryImageFile;
 
-  // Step3
+  // Description
   final String? titleText;
   final String? descriptionText;
   final String? titleError;
   final String? descriptionError;
 
-  // Step4
+  // Medias
   final List<File> campaignImageFiles;
   final String? campaignImageError;
   final File? campaignVideoFile;
@@ -56,6 +56,8 @@ final class CreateCampaignState extends Equatable with InputValidator {
     this.descriptionError,
     this.campaignImageError,
     this.createCampaignResult = const ApiResultInitial(),
+    this.selectedExpirationDate,
+    this.expirationDateError,
   });
 
   const CreateCampaignState.initial() : this._();
@@ -80,6 +82,8 @@ final class CreateCampaignState extends Equatable with InputValidator {
     String? descriptionError,
     String? campaignImageError,
     ApiResult<CampaignSummary>? createCampaignResult,
+    DateTime? selectedExpirationDate,
+    String? expirationDateError,
   }) {
     return CreateCampaignState._(
       targetAmountText: targetAmountText ?? this.targetAmountText,
@@ -101,6 +105,8 @@ final class CreateCampaignState extends Equatable with InputValidator {
       descriptionError: descriptionError,
       campaignImageError: campaignImageError,
       createCampaignResult: createCampaignResult ?? this.createCampaignResult,
+      selectedExpirationDate: selectedExpirationDate ?? this.selectedExpirationDate,
+      expirationDateError: expirationDateError,
     );
   }
 
@@ -125,5 +131,7 @@ final class CreateCampaignState extends Equatable with InputValidator {
         descriptionError,
         campaignImageError,
         createCampaignResult,
+        selectedExpirationDate,
+        expirationDateError,
       ];
 }

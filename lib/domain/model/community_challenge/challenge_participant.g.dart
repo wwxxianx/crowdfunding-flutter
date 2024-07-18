@@ -17,6 +17,7 @@ ChallengeParticipant _$ChallengeParticipantFromJson(
           : CommunityChallenge.fromJson(
               json['communityChallenge'] as Map<String, dynamic>),
       metadata: json['metadata'] as Map<String, dynamic>?,
+      status: json['status'] as String,
       rewardEmailId: json['rewardEmailId'] as String?,
       rejectReason: json['rejectReason'] as String?,
       challengeIsSuccess: json['challengeIsSuccess'] as bool?,
@@ -33,4 +34,5 @@ Map<String, dynamic> _$ChallengeParticipantToJson(
       'rewardEmailId': instance.rewardEmailId,
       'rejectReason': instance.rejectReason,
       'challengeIsSuccess': instance.challengeIsSuccess,
+      'status': instance.status,
     };

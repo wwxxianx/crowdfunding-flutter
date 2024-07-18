@@ -6,7 +6,7 @@ import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension
 import 'package:crowdfunding_flutter/common/widgets/container/chip.dart';
 import 'package:flutter/material.dart';
 
-enum FundraiserIdentificationStatusEnum {
+enum IdentificationStatusEnum {
   PENDING,
   UNDER_REVIEW,
   VERIFIED,
@@ -15,13 +15,13 @@ enum FundraiserIdentificationStatusEnum {
   @override
   String toString() {
     switch (this) {
-      case FundraiserIdentificationStatusEnum.PENDING:
+      case IdentificationStatusEnum.PENDING:
         return 'Pending';
-      case FundraiserIdentificationStatusEnum.UNDER_REVIEW:
+      case IdentificationStatusEnum.UNDER_REVIEW:
         return 'Under Review';
-      case FundraiserIdentificationStatusEnum.VERIFIED:
+      case IdentificationStatusEnum.VERIFIED:
         return 'Verified';
-      case FundraiserIdentificationStatusEnum.REJECTED:
+      case IdentificationStatusEnum.REJECTED:
         return 'Rejected';
     }
   }
@@ -58,6 +58,17 @@ extension CampaignPublishStatusExtension on CampaignPublishStatusEnum {
   }
 
   String get displayTitle {
+    switch (this) {
+      case CampaignPublishStatusEnum.PENDING:
+        return 'Pending';
+      case CampaignPublishStatusEnum.PUBLISHED:
+        return 'Published';
+      case CampaignPublishStatusEnum.SUSPENDED:
+        return 'Suspended';
+    }
+  }
+
+  String get displayDescription {
     switch (this) {
       case CampaignPublishStatusEnum.PENDING:
         return 'Your campaign is not ready to collect fund. Please complete your identity verification and setup you bank account.';
@@ -102,11 +113,11 @@ extension CampaignPublishStatusExtension on CampaignPublishStatusEnum {
         children: [
           CustomChip(
             style: chipStyle,
-            child: Text(toString()),
+            child: Text(displayTitle),
           ),
           4.kH,
           Text(
-            displayTitle,
+            displayDescription,
             style: CustomFonts.bodySmall.copyWith(color: titleColor),
           ),
         ],

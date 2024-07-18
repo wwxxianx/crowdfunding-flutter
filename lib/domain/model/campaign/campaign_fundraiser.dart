@@ -1,3 +1,4 @@
+import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'campaign_fundraiser.g.dart';
@@ -6,18 +7,14 @@ part 'campaign_fundraiser.g.dart';
 class CampaignFundraiser {
   @JsonKey(name: 'id')
   final String campaignId;
-  final String? fundraiserIdentityNumber;
-  final String fundraiserIdentificationStatus;
-  final String? fundraiserIdentificationRejectReason;
   @JsonKey(name: 'fundraiserSignatureUrl')
   final String? fundraiserSignaturFileUrl;
+  final UserModel user;
 
   const CampaignFundraiser({
     required this.campaignId,
-    this.fundraiserIdentityNumber,
-    required this.fundraiserIdentificationStatus,
-    this.fundraiserIdentificationRejectReason,
     this.fundraiserSignaturFileUrl,
+    required this.user,
   });
 
   factory CampaignFundraiser.fromJson(Map<String, dynamic> json) =>
