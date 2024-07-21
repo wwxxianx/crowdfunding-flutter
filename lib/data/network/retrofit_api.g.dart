@@ -14,7 +14,7 @@ class _RestClient implements RestClient {
     this.baseUrl,
   }) {
     baseUrl ??=
-        'https://6da7-2001-f40-987-516-4d7c-ead3-d030-e8aa.ngrok-free.app/';
+        'https://5236-202-184-8-138.ngrok-free.app/';
   }
 
   final Dio _dio;
