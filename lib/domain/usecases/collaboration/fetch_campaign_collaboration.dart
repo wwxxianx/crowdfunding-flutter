@@ -4,13 +4,14 @@ import 'package:crowdfunding_flutter/domain/model/collaboration/collaboration.da
 import 'package:crowdfunding_flutter/domain/repository/collaboration/collaboration_repository.dart';
 import 'package:fpdart/src/either.dart';
 
-class FetchCampaignCollaboration implements UseCase<Collaboration?, String> {
+class FetchCollaboration implements UseCase<Collaboration?, String> {
   final CollaborationRepository collaborationRepository;
 
-  const FetchCampaignCollaboration({required this.collaborationRepository});
+  const FetchCollaboration({required this.collaborationRepository});
 
   @override
   Future<Either<Failure, Collaboration?>> call(String payload) async {
-    return await collaborationRepository.getCollaboration(campaignId: payload);
+    return await collaborationRepository.getCollaboration(
+        collaborationId: payload);
   }
 }

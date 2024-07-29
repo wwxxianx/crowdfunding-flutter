@@ -8,6 +8,7 @@ import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/domain/model/gift_card/gift_card.dart';
 import 'package:crowdfunding_flutter/presentation/account_gift_card/screens/open_gift_card_screen.dart';
 import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_bloc.dart';
+import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_event.dart';
 import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,10 +21,16 @@ class SentTabContent extends StatelessWidget {
     final sentGiftCards = state.sentGiftCards;
     if (sentGiftCards.isNotEmpty) {
       return ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemCount: sentGiftCards.length,
         itemBuilder: (context, index) {
-          return ReceivedGiftCardItem(giftCard: sentGiftCards[index]);
+          return Container(
+            margin: const EdgeInsets.only(bottom: 16),
+            child: SentGiftCardItem(
+              giftCard: sentGiftCards[index],
+            ),
+          );
         },
       );
     }
@@ -35,13 +42,20 @@ class SentTabContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<GiftCardBloc, GiftCardState>(
       builder: (context, state) {
-        return SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: Dimensions.screenHorizontalPadding,
-              vertical: 20,
+        return RefreshIndicator(
+          onRefresh: () async {
+            context
+                .read<GiftCardBloc>()
+                .add(OnFetchAllGiftCards(isRefresh: true));
+          },
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: Dimensions.screenHorizontalPadding,
+                vertical: 20,
+              ),
+              child: _buildContent(state),
             ),
-            child: _buildContent(state),
           ),
         );
       },
@@ -49,9 +63,9 @@ class SentTabContent extends StatelessWidget {
   }
 }
 
-class ReceivedGiftCardItem extends StatelessWidget {
+class SentGiftCardItem extends StatelessWidget {
   final GiftCard giftCard;
-  const ReceivedGiftCardItem({
+  const SentGiftCardItem({
     super.key,
     required this.giftCard,
   });
@@ -75,17 +89,7 @@ class ReceivedGiftCardItem extends StatelessWidget {
         ),
       );
     }
-    return CustomButton(
-      borderRadius: BorderRadius.circular(4),
-      height: 34,
-      onPressed: () {
-        _navigateToOpenCardScreen(context);
-      },
-      child: const Text(
-        "Receive my gift",
-        style: CustomFonts.labelSmall,
-      ),
-    );
+    return const SizedBox.shrink();
   }
 
   @override
@@ -104,8 +108,8 @@ class ReceivedGiftCardItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Avatar(
-                imageUrl: giftCard.sender.profileImageUrl,
-                placeholder: giftCard.sender.fullName[0],
+                imageUrl: giftCard.receiver.profileImageUrl,
+                placeholder: giftCard.receiver.fullName[0],
                 size: 50,
               ),
               12.kW,
@@ -115,12 +119,12 @@ class ReceivedGiftCardItem extends StatelessWidget {
                   children: [
                     RichText(
                       text: TextSpan(
-                        text: giftCard.sender.fullName,
-                        style: CustomFonts.labelMedium,
-                        children: const [
+                        text: "Sent a gift of RM${giftCard.amount} ",
+                        style: CustomFonts.bodyMedium,
+                        children: [
                           TextSpan(
-                            text: " sent you a gift of RM500!",
-                            style: CustomFonts.bodyMedium,
+                            text: giftCard.receiver.fullName,
+                            style: CustomFonts.labelMedium,
                           ),
                         ],
                       ),

@@ -7,6 +7,7 @@ import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/selectable_container.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/domain/model/organization/organization.dart';
+import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:crowdfunding_flutter/presentation/home/home_screen.dart';
 import 'package:crowdfunding_flutter/presentation/onboarding/pages/npo_onboarding/join_npo_success_page.dart';
 import 'package:crowdfunding_flutter/state_management/onboarding/join_npo/join_npo_bloc.dart';
@@ -65,7 +66,7 @@ class _MatchedCodeNPOPageState extends State<MatchedCodeNPOPage> {
     context
         .read<JoinNPOBloc>()
         .add(OnboardCompleteWithoutJoinNPO(onSuccess: () {
-      context.go(HomeScreen.route);
+      context.go("/home");
     }));
   }
 
@@ -244,7 +245,21 @@ class _MatchedCodeNPOPageState extends State<MatchedCodeNPOPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<JoinNPOBloc, JoinNPOState>(
+    return BlocConsumer<JoinNPOBloc, JoinNPOState>(
+      listener: (context, state) {
+        final joinOrganizationResult = state.joinOrganizationResult;
+        if (joinOrganizationResult is ApiResultFailure<UserModel>) {
+          toastification.show(
+            type: ToastificationType.error,
+            autoCloseDuration: const Duration(seconds: 5),
+            showProgressBar: true,
+            applyBlurEffect: true,
+            boxShadow: lowModeShadow,
+            title: Text(
+                joinOrganizationResult.errorMessage ?? "Something went wrong"),
+          );
+        }
+      },
       builder: (context, state) {
         return WillPopScope(
           onWillPop: () async {

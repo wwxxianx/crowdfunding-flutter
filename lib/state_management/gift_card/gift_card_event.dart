@@ -6,7 +6,11 @@ sealed class GiftCardEvent {
   const GiftCardEvent();
 }
 
-final class OnFetchAllGiftCards extends GiftCardEvent {}
+final class OnFetchAllGiftCards extends GiftCardEvent {
+  final bool isRefresh;
+
+  const OnFetchAllGiftCards({this.isRefresh = false});
+}
 
 final class OnSelectGiftCardToUse extends GiftCardEvent {
   final GiftCard giftCard;

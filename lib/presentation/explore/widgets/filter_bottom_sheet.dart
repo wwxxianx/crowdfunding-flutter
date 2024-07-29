@@ -1,4 +1,5 @@
 import 'package:crowdfunding_flutter/common/theme/color.dart';
+import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/string.dart';
@@ -45,53 +46,69 @@ class CampaignsFilterBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ExploreCampaignsBloc, ExploreCampaignsState>(
       builder: (context, state) {
-        return CustomBottomSheet(
-          bottomAction: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              CustomButton(
-                onPressed: () {
-                  _handleApplyFilter(context);
-                },
-                child: const Text("Apply filter"),
+        return CustomDraggableSheet(
+          initialChildSize: 0.95,
+          footer: Container(
+            padding: const EdgeInsets.symmetric(
+                horizontal: Dimensions.screenHorizontalPadding),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              border: Border.symmetric(
+                horizontal:
+                    BorderSide(color: CustomColors.containerBorderSlate),
               ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Category",
-                style: CustomFonts.labelMedium,
-              ),
-              12.kH,
-              CampaignCategoryList(
-                onPressed: (campaignCategory) {
-                  _handleSelectCategory(context, campaignCategory);
-                },
-                selectedCategoryIds: state.selectedCategoryIds,
-              ),
-              20.kH,
-              //Divider
-              Container(
-                height: 1,
-                decoration: const BoxDecoration(
-                  color: CustomColors.divider,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                CustomButton(
+                  onPressed: () {
+                    _handleApplyFilter(context);
+                  },
+                  child: const Text("Apply filter"),
                 ),
-              ),
-              20.kH,
-              const Text(
-                "Location",
-                style: CustomFonts.labelMedium,
-              ),
-              12.kH,
-              StateAndRegionChecklist(
-                selectedStateIds: state.selectedStateIds,
-                onChecked: (stateAndRegion) {
-                  _handleSelectState(context, stateAndRegion);
-                },
-              ),
-            ],
+              ],
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: Dimensions.screenHorizontalPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Category",
+                  style: CustomFonts.labelMedium,
+                ),
+                12.kH,
+                CampaignCategoryList(
+                  onPressed: (campaignCategory) {
+                    _handleSelectCategory(context, campaignCategory);
+                  },
+                  selectedCategoryIds: state.selectedCategoryIds,
+                ),
+                20.kH,
+                //Divider
+                Container(
+                  height: 1,
+                  decoration: const BoxDecoration(
+                    color: CustomColors.divider,
+                  ),
+                ),
+                20.kH,
+                const Text(
+                  "Location",
+                  style: CustomFonts.labelMedium,
+                ),
+                12.kH,
+                StateAndRegionChecklist(
+                  selectedStateIds: state.selectedStateIds,
+                  onChecked: (stateAndRegion) {
+                    _handleSelectState(context, stateAndRegion);
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },

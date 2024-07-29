@@ -29,3 +29,5 @@ final class OnSearchQueryChanged extends ExploreCampaignsEvent {
 
   const OnSearchQueryChanged({required this.searchQuery});
 }
+
+final class OnRefreshCampaigns extends ExploreCampaignsEvent {}

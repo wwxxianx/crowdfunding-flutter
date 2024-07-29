@@ -6,10 +6,9 @@ import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/text/gradient_text.dart';
-import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 
 class SloganBanner extends StatelessWidget {
   // TIPS:
@@ -74,7 +73,7 @@ class SloganBanner extends StatelessWidget {
                       borderRadius: BorderRadius.circular(6.0),
                       height: 40.0,
                       onPressed: () {
-                        
+                        context.go("/explore");
                       },
                       textStyle: CustomFonts.titleSmall,
                       child: const GradientText(

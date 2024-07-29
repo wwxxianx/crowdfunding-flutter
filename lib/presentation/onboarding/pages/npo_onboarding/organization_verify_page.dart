@@ -20,6 +20,14 @@ class OrganizationVerifyPage extends StatefulWidget {
 
 class _OrganizationVerifyPageState extends State<OrganizationVerifyPage> {
   final textController = TextEditingController();
+  final registrationTypes = [
+    "Company Registration Number (Old)",
+    "Company Registration Number (New)  ",
+    "Business Registration Number (Old)",
+    "Business Registration Number (New)",
+    "LLP Registration Number",
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -53,14 +61,13 @@ class _OrganizationVerifyPageState extends State<OrganizationVerifyPage> {
               Expanded(
                 child: CustomDropdownMenu(
                   label: "Registration type",
-                  dropdownMenuEntries: List.generate(
-                    4,
-                    (index) => DropdownMenuEntry(
-                      value: "$index",
-                      label: "$index Some text",
+                  dropdownMenuEntries: registrationTypes.map((type) {
+                    return DropdownMenuEntry(
+                      value: type,
+                      label: type,
                       enabled: true,
-                    ),
-                  ),
+                    );
+                  }).toList(),
                 ),
               ),
             ],

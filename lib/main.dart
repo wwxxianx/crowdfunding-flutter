@@ -4,20 +4,25 @@ import 'package:crowdfunding_flutter/common/theme/app_theme.dart';
 import 'package:crowdfunding_flutter/di/init_dependencies.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_bloc.dart';
-import 'package:crowdfunding_flutter/state_management/explore/explore_campaigns_event.dart';
 import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/home/home_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/sign_up/sign_up_bloc.dart';
+import 'package:crowdfunding_flutter/state_management/user/favourite_campaign/favourite_campaign_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:toastification/toastification.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:logger/logger.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initDependencies();
   Stripe.publishableKey = Constants.stripePublishableKey;
+  OneSignal.initialize(Constants.onesignalID);
+
+  // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+  OneSignal.Notifications.requestPermission(true);
 
   runApp(
     MultiBlocProvider(
@@ -29,6 +34,7 @@ void main() async {
                 ExploreCampaignsBloc(fetchCampaigns: serviceLocator())),
         BlocProvider(create: (_) => serviceLocator<HomeBloc>()),
         BlocProvider(create: (_) => serviceLocator<GiftCardBloc>()),
+        BlocProvider(create: (_) => serviceLocator<FavouriteCampaignBloc>()),
       ],
       child: const MyApp(),
     ),

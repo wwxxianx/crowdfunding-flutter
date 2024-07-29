@@ -138,7 +138,7 @@ class _OrganizationAppBarState extends State<OrganizationAppBar>
                   text: 'Profile',
                 ),
                 Tab(
-                  text: 'Campaigns',
+                  text: 'Collaborations',
                 ),
               ],
             ),

@@ -10,6 +10,18 @@ sealed class CampaignDetailsEvent {
   const CampaignDetailsEvent();
 }
 
+final class OnFetchCampaign extends CampaignDetailsEvent {
+  final String campaignId;
+
+  const OnFetchCampaign(this.campaignId);
+}
+
+final class OnRefreshCampaign extends CampaignDetailsEvent {
+  final String campaignId;
+
+  const OnRefreshCampaign(this.campaignId);
+}
+
 final class OnSubmitComment extends CampaignDetailsEvent {
   final CreateCampaignCommentPayload payload;
 
@@ -18,14 +30,9 @@ final class OnSubmitComment extends CampaignDetailsEvent {
 
 final class OnSubmitReply extends CampaignDetailsEvent {
   final CreateCampaignReplyPayload payload;
+  final VoidCallback? onSuccess;
 
-  const OnSubmitReply(this.payload);
-}
-
-final class OnFetchCampaign extends CampaignDetailsEvent {
-  final String campaignId;
-
-  const OnFetchCampaign(this.campaignId);
+  const OnSubmitReply({required this.payload, this.onSuccess});
 }
 
 final class OnTabIndexChanged extends CampaignDetailsEvent {

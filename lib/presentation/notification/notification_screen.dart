@@ -5,12 +5,22 @@ import 'package:crowdfunding_flutter/presentation/notification/widgets/notificat
 import 'package:crowdfunding_flutter/state_management/app_user_cubit.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_state.dart';
 import 'package:flutter/material.dart';
-import 'package:crowdfunding_flutter/domain/model/notification/notification.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class NotificationScreen extends StatelessWidget {
+class NotificationScreen extends StatefulWidget {
   static const route = 'notification';
   const NotificationScreen({super.key});
+
+  @override
+  State<NotificationScreen> createState() => _NotificationScreenState();
+}
+
+class _NotificationScreenState extends State<NotificationScreen> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    context.read<AppUserCubit>().fetchNotifications();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +45,7 @@ class NotificationScreen extends StatelessWidget {
                   builder: (context, state) {
                     if (state.notifications.isNotEmpty) {
                       return ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: state.notifications.length,
                         itemBuilder: (context, index) {

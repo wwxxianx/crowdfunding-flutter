@@ -66,7 +66,8 @@ class JoinNPOBloc extends Bloc<JoinNPOEvent, JoinNPOState> with InputValidator {
         JoinOrganizationPayload(organizationId: event.organizationId);
     final res = await _joinOrganization.call(payload);
     res.fold(
-      (l) => null,
+      (l) => emit(state.copyWith(
+            joinOrganizationResult: ApiResultFailure(l.errorMessage))),
       (userModel) {
         emit(state.copyWith(
             joinOrganizationResult: ApiResultSuccess(userModel)));
@@ -90,7 +91,7 @@ class JoinNPOBloc extends Bloc<JoinNPOEvent, JoinNPOState> with InputValidator {
     final res =
         await _fetchOrganizationWithCode.call(state.invitationCodeText!);
     res.fold(
-      (l) => null,
+      (l) => emit(state.copyWith(searchOrganizationResult: ApiResultFailure(l.errorMessage))),
       (organization) {
         emit(state.copyWith(
             searchOrganizationResult: ApiResultSuccess(organization)));

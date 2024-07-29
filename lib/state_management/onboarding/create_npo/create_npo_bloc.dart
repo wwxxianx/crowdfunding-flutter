@@ -77,6 +77,7 @@ class CreateNpoBloc extends Bloc<CreateNpoEvent, CreateNpoState>
       (failure) {
         var logger = Logger();
         logger.w(failure.errorMessage);
+        emit(state.copyWith(createOrganizationResult: ApiResultFailure(failure.errorMessage)));
       },
       (userModel) {
         emit(state.copyWith(

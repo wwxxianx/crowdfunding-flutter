@@ -13,8 +13,8 @@ class CustomListTile extends StatelessWidget {
   const CustomListTile({
     super.key,
     required this.title,
-    required this.leading,
-    required this.trailing,
+    this.leading,
+    this.trailing,
     required this.onTap,
     this.padding = const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
     this.showBadge = false,

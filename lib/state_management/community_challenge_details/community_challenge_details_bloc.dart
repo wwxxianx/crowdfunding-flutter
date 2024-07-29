@@ -40,6 +40,7 @@ class CommunityChallengeDetailsBloc extends Bloc<CommunityChallengeDetailsEvent,
       final OnChallengeImageFileChanged e =>
         _onChallengeImageFileChanged(e, emit),
       final OnUpdateChallengeProgress e => _onUpdateChallengeProgress(e, emit),
+      final OnRefreshChallengeProgress e => _onRefreshChallengeProgress(e, emit),
     };
   }
 
@@ -91,6 +92,7 @@ class CommunityChallengeDetailsBloc extends Bloc<CommunityChallengeDetailsEvent,
         emit(state.copyWith(
           challengeProgressResult: ApiResultSuccess(challengeProgress),
           participateResult: const ApiResultInitial(),
+          isChallengeNotStarted: false,
         ));
       },
     );
@@ -106,6 +108,33 @@ class CommunityChallengeDetailsBloc extends Bloc<CommunityChallengeDetailsEvent,
     //       ApiResultSuccess(ChallengeParticipant.samples[0]),
     //   isChallengeNotStarted: false,
     // ));
+    final res = await _fetchChallengeProgress.call(event.communityChallengeId);
+    res.fold(
+      (failure) => emit(state.copyWith(
+          communityChallengeResult: ApiResultFailure(failure.errorMessage))),
+      (data) {
+        if (data == null) {
+          // Not started the challenge
+          emit(
+            state.copyWith(
+              challengeProgressResult: const ApiResultInitial(),
+              isChallengeNotStarted: true,
+            ),
+          );
+        }
+        emit(
+          state.copyWith(
+              challengeProgressResult: ApiResultSuccess(data!),
+              isChallengeNotStarted: false),
+        );
+      },
+    );
+  }
+
+  Future<void> _onRefreshChallengeProgress(
+    OnRefreshChallengeProgress event,
+    Emitter<CommunityChallengeDetailsState> emit,
+  ) async {
     final res = await _fetchChallengeProgress.call(event.communityChallengeId);
     res.fold(
       (failure) => emit(state.copyWith(

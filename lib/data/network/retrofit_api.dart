@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:crowdfunding_flutter/common/constants/constants.dart';
 import 'package:crowdfunding_flutter/data/network/payload/auth/login_be_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/auth/sign_up_payload.dart';
+import 'package:crowdfunding_flutter/data/network/payload/campaign/campaign_update/campaign_update_recommendation_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_comment_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_reply_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/collaboration/create_collaboration_payload.dart';
@@ -23,6 +24,7 @@ import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_fundraiser.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update_recommendation.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/enum/campaign_enum.dart';
 import 'package:crowdfunding_flutter/domain/model/collaboration/collaboration.dart';
 import 'package:crowdfunding_flutter/domain/model/community_challenge/challenge_participant.dart';
@@ -70,6 +72,12 @@ abstract class RestClient {
     @Query("isPublished") bool? isPublished,
     @Query("identification") IdentificationStatusEnum? identificationStatus,
   });
+
+  @GET("campaigns/interested")
+  Future<List<Campaign>> getUserInterestedCampaigns();
+
+  @GET("campaigns/close-to-target")
+  Future<List<Campaign>> getCloseToTargetCampaigns();
 
   @GET("campaigns/successful")
   Future<List<Campaign>> getSuccessfulCampaigns();
@@ -149,15 +157,23 @@ abstract class RestClient {
     @Part(name: "imageFiles") required List<File> imageFiles,
   });
 
+  @POST('campaign-updates/recommendation')
+  Future<CampaignUpdateRecommendation> createCampaignUpdateRecommendation({
+    @Body() required CampaignUpdateRecommendationPayload payload,
+  });
+
   // User Profile
   @PATCH("users")
   @MultiPart()
   Future<UserModel> updateUserProfile({
     @Part(name: "fullName") String? fullName,
+    @Part(name: "address") String? address,
+    @Part(name: "identityNumber") String? identityNumber,
     @Part(name: "profileImageFile") File? profileImageFile,
     @Part(name: "favouriteCategoriesId") List<String>? favouriteCategoriesId,
-    @Part(name: "phoneNumber") String phoneNumber = "112901029",
+    @Part(name: "phoneNumber") String? phoneNumber,
     @Part(name: "isOnboardingCompleted") bool? isOnboardingCompleted,
+    @Part(name: "onesignalId") String? onesignalId,
   });
 
   @GET("users/profile")
@@ -196,6 +212,9 @@ abstract class RestClient {
     @Body() FavouriteCampaignPayload payload,
   );
 
+  @GET("users/scam-reports")
+  Future<List<ScamReport>> getUserSubmittedScamReports();
+
   // Donations
   @POST("donations")
   Future<GiftCardDonationResponse> createGiftCardDonation(
@@ -218,6 +237,9 @@ abstract class RestClient {
 
   @POST("payment/connect-account")
   Future<ConnectAccountResponse> connectStripeAccount();
+
+  @POST("payment/connect-account/organization")
+  Future<ConnectAccountResponse> connectOrganizationStripeAccount();
 
   @POST("payment/onboard-update")
   Future<ConnectAccountResponse> updateConnectAccount(
@@ -288,12 +310,15 @@ abstract class RestClient {
 
   @GET("collaborations/{id}")
   Future<Collaboration?> getCollaboration({
-    @Path('id') required String campaignId,
+    @Path('id') required String collaborationId,
   });
 
   @GET("collaborations")
-  Future<List<Collaboration>> getCollaborations(
-      {@Query("isPending") bool? isPending});
+  Future<List<Collaboration>> getCollaborations({
+    @Query("isPending") bool? isPending,
+    @Query("organizationId") String? organizationId,
+    @Query("campaignId") String? campaignId,
+  });
 
   @PATCH("collaborations/{id}")
   Future<Collaboration> updateCollaboration({
@@ -328,8 +353,8 @@ abstract class RestClient {
   @PATCH("community-challenges/participants")
   @MultiPart()
   Future<ChallengeParticipant> updateChallengeParticipant({
-    @Part(name: 'imageFile') File? imageFile,
     @Part(name: 'communityChallengeId') required String communityChallengeId,
+    @Part(name: 'imageFile') File? imageFile,
   });
 
   @GET('users/community-challenges')

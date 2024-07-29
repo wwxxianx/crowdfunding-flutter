@@ -129,11 +129,13 @@ class _CampaignDetailsScreenState extends State<CampaignDetailsScreen> {
                             style: CustomFonts.titleExtraLarge,
                           ),
                         16.kH,
-                        const DonationProgressBar(
-                          current: 3799,
-                          total: 10000,
-                          height: 12.0,
-                        ),
+                        if (campaignResult is ApiResultSuccess<Campaign>)
+                          DonationProgressBar(
+                            current:
+                                campaignResult.data.raisedAmount.toDouble(),
+                            total: campaignResult.data.targetAmount.toDouble(),
+                            height: 12.0,
+                          ),
                         16.kH,
                         if (campaignResult is ApiResultSuccess<Campaign>)
                           CampaignCategoryTag(

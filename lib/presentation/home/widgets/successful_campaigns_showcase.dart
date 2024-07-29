@@ -2,10 +2,12 @@ import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/widgets/campaign/campaign_card.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
+import 'package:crowdfunding_flutter/presentation/campaign_details/campaign_details_screen.dart';
 import 'package:crowdfunding_flutter/state_management/home/home_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/home/home_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class SuccessfulCampaignsShowcase extends StatelessWidget {
   const SuccessfulCampaignsShowcase({
@@ -29,13 +31,16 @@ class SuccessfulCampaignsShowcase extends StatelessWidget {
               itemCount: completedCampaignsResult.data.length,
               itemBuilder: (context, index) {
                 final campaign = completedCampaignsResult.data[index];
-                return CampaignCard(
-                  height: 550,
-                  campaign: campaign,
-                  onPressed: () {
-                    // context.push(CampaignDetailsScreen.generateRoute(
-                    //     campaignId: campaign.id));
-                  },
+                return Container(
+                  margin: const EdgeInsets.only(right: 12),
+                  child: CampaignCard(
+                    height: 550,
+                    campaign: campaign,
+                    onPressed: () {
+                      context.push(CampaignDetailsScreen.generateRoute(
+                          campaignId: campaign.id));
+                    },
+                  ),
                 );
               },
             ),

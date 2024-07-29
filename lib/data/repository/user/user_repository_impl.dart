@@ -13,6 +13,7 @@ import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dar
 import 'package:crowdfunding_flutter/domain/model/community_challenge/challenge_participant.dart';
 import 'package:crowdfunding_flutter/domain/model/gift_card/gift_cards_response.dart';
 import 'package:crowdfunding_flutter/domain/model/gift_card/num_gift_card_response.dart';
+import 'package:crowdfunding_flutter/domain/model/scam_report/scam_report.dart';
 import 'package:crowdfunding_flutter/domain/model/tax_receipt/tax_receipt.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user_favourite_campaign.dart';
@@ -42,7 +43,10 @@ class UserRepositoryImpl implements UserRepository {
         fullName: payload.fullName,
         isOnboardingCompleted: payload.isOnBoardingCompleted,
         profileImageFile: payload.profileImageFile,
-        phoneNumber: "11209129",
+        phoneNumber: payload.phoneNumber,
+        address: payload.address,
+        identityNumber: payload.identityNumber,
+        onesignalId: payload.onesignalId,
       );
       // Update Cached user
       sp.saveData(
@@ -95,6 +99,7 @@ class UserRepositoryImpl implements UserRepository {
   Future<Either<Failure, List<UserFavouriteCampaign>>>
       getFavouriteCampaigns() async {
     try {
+      // return right(UserFavouriteCampaign.samples);
       final res = await api.getUserFavouriteCampaigns();
       return right(res);
     } on Exception catch (e) {
@@ -181,7 +186,7 @@ class UserRepositoryImpl implements UserRepository {
       return left(Failure(ErrorHandler.otherException(error: e).errorMessage));
     }
   }
-  
+
   @override
   Future<Either<Failure, UserModel>> getCurrentUserProfile() async {
     try {
@@ -211,9 +216,25 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<Failure, TaxReceipt>> getUserTaxReceipt(GetTaxReceiptPayload payload) async {
+  Future<Either<Failure, TaxReceipt>> getUserTaxReceipt(
+      GetTaxReceiptPayload payload) async {
     try {
       final res = await api.getUserTaxReceipt(year: payload.year);
+      return right(res);
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException(error: e).errorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ScamReport>>>
+      getUserSubmittedScamReports() async {
+    try {
+      final res = await api.getUserSubmittedScamReports();
       return right(res);
     } on Exception catch (e) {
       if (e is DioException) {

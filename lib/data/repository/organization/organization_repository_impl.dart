@@ -1,4 +1,5 @@
 import 'package:crowdfunding_flutter/common/error/failure.dart';
+import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/data/network/payload/organization/create_organization_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/organization/get_organizations_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/organization/join_organization_payload.dart';
@@ -7,6 +8,7 @@ import 'package:crowdfunding_flutter/domain/model/organization/organization.dart
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:crowdfunding_flutter/domain/repository/organization/organization_repository.dart';
 import 'package:crowdfunding_flutter/domain/service/auth_service.dart';
+import 'package:dio/dio.dart';
 import 'package:fpdart/src/either.dart';
 
 class OrganizationRepositoryImpl implements OrganizationRepository {
@@ -31,9 +33,12 @@ class OrganizationRepositoryImpl implements OrganizationRepository {
       );
       await authService.updateCacheUser(user: res);
       return right(res);
-    } catch (e) {
-      return left(
-          Failure('Failed to create organization, please try again later.'));
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException().errorMessage));
     }
   }
 
@@ -44,8 +49,12 @@ class OrganizationRepositoryImpl implements OrganizationRepository {
       final res = await api.getOrganizationByInvitationCode(
           invitationCode: invitationCode);
       return right(res);
-    } catch (e) {
-      return left(Failure('Failed to find organization with this code.'));
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException().errorMessage));
     }
   }
 
@@ -56,8 +65,12 @@ class OrganizationRepositoryImpl implements OrganizationRepository {
       final res = await api.joinOrganization(payload);
       await authService.updateCacheUser(user: res);
       return right(res);
-    } catch (e) {
-      return left(Failure('Failed to find organization with this code.'));
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException().errorMessage));
     }
   }
 
@@ -67,8 +80,12 @@ class OrganizationRepositoryImpl implements OrganizationRepository {
     try {
       final res = await api.getOrganization(organizationId: organizationId);
       return right(res);
-    } catch (e) {
-      return left(Failure('Failed to fetch organization.'));
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException().errorMessage));
     }
   }
 
@@ -79,8 +96,12 @@ class OrganizationRepositoryImpl implements OrganizationRepository {
       final res =
           await api.getOrganizationMembers(organizationId: organizationId);
       return right(res);
-    } catch (e) {
-      return left(Failure('Failed to fetch organization.'));
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException().errorMessage));
     }
   }
 
@@ -96,8 +117,12 @@ class OrganizationRepositoryImpl implements OrganizationRepository {
         imageFile: payload.imageFile,
       );
       return right(res);
-    } catch (e) {
-      return left(Failure('Failed to update organization.'));
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException().errorMessage));
     }
   }
 
@@ -105,11 +130,15 @@ class OrganizationRepositoryImpl implements OrganizationRepository {
   Future<Either<Failure, List<Organization>>> getOrganizations(
       GetOrganizationsPayload payload) async {
     try {
-      return right(Organization.samples);
+      // return right(Organization.samples);
       final res = await api.getOrganizations(limit: payload.limit ?? 0);
       return right(res);
-    } catch (e) {
-      return left(Failure('Failed to fetch organization.'));
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException().errorMessage));
     }
   }
 }

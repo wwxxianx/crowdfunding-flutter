@@ -22,14 +22,16 @@ final class AppUserState extends Equatable {
   final ApiResult<UserModel> userProfileResult;
   final bool isConnectingStripeAccount;
   final List<NotificationModel> notifications;
-  final NotificationModel? realtimeNotification;
+  final NotificationModel? unreadCommunityChallengeRewardNotification;
+  final NotificationModel? unreadCampaignStatusChangedNotification;
 
   const AppUserState._({
     this.currentUser,
     this.isConnectingStripeAccount = false,
     this.notifications = const [],
-    this.realtimeNotification,
+    this.unreadCommunityChallengeRewardNotification,
     this.userProfileResult = const ApiResultInitial(),
+    this.unreadCampaignStatusChangedNotification,
   });
 
   const AppUserState.initial() : this._();
@@ -38,16 +40,22 @@ final class AppUserState extends Equatable {
     UserModel? currentUser,
     bool? isConnectingStripeAccount,
     List<NotificationModel>? notifications,
-    NotificationModel? realtimeNotification,
+    NotificationModel? unreadCommunityChallengeRewardNotification,
     ApiResult<UserModel>? userProfileResult,
+    NotificationModel? unreadCampaignStatusChangedNotification,
   }) {
     return AppUserState._(
       currentUser: currentUser ?? this.currentUser,
       isConnectingStripeAccount:
           isConnectingStripeAccount ?? this.isConnectingStripeAccount,
       notifications: notifications ?? this.notifications,
-      realtimeNotification: realtimeNotification ?? this.realtimeNotification,
+      unreadCommunityChallengeRewardNotification:
+          unreadCommunityChallengeRewardNotification ??
+              this.unreadCommunityChallengeRewardNotification,
       userProfileResult: userProfileResult ?? this.userProfileResult,
+      unreadCampaignStatusChangedNotification:
+          unreadCampaignStatusChangedNotification ??
+              this.unreadCampaignStatusChangedNotification,
     );
   }
 
@@ -56,7 +64,8 @@ final class AppUserState extends Equatable {
         currentUser,
         isConnectingStripeAccount,
         notifications,
-        realtimeNotification,
+        unreadCommunityChallengeRewardNotification,
         userProfileResult,
+        unreadCampaignStatusChangedNotification,
       ];
 }

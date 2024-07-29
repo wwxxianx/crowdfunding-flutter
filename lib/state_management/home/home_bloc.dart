@@ -1,3 +1,4 @@
+import 'package:crowdfunding_flutter/common/usecase/usecase.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/data/network/payload/organization/get_organizations_payload.dart';
 import 'package:crowdfunding_flutter/data/service/payment/payment_service.dart';
@@ -5,6 +6,8 @@ import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/enum/campaign_enum.dart';
 import 'package:crowdfunding_flutter/domain/model/organization/organization.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaigns.dart';
+import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_close_to_target_campaigns.dart';
+import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_user_interested_campaigns.dart';
 import 'package:crowdfunding_flutter/domain/usecases/organization/fetch_organizations.dart';
 import 'package:crowdfunding_flutter/state_management/home/home_event.dart';
 import 'package:crowdfunding_flutter/state_management/home/home_state.dart';
@@ -14,14 +17,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final FetchCampaigns _fetchCampaign;
   final PaymentService _paymentService;
   final FetchOrganizations _fetchOrganizations;
+  final FetchCloseToTargetCampaigns _fetchCloseToTargetCampaigns;
+  final FetchUserInterestedCampaigns _fetchUserInterestedCampaigns;
 
   HomeBloc({
     required FetchCampaigns fetchCampaign,
     required PaymentService paymentService,
     required FetchOrganizations fetchOrganizations,
+    required FetchCloseToTargetCampaigns fetchCloseToTargetCampaigns,
+    required FetchUserInterestedCampaigns fetchUserInterestedCampaigns,
   })  : _fetchCampaign = fetchCampaign,
         _paymentService = paymentService,
         _fetchOrganizations = fetchOrganizations,
+        _fetchCloseToTargetCampaigns = fetchCloseToTargetCampaigns,
+        _fetchUserInterestedCampaigns = fetchUserInterestedCampaigns,
         super(const HomeState.initial()) {
     on<HomeEvent>(_onEvent);
   }
@@ -38,7 +47,51 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       final OnFetchOrganizations e => _onFetchOrganizations(e, emit),
       final OnFetchSuccessfulCampaigns e =>
         _onFetchSuccessfulCampaigns(e, emit),
+      final OnFetchCloseToTargetCampaigns e =>
+        _onFetchCloseToTargetCampaigns(e, emit),
+      final OnFetchUserInterestedCampaigns e =>
+        _onFetchUserInterestedCampaigns(e, emit),
     };
+  }
+
+  Future<void> _onFetchCloseToTargetCampaigns(
+    OnFetchCloseToTargetCampaigns event,
+    Emitter<HomeState> emit,
+  ) async {
+    emit(
+        state.copyWith(closeToTargetCampaignsResult: const ApiResultLoading()));
+    final res = await _fetchCloseToTargetCampaigns(NoPayload());
+    res.fold(
+      (failure) => emit(state.copyWith(
+          closeToTargetCampaignsResult:
+              ApiResultFailure(failure.errorMessage))),
+      (campaigns) {
+        emit(
+          state.copyWith(
+              closeToTargetCampaignsResult: ApiResultSuccess(campaigns)),
+        );
+      },
+    );
+  }
+
+  Future<void> _onFetchUserInterestedCampaigns(
+    OnFetchUserInterestedCampaigns event,
+    Emitter<HomeState> emit,
+  ) async {
+    emit(state.copyWith(
+        userInterestedCampaignsResult: const ApiResultLoading()));
+    final res = await _fetchUserInterestedCampaigns(NoPayload());
+    res.fold(
+      (failure) => emit(state.copyWith(
+          userInterestedCampaignsResult:
+              ApiResultFailure(failure.errorMessage))),
+      (campaigns) {
+        emit(
+          state.copyWith(
+              userInterestedCampaignsResult: ApiResultSuccess(campaigns)),
+        );
+      },
+    );
   }
 
   Future<void> _onFetchOrganizations(

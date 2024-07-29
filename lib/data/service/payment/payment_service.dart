@@ -1,4 +1,5 @@
 import 'package:crowdfunding_flutter/common/error/failure.dart';
+import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/data/network/payload/stripe/update_connect_account_payload.dart';
 import 'package:crowdfunding_flutter/data/network/response/payment/connect_account_response.dart';
 import 'package:crowdfunding_flutter/data/network/retrofit_api.dart';
@@ -6,6 +7,7 @@ import 'package:crowdfunding_flutter/data/service/payment/campaign_donation/crea
 import 'package:crowdfunding_flutter/data/service/payment/gift_card/create_gift_card_payment_intent_payload.dart';
 import 'package:crowdfunding_flutter/data/service/payment/payment_intent_response.dart';
 import 'package:crowdfunding_flutter/domain/model/stripe/stripe_account.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:fpdart/fpdart.dart';
@@ -44,6 +46,19 @@ class PaymentService {
       return right(res);
     } catch (e) {
       return left(Failure('Failed to connect account'));
+    }
+  }
+
+  Future<Either<Failure, ConnectAccountResponse>> connectOrganizationStripeAccount() async {
+    try {
+      final res = await api.connectOrganizationStripeAccount();
+      return right(res);
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException().errorMessage));
     }
   }
 

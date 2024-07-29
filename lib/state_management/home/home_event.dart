@@ -12,4 +12,8 @@ final class OnFetchOrganizations extends HomeEvent {}
 
 final class OnFetchSuccessfulCampaigns extends HomeEvent {}
 
+final class OnFetchCloseToTargetCampaigns extends HomeEvent {}
+
+final class OnFetchUserInterestedCampaigns extends HomeEvent {}
+
 final class TestPayment extends HomeEvent {}

@@ -57,9 +57,9 @@ class _DonateScreenState extends State<DonateScreen> {
         isAnonymous: isAnonymousSelected,
         giftCardId: selectedGiftCardToUse?.id,
         onSuccess: () {
-          context
-              .read<GiftCardBloc>()
-              ..add(OnRemoveSelectedGiftCard())..add(OnFetchAllGiftCards());
+          context.read<GiftCardBloc>()
+            ..add(OnRemoveSelectedGiftCard())
+            ..add(OnFetchAllGiftCards());
           context.go('/explore/campaign-details/${widget.campaignId}');
         }));
   }
@@ -124,67 +124,72 @@ class _DonateScreenState extends State<DonateScreen> {
     );
   }
 
-  Widget _buildGiftCardDonationContent() {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 8,
-            vertical: 10,
+  Widget _buildGiftCardDonationContent(BuildContext context) {
+    final selectedGiftCardToUse =
+        context.watch<GiftCardBloc>().state.selectedGiftCardToUse;
+    if (selectedGiftCardToUse != null) {
+      return Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 8,
+              vertical: 10,
+            ),
+            decoration: BoxDecoration(
+              border: Border.all(color: CustomColors.accentGreen),
+              color: CustomColors.containerLightGreen,
+              boxShadow: CustomColors.containerGreenShadow,
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    SvgPicture.asset("assets/icons/gift.svg"),
+                    4.kW,
+                    Text(
+                      "Gift Card Donation",
+                      style: CustomFonts.labelMedium,
+                    ),
+                  ],
+                ),
+                4.kH,
+                Text(
+                  "You’re using the gift (${selectedGiftCardToUse.amount}) received from ${selectedGiftCardToUse.sender.fullName} to support this campaign.",
+                  style: CustomFonts.bodySmall,
+                ),
+              ],
+            ),
           ),
-          decoration: BoxDecoration(
-            border: Border.all(color: CustomColors.accentGreen),
-            color: CustomColors.containerLightGreen,
-            boxShadow: CustomColors.containerGreenShadow,
-            borderRadius: BorderRadius.circular(6),
-          ),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  SvgPicture.asset("assets/icons/gift.svg"),
-                  4.kW,
-                  Text(
-                    "Gift Card Donation",
-                    style: CustomFonts.labelMedium,
-                  ),
-                ],
-              ),
-              4.kH,
-              Text(
-                "You’re using the gift (RM500) received from Kelvin Tan to support this campaign.",
-                style: CustomFonts.bodySmall,
-              ),
-            ],
-          ),
-        ),
-        Positioned(
-          right: -10,
-          top: -10,
-          child: GestureDetector(
-            onTap: () {
-              context.read<GiftCardBloc>().add(OnRemoveSelectedGiftCard());
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white,
-                border: Border.all(color: Color(0xFFFEFEFE)),
-                boxShadow: CustomColors.cardShadow,
-              ),
-              padding: const EdgeInsets.all(4.0),
-              child: const HeroIcon(
-                HeroIcons.xMark,
-                style: HeroIconStyle.mini,
-                color: Color(0xFFAEAEAE),
-                size: 16.0,
+          Positioned(
+            right: -10,
+            top: -10,
+            child: GestureDetector(
+              onTap: () {
+                context.read<GiftCardBloc>().add(OnRemoveSelectedGiftCard());
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                  border: Border.all(color: Color(0xFFFEFEFE)),
+                  boxShadow: CustomColors.cardShadow,
+                ),
+                padding: const EdgeInsets.all(4.0),
+                child: const HeroIcon(
+                  HeroIcons.xMark,
+                  style: HeroIconStyle.mini,
+                  color: Color(0xFFAEAEAE),
+                  size: 16.0,
+                ),
               ),
             ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    }
+    return const SizedBox.shrink();
   }
 
   @override
@@ -306,7 +311,8 @@ class _DonateScreenState extends State<DonateScreen> {
                                 final giftCardBloc =
                                     context.watch<GiftCardBloc>();
                                 return AnimatedCrossFade(
-                                  firstChild: _buildGiftCardDonationContent(),
+                                  firstChild:
+                                      _buildGiftCardDonationContent(context),
                                   secondChild:
                                       _buildStripePaymentMethodContent(),
                                   crossFadeState: giftCardBloc

@@ -3,11 +3,11 @@ import 'package:crowdfunding_flutter/data/network/payload/user/favourite_campaig
 import 'package:crowdfunding_flutter/data/network/payload/user/get_users_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/user/tax_receipt/get_tax_receipt_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/user/user_profile_payload.dart';
-import 'package:crowdfunding_flutter/data/network/response/donation/user_grouped_donations_response.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dart';
 import 'package:crowdfunding_flutter/domain/model/community_challenge/challenge_participant.dart';
 import 'package:crowdfunding_flutter/domain/model/gift_card/gift_cards_response.dart';
 import 'package:crowdfunding_flutter/domain/model/gift_card/num_gift_card_response.dart';
+import 'package:crowdfunding_flutter/domain/model/scam_report/scam_report.dart';
 import 'package:crowdfunding_flutter/domain/model/tax_receipt/tax_receipt.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user_favourite_campaign.dart';
@@ -45,4 +45,9 @@ abstract interface class UserRepository {
 
   Future<Either<Failure, TaxReceipt>>
       getUserTaxReceipt(GetTaxReceiptPayload payload);
+  
+  Future<Either<Failure, List<ScamReport>>>
+      getUserSubmittedScamReports();
+
+  
 }

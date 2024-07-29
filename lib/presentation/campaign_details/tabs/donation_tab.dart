@@ -4,10 +4,12 @@ import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/string.dart';
 import 'package:crowdfunding_flutter/common/widgets/avatar/avatar.dart';
+import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/skeleton.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dart';
+import 'package:crowdfunding_flutter/presentation/campaign_details/widgets/donations_bottom_sheet.dart';
 import 'package:crowdfunding_flutter/state_management/campaign_details/campaign_details_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/campaign_details/campaign_details_state.dart';
 import 'package:flutter/material.dart';
@@ -17,15 +19,30 @@ import 'package:material_symbols_icons/symbols.dart';
 class DonationTab extends StatelessWidget {
   const DonationTab({super.key});
 
-  Widget _buildDonationContent(CampaignDetailsState state) {
-    final campaignResult = state.campaignResult;
+  void _showDonationsBottomSheet(BuildContext context, Campaign campaign) {
+    showModalBottomSheet(
+      isDismissible: true,
+      isScrollControlled: true,
+      elevation: 0,
+      context: context,
+      builder: (context) {
+        return DonationsBottomSheet(
+          campaign: campaign,
+        );
+      },
+    );
+  }
+
+  Widget _buildDonationContent(BuildContext context) {
+    final campaignResult =
+        context.watch<CampaignDetailsBloc>().state.campaignResult;
     if (campaignResult is ApiResultSuccess<Campaign>) {
       if (campaignResult.data.donations.isEmpty) {
         return Text("Empty");
       }
       return Column(
         children: [
-        // Recent donation
+          // Recent donation
           Row(
             children: [
               const Icon(
@@ -55,6 +72,20 @@ class DonationTab extends StatelessWidget {
           ),
           6.kH,
           _buildDonationList(campaignResult.data.topThreeDonations),
+          16.kH,
+          SizedBox(
+            width: double.maxFinite,
+            child: CustomButton(
+              height: 42,
+              style: CustomButtonStyle.white,
+              onPressed: () {
+                _showDonationsBottomSheet(context, campaignResult.data);
+              },
+              child: Text(
+                "See all donations",
+              ),
+            ),
+          )
         ],
       );
     }
@@ -87,7 +118,7 @@ class DonationTab extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _buildDonationContent(state),
+              _buildDonationContent(context),
             ],
           ),
         );

@@ -78,13 +78,9 @@ class GiveTabContent extends StatelessWidget {
                 child: CustomButton(
                   onPressed: () {
                     showModalBottomSheet<void>(
-                      constraints: BoxConstraints(
-                        maxHeight: MediaQuery.of(context).size.height -
-                            MediaQuery.of(context).viewPadding.top -
-                            120,
-                      ),
-                      useSafeArea: true,
                       isScrollControlled: true,
+                      isDismissible: true,
+                      elevation: 0,
                       context: context,
                       builder: (BuildContext context) {
                         return PurchaseGiftCardBottomSheet();

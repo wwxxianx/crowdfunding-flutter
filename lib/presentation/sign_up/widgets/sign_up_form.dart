@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:logger/logger.dart';
 
 class SignUpForm extends StatefulWidget {
   final String? redirectPath;
@@ -32,6 +33,7 @@ class _SignUpFormState extends State<SignUpForm> with InputValidator {
   final focusNode = FocusNode();
 
   void _handleSignUpSubmit() {
+    var logger = Logger();
     if (formKey.currentState!.validate()) {
       final appUserCubit = context.read<AppUserCubit>();
       context.read<SignUpBloc>().add(
@@ -40,10 +42,13 @@ class _SignUpFormState extends State<SignUpForm> with InputValidator {
               password: passwordController.text,
               onSuccess: (user) {
                 appUserCubit.updateUser(user);
-                if (widget.redirectPath != null) {
+                if (widget.redirectPath != null &&
+                    widget.redirectPath!.isNotEmpty) {
+                  logger.e("Redirect path exist");
                   context.go(widget.redirectPath!);
                   return;
                 }
+                logger.e("Go onboard");
                 context.go(OnboardingSelectAccountScreen.route);
               },
             ),

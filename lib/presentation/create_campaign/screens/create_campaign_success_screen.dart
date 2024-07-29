@@ -20,17 +20,15 @@ class CreateCampaignSuccessScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          'Your fundraiser will be published once it’s verified!',
-          style: CustomFonts.labelMedium,
-        ),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(Dimensions.screenHorizontalPadding),
         child: Column(
           children: [
+            const Text(
+              'Your fundraiser will be published once it’s all set up and verified!',
+              style: CustomFonts.titleMedium,
+            ),
+            20.kH,
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(

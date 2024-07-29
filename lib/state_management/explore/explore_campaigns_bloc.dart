@@ -25,7 +25,28 @@ class ExploreCampaignsBloc
       final OnSelectCampaignCategory e => _onSelectCampaignCategory(e, emit),
       final OnSelectStateAndRegion e => _onSelectStateAndRegion(e, emit),
       final OnSearchQueryChanged e => _onSearchQueryChanged(e, emit),
+      final OnRefreshCampaigns e => _onRefreshCampaigns(e, emit),
     };
+  }
+
+  Future<void> _onRefreshCampaigns(
+    OnRefreshCampaigns event,
+    Emitter<ExploreCampaignsState> emit,
+  ) async {
+    final payload = FetchCampaignsPayload(
+      categoryIds: state.selectedCategoryIds,
+      stateIds: state.selectedStateIds,
+      searchQuery: state.searchQuery,
+      isPublished: true,
+      identificationStatus: IdentificationStatusEnum.VERIFIED,
+    );
+    final res = await _fetchCampaigns(payload);
+    res.fold(
+      (failure) => emit(state.copyWith(
+          campaignsResult: ApiResultFailure(failure.errorMessage))),
+      (campaigns) =>
+          emit(state.copyWith(campaignsResult: ApiResultSuccess(campaigns))),
+    );
   }
 
   void _onSearchQueryChanged(

@@ -61,8 +61,10 @@ class LoginScreen extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        context.goNamed('sign-up',
-                            queryParameters: {'from': fromPath});
+                        context.pushNamed(
+                          'sign-up',
+                          queryParameters: {'from': fromPath},
+                        );
                       },
                       child: Ink(
                         child: Text(

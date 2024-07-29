@@ -17,4 +17,15 @@ class UserFavouriteCampaign {
       _$UserFavouriteCampaignFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserFavouriteCampaignToJson(this);
+
+  static final samples = [
+    UserFavouriteCampaign(
+      campaign: Campaign.samples[0],
+      createdAt: DateTime.now().toString(),
+    ),
+    UserFavouriteCampaign(
+      campaign: Campaign.samples[1],
+      createdAt: DateTime.now().toString(),
+    ),
+  ];
 }

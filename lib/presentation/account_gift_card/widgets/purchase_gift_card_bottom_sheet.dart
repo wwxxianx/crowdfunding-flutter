@@ -18,6 +18,7 @@ import 'package:crowdfunding_flutter/state_management/purchase_gift_card/purchas
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PurchaseGiftCardBottomSheet extends StatefulWidget {
@@ -50,14 +51,14 @@ class _PurchaseGiftCardBottomSheetState
         fetchUsers: serviceLocator(),
         paymentService: serviceLocator(),
       ),
-      child: CustomBottomSheet(
-        padding: const EdgeInsets.only(top: 8),
+      child: CustomDraggableSheet(
+        initialChildSize: 0.95,
         child: Container(
           constraints: BoxConstraints(
             maxHeight: (MediaQuery.of(context).size.height -
                     MediaQuery.of(context).viewPadding.top) /
                 100 *
-                80,
+                90,
           ),
           child: PageView(
             controller: pageViewController,
@@ -177,15 +178,12 @@ class _PurchaseGiftCardPageState extends State<PurchaseGiftCardPage> {
                 },
               ),
               const Spacer(),
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomButton(
-                      onPressed: _navigateToConfirmationPage,
-                      child: const Text("Send my gift"),
-                    ),
-                  ),
-                ],
+              SizedBox(
+                width: double.maxFinite,
+                child: CustomButton(
+                  onPressed: _navigateToConfirmationPage,
+                  child: const Text("Send my gift"),
+                ),
               ),
             ],
           ),
@@ -205,7 +203,9 @@ class PurchaseGiftCardConfirmationPage extends StatelessWidget {
   void _handleCreateGiftCardAndPayment(BuildContext context) {
     context
         .read<PurchaseGiftCardBloc>()
-        .add(OnCreateGiftCardAndPayment(onSuccess: () {}));
+        .add(OnCreateGiftCardAndPayment(onSuccess: () {
+      context.pop();
+    }));
   }
 
   Widget _buildReceiver(PurchaseGiftCardState state) {

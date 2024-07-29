@@ -6,6 +6,7 @@ import 'package:crowdfunding_flutter/presentation/account_gift_card/widgets/tab_
 import 'package:crowdfunding_flutter/presentation/account_gift_card/widgets/tab_receive.dart';
 import 'package:crowdfunding_flutter/presentation/account_gift_card/widgets/tab_sent.dart';
 import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_bloc.dart';
+import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

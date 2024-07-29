@@ -4,6 +4,8 @@ import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/avatar/avatar.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
+import 'package:crowdfunding_flutter/common/widgets/container/animated_bg_container.dart';
+import 'package:crowdfunding_flutter/common/widgets/dashed_line.dart';
 import 'package:crowdfunding_flutter/common/widgets/skeleton.dart';
 import 'package:crowdfunding_flutter/common/widgets/text/expandable_text.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
@@ -54,37 +56,122 @@ class CampaignAboutTabContent extends StatelessWidget {
                       height: 40,
                       radius: 100,
                     ),
-                  if (campaignResult is ApiResultSuccess<Campaign>)
-                    Avatar(
-                      imageUrl: campaignResult.data.user.profileImageUrl,
-                      placeholder: campaignResult.data.user.email[0],
-                    ),
-                  8.kW,
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
+                  if (campaignResult is ApiResultSuccess<Campaign> &&
+                      campaignResult.data.collaboratedOrganization != null)
+                    AnimatedBGContainer(
+                      startColor: const Color(0xFFF1FAEA),
+                      endColor: Color.fromARGB(255, 235, 254, 222),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 10),
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: CustomColors.accentGreen),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Text(
-                            "California Agency",
-                            style: CustomFonts.labelMedium,
+                          // Fundraiser
+                          Column(
+                            children: [
+                              Avatar(
+                                imageUrl:
+                                    campaignResult.data.user.profileImageUrl,
+                                placeholder: campaignResult.data.user.email[0],
+                              ),
+                              6.kH,
+                              Text(
+                                campaignResult.data.user.fullName,
+                                style: CustomFonts.labelSmall,
+                              )
+                            ],
+                          ),
+                          8.kW,
+                          SizedBox(
+                            width: 35,
+                            child: DashedLine(
+                              color: CustomColors.accentGreen,
+                            ),
                           ),
                           4.kW,
-                          const HeroIcon(
-                            HeroIcons.checkBadge,
-                            size: 20.0,
-                            style: HeroIconStyle.solid,
+                          SvgPicture.asset("assets/icons/handshake.svg"),
+                          4.kW,
+                          SizedBox(
+                            width: 35,
+                            child: DashedLine(
+                              color: CustomColors.accentGreen,
+                            ),
                           ),
+                          8.kW,
+                          // Organization
+                          if (campaignResult.data.collaboratedOrganization !=
+                              null)
+                            Column(
+                              children: [
+                                Avatar(
+                                  imageUrl: campaignResult
+                                      .data.collaboratedOrganization?.imageUrl,
+                                  placeholder:
+                                      campaignResult.data.user.email[0],
+                                ),
+                                6.kH,
+                                Text(
+                                  campaignResult.data.collaboratedOrganization
+                                          ?.name ??
+                                      "NPO",
+                                  style: CustomFonts.labelSmall,
+                                )
+                              ],
+                            ),
                         ],
                       ),
-                      Text(
-                        "California, USA",
-                        style: CustomFonts.bodySmall.copyWith(
-                          color: CustomColors.textGrey,
+                    ),
+                  if (campaignResult is ApiResultSuccess<Campaign> &&
+                      campaignResult.data.collaboratedOrganization == null)
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Avatar(
+                          imageUrl: campaignResult.data.user.profileImageUrl,
+                          placeholder: campaignResult.data.user.email[0],
                         ),
-                      )
-                    ],
-                  )
+                        6.kW,
+                        Text(
+                          campaignResult.data.user.fullName,
+                          style: CustomFonts.labelSmall,
+                        ),
+                        4.kW,
+                        const HeroIcon(
+                          HeroIcons.checkBadge,
+                          size: 20.0,
+                          style: HeroIconStyle.solid,
+                        ),
+                      ],
+                    )
+                  // 8.kW,
+                  // if (campaignResult is ApiResultSuccess<Campaign>)
+                  //   Column(
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //     children: [
+                  //       Row(
+                  //         children: [
+                  //           Text(
+                  //             campaignResult.data.user.fullName,
+                  //             style: CustomFonts.labelMedium,
+                  //           ),
+                  //           4.kW,
+                  //           const HeroIcon(
+                  //             HeroIcons.checkBadge,
+                  //             size: 20.0,
+                  //             style: HeroIconStyle.solid,
+                  //           ),
+                  //         ],
+                  //       ),
+                  //       // Text(
+                  //       //   "California, USA",
+                  //       //   style: CustomFonts.bodySmall.copyWith(
+                  //       //     color: CustomColors.textGrey,
+                  //       //   ),
+                  //       // )
+                  //     ],
+                  //   )
                 ],
               ),
 
@@ -131,12 +218,12 @@ class CampaignAboutTabContent extends StatelessWidget {
                           campaignResult.data.beneficiaryName,
                           style: CustomFonts.labelMedium,
                         ),
-                      Text(
-                        "California, USA",
-                        style: CustomFonts.bodySmall.copyWith(
-                          color: CustomColors.textGrey,
-                        ),
-                      )
+                      // Text(
+                      //   "California, USA",
+                      //   style: CustomFonts.bodySmall.copyWith(
+                      //     color: CustomColors.textGrey,
+                      //   ),
+                      // )
                     ],
                   )
                 ],

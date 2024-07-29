@@ -10,6 +10,7 @@ import 'package:crowdfunding_flutter/state_management/onboarding/join_npo/join_n
 import 'package:crowdfunding_flutter/state_management/onboarding/join_npo/join_npo_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:toastification/toastification.dart';
 
 class EnterCodePage extends StatelessWidget {
   final VoidCallback onNextPage;
@@ -34,7 +35,21 @@ class EnterCodePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<JoinNPOBloc, JoinNPOState>(
+    return BlocConsumer<JoinNPOBloc, JoinNPOState>(
+      listener: (context, state) {
+        final searchOrganizationResult = state.searchOrganizationResult;
+        if (searchOrganizationResult is ApiResultFailure<Organization>) {
+          toastification.show(
+            type: ToastificationType.error,
+            autoCloseDuration: const Duration(seconds: 5),
+            showProgressBar: true,
+            applyBlurEffect: true,
+            boxShadow: lowModeShadow,
+            title: Text(searchOrganizationResult.errorMessage ??
+                "Something went wrong"),
+          );
+        }
+      },
       builder: (context, state) {
         final organizationResult = state.searchOrganizationResult;
         return Padding(
@@ -66,6 +81,7 @@ class EnterCodePage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: CustomButton(
+                      
                       style: CustomButtonStyle.white,
                       onPressed: () {
                         Navigator.pop(context);
@@ -80,6 +96,8 @@ class EnterCodePage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: CustomButton(
+                      isLoading:
+                          state.searchOrganizationResult is ApiResultLoading,
                       onPressed: () {
                         _handleSubmit(context);
                       },

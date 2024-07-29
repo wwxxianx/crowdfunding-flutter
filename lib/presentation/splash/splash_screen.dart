@@ -1,4 +1,5 @@
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
+import 'package:crowdfunding_flutter/data/network/payload/user/user_profile_payload.dart';
 import 'package:crowdfunding_flutter/presentation/home/home_screen.dart';
 import 'package:crowdfunding_flutter/presentation/onboarding/widgets/onboarding_select_account_type_screen.dart';
 import 'package:crowdfunding_flutter/presentation/splash/splash_bg_shape.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -26,6 +28,8 @@ class _SplashScreenState extends State<SplashScreen>
   late Animation<double> textPositionAnimation;
   late Animation<double> textOpacityAnimation;
   double scale = 1.0;
+
+  final ValueNotifier<bool> isAnimationCompleted = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -44,6 +48,9 @@ class _SplashScreenState extends State<SplashScreen>
     textOpacityAnimation = Tween<double>(begin: 0, end: 1).animate(
         CurvedAnimation(parent: animationController, curve: Curves.easeInOut));
     _navigateAfterDelay();
+    animationController.forward().whenComplete(() {
+      isAnimationCompleted.value = true;
+    });
   }
 
   @override
@@ -55,33 +62,46 @@ class _SplashScreenState extends State<SplashScreen>
   void _navigateAfterDelay() async {
     String destination;
     final appUserCubit = context.read<AppUserCubit>();
-    await appUserCubit.checkUserLoggedIn();
-    final state = appUserCubit.state;
-    Future.delayed(const Duration(milliseconds: 300), () {
-      animationController.forward().then((value) {
-        if (state.currentUser != null) {
-          if (state.currentUser!.isOnboardingCompleted) {
-            destination = '/home';
-          } else {
-            destination = OnboardingSelectAccountScreen.route;
+    await appUserCubit.checkUserLoggedIn(
+      onSuccess: (user) {
+        OneSignal.login(user.id).whenComplete(() async {
+          // Update user onesignal field
+          if (user.onesignalId != null) {
+            return;
           }
+          final id = await OneSignal.User.getOnesignalId();
+          appUserCubit.updateUserProfile(UserProfilePayload(onesignalId: id));
+        });
+        if (user.isOnboardingCompleted) {
+          destination = '/home';
         } else {
-          destination = '/login';
+          // destination = OnboardingSelectAccountScreen.route;
+          destination = '/home';
         }
 
-        if (mounted) {
-          context.go(destination);
-        }
-      });
-    });
-
-    if (!mounted) return;
-    if (state.currentUser != null) {
-      // Init app state
-      context.read<GiftCardBloc>().add(OnFetchAllGiftCards());
-      context.read<AppUserCubit>().fetchNotifications();
-      context.read<HomeBloc>().add(OnFetchRecommendedCampaigns());
-    }
+        context.read<GiftCardBloc>().add(OnFetchAllGiftCards());
+        context.read<AppUserCubit>().fetchNotifications();
+        context.read<HomeBloc>()
+          ..add(OnFetchRecommendedCampaigns())
+          ..add(OnFetchCloseToTargetCampaigns())
+          ..add(OnFetchUserInterestedCampaigns());
+        // Redirect user
+        // Listen for animation completion
+        isAnimationCompleted.addListener(() {
+          if (isAnimationCompleted.value) {
+            context.go(destination);
+          }
+        });
+      },
+      onFailure: () {
+        // Redirect user
+        isAnimationCompleted.addListener(() {
+          if (isAnimationCompleted.value) {
+            context.go('/login');
+          }
+        });
+      },
+    );
   }
 
   @override

@@ -2,11 +2,13 @@ import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
-import 'package:crowdfunding_flutter/common/widgets/avatar/avatar.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
+import 'package:crowdfunding_flutter/data/network/response/payment/connect_account_response.dart';
 import 'package:crowdfunding_flutter/di/init_dependencies.dart';
 import 'package:crowdfunding_flutter/domain/model/organization/organization.dart';
+import 'package:crowdfunding_flutter/presentation/organization_profile/tabs/collaborations_tab.dart';
 import 'package:crowdfunding_flutter/presentation/organization_profile/tabs/organization_profile_campaigns_tab.dart';
+import 'package:crowdfunding_flutter/presentation/organization_profile/tabs/profile_tab.dart';
 import 'package:crowdfunding_flutter/presentation/organization_profile/widgets/organization_app_bar.dart';
 import 'package:crowdfunding_flutter/state_management/organization_profile/organization_profile_bloc.dart';
 import 'package:crowdfunding_flutter/state_management/organization_profile/organization_profile_event.dart';
@@ -14,7 +16,7 @@ import 'package:crowdfunding_flutter/state_management/organization_profile/organ
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:heroicons/heroicons.dart';
-import 'package:logger/logger.dart';
+import 'package:toastification/toastification.dart';
 
 class OrganizationProfileScreen extends StatefulWidget {
   static const route = '/organization-profile/:organizationId';
@@ -42,9 +44,11 @@ class _OrganizationProfileScreenState extends State<OrganizationProfileScreen>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _scrollController = ScrollController();
-    _organizationProfileBloc =
-        OrganizationProfileBloc(fetchOrganization: serviceLocator())
-          ..add(OnFetchOrganization(organizationId: widget.organizationId));
+    _organizationProfileBloc = OrganizationProfileBloc(
+      fetchOrganization: serviceLocator(),
+      connectOrganizationBankAccount: serviceLocator(),
+      fetchCollaborations: serviceLocator(),
+    )..add(OnFetchOrganization(organizationId: widget.organizationId));
   }
 
   @override
@@ -110,7 +114,21 @@ class _OrganizationProfileScreenState extends State<OrganizationProfileScreen>
     return BlocProvider(
       create: (context) => _organizationProfileBloc,
       child: Scaffold(
-        body: BlocBuilder<OrganizationProfileBloc, OrganizationProfileState>(
+        body: BlocConsumer<OrganizationProfileBloc, OrganizationProfileState>(
+          listener: (context, state) {
+            final connectBankAccountResult = state.connectBankAccountResult;
+            if (connectBankAccountResult
+                is ApiResultFailure<ConnectAccountResponse>) {
+              toastification.show(
+                type: ToastificationType.error,
+                title: Text(connectBankAccountResult.errorMessage ?? "Something went wrong"),
+                autoCloseDuration: const Duration(seconds: 5),
+                showProgressBar: true,
+                applyBlurEffect: true,
+                boxShadow: lowModeShadow,
+              );
+            }
+          },
           builder: (context, state) {
             return RefreshIndicator(
               onRefresh: () async {
@@ -139,12 +157,8 @@ class _OrganizationProfileScreenState extends State<OrganizationProfileScreen>
                             controller: _tabController,
                             children: [
                               OrganizationCampaignsTabContent(),
-                              Center(
-                                child: Text('Profile tab'),
-                              ),
-                              Center(
-                                child: Text('Campaigns tab'),
-                              ),
+                              OrganizationProfileTabContent(),
+                              CollaborationsTabContent(),
                             ],
                           );
                         }

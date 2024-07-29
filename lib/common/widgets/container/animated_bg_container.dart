@@ -7,6 +7,7 @@ class AnimatedBGContainer extends StatefulWidget {
   final Duration animationDuration;
   final BorderRadiusGeometry? borderRadius;
   final EdgeInsetsGeometry padding;
+  final List<BoxShadow>? boxShadow;
   final Widget child;
   const AnimatedBGContainer({
     super.key,
@@ -14,6 +15,7 @@ class AnimatedBGContainer extends StatefulWidget {
     required this.startColor,
     required this.endColor,
     this.borderRadius,
+    this.boxShadow,
     this.border,
     this.animationDuration = const Duration(seconds: 1),
     this.padding = const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
@@ -60,6 +62,7 @@ class _AnimatedBGContainerState extends State<AnimatedBGContainer>
       animation: _controller,
       builder: (context, _) => Container(
         decoration: BoxDecoration(
+          boxShadow: widget.boxShadow,
           borderRadius: widget.borderRadius,
           border: widget.border,
           gradient: LinearGradient(

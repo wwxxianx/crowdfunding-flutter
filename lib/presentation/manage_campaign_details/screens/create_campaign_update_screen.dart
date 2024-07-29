@@ -5,15 +5,21 @@ import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
+import 'package:crowdfunding_flutter/common/widgets/container/animated_bg_container.dart';
 import 'package:crowdfunding_flutter/common/widgets/input/outlined_text_field.dart';
 import 'package:crowdfunding_flutter/common/widgets/media_picker.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/di/init_dependencies.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update_recommendation.dart';
+import 'package:crowdfunding_flutter/presentation/manage_campaign_details/widgets/ai_campaign_update_bottom_sheet.dart';
 import 'package:crowdfunding_flutter/state_management/create_campaign_update/create_campaign_update_bloc.dart';
+import 'package:crowdfunding_flutter/state_management/create_campaign_update/create_campaign_update_event.dart';
 import 'package:crowdfunding_flutter/state_management/create_campaign_update/create_campaign_update_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:toastification/toastification.dart';
 
 class CreateCampaignUpdateScreen extends StatefulWidget {
   static const String route = '/create-campaign-update/:campaignId';
@@ -38,6 +44,27 @@ class _CreateCampaignUpdateScreenState
   final contentTextController = TextEditingController();
   List<File> selectedImageFiles = [];
 
+  void _showAIBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      isDismissible: true,
+      isScrollControlled: true,
+      elevation: 0,
+      context: context,
+      builder: (modalContext) {
+        return BlocProvider.value(
+          value: BlocProvider.of<CreateCampaignUpdateBloc>(context),
+          child: AICampaignUpdateBottomSheet(
+            campaignId: widget.campaignId,
+            onPopulateResult: (CampaignUpdateRecommendation result) {
+              titleTextController.text = result.title;
+              contentTextController.text = result.description;
+            },
+          ),
+        );
+      },
+    );
+  }
+
   void _handleSelectFile(List<File> files) {
     setState(() {
       selectedImageFiles = files;
@@ -45,25 +72,38 @@ class _CreateCampaignUpdateScreenState
   }
 
   void _handleSubmit(BuildContext context) {
-    print(selectedImageFiles.length);
-    // context.read<CreateCampaignUpdateBloc>().add(
-    //       OnCreateCampaignUpdate(
-    //         title: titleTextController.text,
-    //         description: contentTextController.text,
-    //         campaignId: widget.campaignId,
-    //         imageFiles: selectedImageFiles,
-    //         onSuccess: () {
-    //           print("Success");
-    //         },
-    //       ),
-    //     );
+    // print("Submit update");
+
+    context.read<CreateCampaignUpdateBloc>().add(
+          OnCreateCampaignUpdate(
+            title: titleTextController.text,
+            description: contentTextController.text,
+            campaignId: widget.campaignId,
+            imageFiles: selectedImageFiles,
+            onSuccess: () {
+              toastification.show(
+                type: ToastificationType.success,
+                autoCloseDuration: const Duration(seconds: 7),
+                showProgressBar: true,
+                applyBlurEffect: true,
+                boxShadow: lowModeShadow,
+                title: Text("A NEW update created!"),
+                description:
+                    Text("All of the donors will receive your update soon!"),
+              );
+              context.pop();
+            },
+          ),
+        );
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          CreateCampaignUpdateBloc(createCampaignUpdate: serviceLocator()),
+      create: (context) => CreateCampaignUpdateBloc(
+        createCampaignUpdate: serviceLocator(),
+        createCampaignUpdateRecommendation: serviceLocator(),
+      ),
       child: BlocBuilder<CreateCampaignUpdateBloc, CreateCampaignUpdateState>(
         builder: (context, state) {
           return Scaffold(
@@ -134,6 +174,37 @@ class _CreateCampaignUpdateScreenState
                         controller: contentTextController,
                         maxLines: 10,
                       ),
+                      6.kH,
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: GestureDetector(
+                          onTap: () {
+                            _showAIBottomSheet(context);
+                          },
+                          child: AnimatedBGContainer(
+                            startColor: const Color(0xFFF1FAEA),
+                            endColor: const Color(0xFFB7FF87),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 8),
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(color: CustomColors.accentGreen),
+                            boxShadow: CustomColors.containerSlateShadow,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SvgPicture.asset("assets/icons/sparkles.svg"),
+                                6.kW,
+                                Text(
+                                  "Generate for me",
+                                  style: CustomFonts.labelSmall.copyWith(
+                                    color: CustomColors.textDarkGreen,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                       28.kH,
                       Row(
                         children: [
@@ -141,8 +212,8 @@ class _CreateCampaignUpdateScreenState
                             child: CustomButton(
                               isLoading:
                                   state.createUpdateResult is ApiResultLoading,
-                              enabled:
-                                  state.createUpdateResult is! ApiResultLoading,
+                              // enabled:
+                              //     state.createUpdateResult is! ApiResultLoading,
                               onPressed: () {
                                 _handleSubmit(context);
                               },

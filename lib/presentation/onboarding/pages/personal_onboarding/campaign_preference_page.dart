@@ -41,7 +41,7 @@ class _OnboardingCampaignPreferencePageState
       //   NavigationScreen.route(),
       //   (route) => false,
       // );
-      context.go(HomeScreen.route);
+      context.go("/home");
     }));
   }
 

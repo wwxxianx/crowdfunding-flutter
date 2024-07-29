@@ -7,6 +7,7 @@ import 'package:crowdfunding_flutter/common/widgets/avatar/avatar.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/animated_bg_container.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/dialog.dart';
+import 'package:crowdfunding_flutter/common/widgets/skeleton.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/di/init_dependencies.dart';
 import 'package:crowdfunding_flutter/domain/model/community_challenge/challenge_participant.dart';
@@ -21,6 +22,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:toastification/toastification.dart';
 
 class CommunityChallengeDetailsScreen extends StatelessWidget {
   final String id;
@@ -201,9 +203,19 @@ class CommunityChallengeDetailsScreen extends StatelessWidget {
         updateChallengeParticipant: serviceLocator(),
       )
         ..add(OnFetchCommunityChallenge(id: id))
-        ..add(OnFetchChallengeProgress(communityChallengeId: id, userId: '')),
-      child: BlocBuilder<CommunityChallengeDetailsBloc,
+        ..add(OnFetchChallengeProgress(communityChallengeId: id)),
+      child: BlocConsumer<CommunityChallengeDetailsBloc,
           CommunityChallengeDetailsState>(
+        listener: (context, state) {
+          final updateProgressResult = state.updateProgressResult;
+          if (updateProgressResult is ApiResultFailure<ChallengeParticipant>) {
+            toastification.show(
+              type: ToastificationType.error,
+              title: Text(
+                  updateProgressResult.errorMessage ?? "Something went wrong"),
+            );
+          }
+        },
         builder: (context, state) {
           // final communityChallengeResult = state.communityChallengeResult;
           final communityChallengeResult = context
@@ -211,134 +223,145 @@ class CommunityChallengeDetailsScreen extends StatelessWidget {
               .state
               .communityChallengeResult;
           final challengeProgressResult = state.challengeProgressResult;
-          return Scaffold(
-            extendBodyBehindAppBar: true,
-            bottomSheet: Container(
-              width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.symmetric(
-                  horizontal: Dimensions.screenHorizontalPadding, vertical: 8),
-              decoration: const BoxDecoration(
-                border: Border.symmetric(
-                  horizontal:
-                      BorderSide(color: CustomColors.containerBorderGrey),
+          return RefreshIndicator(
+            onRefresh: () async {
+              context
+                  .read<CommunityChallengeDetailsBloc>()
+                  .add(OnRefreshChallengeProgress(communityChallengeId: id));
+            },
+            child: Scaffold(
+              extendBodyBehindAppBar: true,
+              bottomSheet: Container(
+                width: MediaQuery.of(context).size.width,
+                padding: const EdgeInsets.symmetric(
+                    horizontal: Dimensions.screenHorizontalPadding,
+                    vertical: 8),
+                decoration: const BoxDecoration(
+                  border: Border.symmetric(
+                    horizontal:
+                        BorderSide(color: CustomColors.containerBorderGrey),
+                  ),
+                ),
+                child: _buildBottomSheet(context),
+              ),
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+                leading: IconButton.filled(
+                  color: Colors.black,
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                        Colors.white.withOpacity(0.6)),
+                  ),
+                  icon: const HeroIcon(
+                    HeroIcons.arrowLeft,
+                    size: 20,
+                    style: HeroIconStyle.mini,
+                  ),
+                  onPressed: () {
+                    context.pop();
+                  },
                 ),
               ),
-              child: _buildBottomSheet(context),
-            ),
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              leading: IconButton.filled(
-                color: Colors.black,
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(Colors.white.withOpacity(0.6)),
-                ),
-                icon: const HeroIcon(
-                  HeroIcons.arrowLeft,
-                  size: 20,
-                  style: HeroIconStyle.mini,
-                ),
-                onPressed: () {
-                  context.pop();
-                },
-              ),
-            ),
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    bottom: Dimensions.bottomActionBarHeight),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AspectRatio(
-                      aspectRatio: 1.35 / 1,
-                      child: CachedNetworkImage(
-                        fit: BoxFit.cover,
-                        imageUrl:
-                            'https://dopwacnojucwkhhdoiqd.supabase.co/storage/v1/object/public/community-challenge/community-challenge-sample.png',
+              body: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      bottom: Dimensions.bottomActionBarHeight),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AspectRatio(
+                        aspectRatio: 1.35 / 1,
+                        child: CachedNetworkImage(
+                          fit: BoxFit.cover,
+                          imageUrl: communityChallengeResult
+                                  is ApiResultSuccess<CommunityChallenge>
+                              ? communityChallengeResult.data.imageUrl
+                              : '',
+                          placeholder: (context, url) {
+                            return Skeleton();
+                          },
+                          errorWidget: (context, url, error) {
+                            return Skeleton();
+                          },
+                        ),
                       ),
-                    ),
-                    12.kH,
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: Dimensions.screenHorizontalPadding),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildSponsorContent(communityChallengeResult),
-                          8.kH,
-                          Text(
-                            'Expires on 2020/19/09',
-                            style: CustomFonts.bodySmall.copyWith(
-                              color: CustomColors.textGrey,
-                            ),
-                          ),
-                          12.kH,
-                          if (communityChallengeResult
-                              is ApiResultSuccess<CommunityChallenge>)
+                      12.kH,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: Dimensions.screenHorizontalPadding),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildSponsorContent(communityChallengeResult),
+                            8.kH,
                             Text(
-                              communityChallengeResult.data.title,
-                              style: CustomFonts.titleLarge,
+                              'Expires on 2020/19/09',
+                              style: CustomFonts.bodySmall.copyWith(
+                                color: CustomColors.textGrey,
+                              ),
                             ),
-                          4.kH,
-                          if (communityChallengeResult
-                              is ApiResultSuccess<CommunityChallenge>)
-                            Text(
-                              communityChallengeResult.data.description,
-                              style: CustomFonts.labelMedium,
-                            ),
-                          8.kH,
-                          AnimatedBGContainer(
-                            startColor: const Color(0xFFF1FAEA),
-                            endColor: const Color(0xFFB7FF87),
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border.all(color: Colors.black),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                        'assets/icons/confetti.svg'),
-                                    6.kW,
+                            12.kH,
+                            if (communityChallengeResult
+                                is ApiResultSuccess<CommunityChallenge>)
+                              Text(
+                                communityChallengeResult.data.title,
+                                style: CustomFonts.titleLarge,
+                              ),
+                            4.kH,
+                            if (communityChallengeResult
+                                is ApiResultSuccess<CommunityChallenge>)
+                              Text(
+                                communityChallengeResult.data.description,
+                                style: CustomFonts.labelMedium,
+                              ),
+                            8.kH,
+                            AnimatedBGContainer(
+                              startColor: const Color(0xFFF1FAEA),
+                              endColor: const Color(0xFFB7FF87),
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(color: Colors.black),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                          'assets/icons/confetti.svg'),
+                                      6.kW,
+                                      Text(
+                                        'Final Rewards!',
+                                        style: CustomFonts.titleMedium.copyWith(
+                                          color: const Color(0xFF335B17),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  6.kH,
+                                  if (communityChallengeResult
+                                      is ApiResultSuccess<CommunityChallenge>)
                                     Text(
-                                      'Final Rewards!',
-                                      style: CustomFonts.titleMedium.copyWith(
+                                      communityChallengeResult.data.reward,
+                                      style: CustomFonts.labelSmall.copyWith(
                                         color: const Color(0xFF335B17),
                                       ),
                                     ),
-                                  ],
-                                ),
-                                6.kH,
-                                if (communityChallengeResult
-                                    is ApiResultSuccess<CommunityChallenge>)
-                                  Text(
-                                    communityChallengeResult.data.reward,
-                                    style: CustomFonts.labelSmall.copyWith(
-                                      color: const Color(0xFF335B17),
-                                    ),
-                                  ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          12.kH,
-                          BlocProvider.value(
-                            value:
-                                BlocProvider.of<CommunityChallengeDetailsBloc>(
-                                    context),
-                            child: const ChallengeStepper(),
-                          ),
-                          20.kH,
-                          const Text(
-                            'How it works?',
-                            style: CustomFonts.labelMedium,
-                          ),
-                          8.kH,
-                          _buildGuidelines(communityChallengeResult),
-                        ],
+                            12.kH,
+                            ChallengeStepper(),
+                            20.kH,
+                            const Text(
+                              'How it works?',
+                              style: CustomFonts.labelMedium,
+                            ),
+                            8.kH,
+                            _buildGuidelines(communityChallengeResult),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

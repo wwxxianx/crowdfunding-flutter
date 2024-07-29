@@ -17,6 +17,7 @@ import 'package:crowdfunding_flutter/state_management/my_campaign/my_campaign_ev
 import 'package:crowdfunding_flutter/state_management/my_campaign/my_campaign_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons/heroicons.dart';
 
@@ -32,7 +33,17 @@ class ManageCampaignScreen extends StatelessWidget {
     if (myCampaignResult is ApiResultSuccess<List<Campaign>>) {
       if (myCampaignResult.data.isEmpty) {
         // Empty state
-        return Text("Empty");
+        return Column(
+          children: [
+            SvgPicture.asset("assets/images/empty-illustration.svg"),
+            16.kH,
+            const Text(
+              "Seems like you have not created any fundraiser yet!",
+              style: CustomFonts.labelLarge,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        );
       }
       return ListView.builder(
         physics: const NeverScrollableScrollPhysics(),

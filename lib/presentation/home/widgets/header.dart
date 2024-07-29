@@ -10,12 +10,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePageHeader extends StatelessWidget {
   final String title;
-  final Widget action;
+  final Widget? action;
   final EdgeInsetsGeometry padding;
   const HomePageHeader({
     super.key,
     required this.title,
-    required this.action,
+    this.action,
     this.padding = const EdgeInsets.only(
       left: Dimensions.screenHorizontalPadding,
       right: Dimensions.screenHorizontalPadding,
@@ -53,7 +53,7 @@ class HomePageHeader extends StatelessWidget {
                 ],
               ),
               const Spacer(),
-              action,
+              if (action != null) action!,
             ],
           ),
         );

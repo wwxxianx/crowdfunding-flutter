@@ -5,8 +5,10 @@ import 'package:crowdfunding_flutter/presentation/account/account_screen.dart';
 import 'package:crowdfunding_flutter/presentation/account_gift_card/charity_gift_card_screen.dart';
 import 'package:crowdfunding_flutter/presentation/account_gift_card/screens/open_gift_card_screen.dart';
 import 'package:crowdfunding_flutter/presentation/account_join_team/account_join_team_screen.dart';
+import 'package:crowdfunding_flutter/presentation/account_legality/account_legality_screen.dart';
 import 'package:crowdfunding_flutter/presentation/account_preferences/account_preferences_screen.dart';
 import 'package:crowdfunding_flutter/presentation/account_saved_campaigns/saved_campaigns_screen.dart';
+import 'package:crowdfunding_flutter/presentation/account_scam_report/account_scam_report_screen.dart';
 import 'package:crowdfunding_flutter/presentation/account_tax/account_tax_screen.dart';
 import 'package:crowdfunding_flutter/presentation/account_user_donations/account_user_donations_screen.dart';
 import 'package:crowdfunding_flutter/presentation/campaign_details/campaign_details_screen.dart';
@@ -37,6 +39,7 @@ import 'package:crowdfunding_flutter/presentation/onboarding/widgets/onboarding_
 import 'package:crowdfunding_flutter/presentation/onboarding/widgets/personal_account_page_view.dart';
 import 'package:crowdfunding_flutter/presentation/organization_profile/organization_profile_screen.dart';
 import 'package:crowdfunding_flutter/presentation/redirects/organization_redirect_screen.dart';
+import 'package:crowdfunding_flutter/presentation/scam_report_details/scam_report_details_screen.dart';
 import 'package:crowdfunding_flutter/presentation/sign_up/sign_up_screen.dart';
 import 'package:crowdfunding_flutter/presentation/splash/splash_screen.dart';
 import 'package:crowdfunding_flutter/presentation/testing/test_screen.dart';
@@ -112,12 +115,40 @@ class AppRouter {
                     builder: (context, state) => const AccountScreen(),
                     routes: [
                       GoRoute(
+                        parentNavigatorKey: rootNavigatorKey,
                         path: 'donation',
                         builder: (context, state) => const MyDonationsScreen(),
                       ),
                       GoRoute(
+                        parentNavigatorKey: rootNavigatorKey,
                         path: 'tax-receipt',
                         builder: (context, state) => const AccountTaxScreen(),
+                      ),
+                      GoRoute(
+                        parentNavigatorKey: rootNavigatorKey,
+                        path: 'legality',
+                        builder: (context, state) =>
+                            const AccountLegalityScreen(),
+                        routes: [
+                          GoRoute(
+                            parentNavigatorKey: rootNavigatorKey,
+                            path: 'scam-report',
+                            builder: (context, state) =>
+                                const AccontScamReportScreen(),
+                            routes: [
+                              GoRoute(
+                                path: ':id',
+                                builder: (context, state) {
+                                  final scamReportId =
+                                      state.pathParameters['id'] ?? "";
+                                  return ScamReportDetailsScreen(
+                                    scamReportId: scamReportId,
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -127,9 +158,12 @@ class AppRouter {
             redirect: (context, state) async {
               final currentUser =
                   context.read<AppUserCubit>().state.currentUser;
+              var userIsLoggedIn = false;
               if (currentUser == null) {
-                final userIsLoggedIn =
-                    await context.read<AppUserCubit>().checkUserLoggedIn();
+                await context.read<AppUserCubit>().checkUserLoggedIn(
+                      onSuccess: (_) => userIsLoggedIn = true,
+                      onFailure: () => userIsLoggedIn = false,
+                    );
                 if (!userIsLoggedIn) {
                   return '/login?from=${state.uri}';
                 }
@@ -163,37 +197,6 @@ class AppRouter {
               final campaignId = state.pathParameters['campaignId'] ?? '';
               return CreateCampaignSuccessScreen(campaignId: campaignId);
             },
-          ),
-          GoRoute(
-            path: '/data',
-            builder: (context, state) {
-              return Scaffold(
-                appBar: AppBar(title: Text('Data All')),
-                body: CustomButton(
-                  onPressed: () {
-                    String? id;
-                    context.push(
-                      '/data/details/$id',
-                    );
-                  },
-                  child: Text('Go details'),
-                ),
-              );
-            },
-            routes: [
-              GoRoute(
-                path: 'details/:id',
-                builder: (context, state) {
-                  final id = state.pathParameters['id'];
-                  var logger = Logger();
-                  return Scaffold(
-                    appBar: AppBar(
-                      title: Text('Details'),
-                    ),
-                  );
-                },
-              ),
-            ],
           ),
           GoRoute(
             path: '/loading',

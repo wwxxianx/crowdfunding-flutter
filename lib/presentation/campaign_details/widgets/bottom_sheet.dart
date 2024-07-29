@@ -67,7 +67,7 @@ class _CampaignDetailsBottomSheetState
         parentId: selectedCommentToReply.parentId ?? selectedCommentToReply.id,
         comment: commentTextController.text,
       );
-      bloc.add(OnSubmitReply(payload));
+      bloc.add(OnSubmitReply(payload: payload));
     } else {
       // New comment (parent)
       final payload = CreateCampaignCommentPayload(
@@ -228,7 +228,7 @@ class _CampaignDetailsBottomSheetState
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                           child: Text(
-                            "You can use the gift (RM500) received from Kelvin Tan to support this fundraiser.",
+                            "You can use the gift (RM${giftCardState.selectedGiftCardToUse!.amount}) received from ${giftCardState.selectedGiftCardToUse!.sender.fullName} to support this fundraiser.",
                             style: CustomFonts.labelSmall,
                           ),
                         ),

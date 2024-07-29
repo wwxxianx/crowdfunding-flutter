@@ -267,24 +267,6 @@ class ConnectedBankAccountScreen extends StatelessWidget {
               ),
               child: _buildContent(context),
             ),
-            // body: LayoutBuilder(
-            //   builder: (context, constraints) {
-            //     return SingleChildScrollView(
-            //       child: ConstrainedBox(
-            //         constraints:
-            //             BoxConstraints(minHeight: constraints.maxHeight),
-            //         child: Padding(
-            //           padding: const EdgeInsets.only(
-            //             left: Dimensions.screenHorizontalPadding,
-            //             right: Dimensions.screenHorizontalPadding,
-            //             bottom: Dimensions.screenHorizontalPadding,
-            //           ),
-            //           child: _buildContent(context),
-            //         ),
-            //       ),
-            //     );
-            //   },
-            // ),
           );
         },
       ),

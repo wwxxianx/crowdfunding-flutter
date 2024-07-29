@@ -79,7 +79,7 @@ class _JoinNPOSuccessScreenState extends State<JoinNPOSuccessScreen> {
                     Expanded(
                       child: CustomButton(
                         onPressed: () {
-                          context.go(HomeScreen.route);
+                          context.go("/home");
                         },
                         child: const Text("OK"),
                       ),

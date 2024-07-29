@@ -24,14 +24,16 @@ void main() {
     setUp(() {
       mockData = CampaignSummary.samples.first;
       registerFallbackValue(CreateCampaignPayload(
-          title: mockData.title,
-          description: mockData.description,
-          targetAmount: mockData.targetAmount.toInt(),
-          categoryId: '',
-          phoneNumber: '',
-          stateId: '',
-          beneficiaryName: mockData.beneficiaryName,
-          campaignImageFiles: [File('')]));
+        title: mockData.title,
+        description: mockData.description,
+        targetAmount: mockData.targetAmount.toInt(),
+        categoryId: '',
+        phoneNumber: '',
+        stateId: '',
+        beneficiaryName: mockData.beneficiaryName,
+        campaignImageFiles: [File('')],
+        expiredAt: DateTime.now(),
+      ));
       createCampaign = MockCreateCampaignUseCase();
       createCampaignBloc = CreateCampaignBloc(createCampaign: createCampaign);
     });
@@ -61,7 +63,8 @@ void main() {
       blocTest(
         'Insert description',
         build: () => createCampaignBloc,
-        act: (bloc) => bloc.add(const OnDescriptionChanged(description: description)),
+        act: (bloc) =>
+            bloc.add(const OnDescriptionChanged(description: description)),
         expect: () => [
           createCampaignBloc.state.copyWith(descriptionText: description),
         ],
@@ -70,7 +73,8 @@ void main() {
       blocTest(
         'Insert target amount',
         build: () => createCampaignBloc,
-        act: (bloc) => bloc.add(const OnTargetAmountTextChanged(targetAmount: targetAmount)),
+        act: (bloc) => bloc
+            .add(const OnTargetAmountTextChanged(targetAmount: targetAmount)),
         expect: () => [
           createCampaignBloc.state.copyWith(targetAmountText: targetAmount),
         ],
@@ -79,7 +83,8 @@ void main() {
       blocTest(
         'Select category ID',
         build: () => createCampaignBloc,
-        act: (bloc) => bloc.add(const OnSelectCampaignCategory(categoryId: categoryId)),
+        act: (bloc) =>
+            bloc.add(const OnSelectCampaignCategory(categoryId: categoryId)),
         expect: () => [
           createCampaignBloc.state.copyWith(selectedCategoryId: categoryId),
         ],
@@ -88,7 +93,8 @@ void main() {
       blocTest(
         'Insert phone number',
         build: () => createCampaignBloc,
-        act: (bloc) => bloc.add(const OnPhoneNumberChanged(phoneNumber: phoneNumber)),
+        act: (bloc) =>
+            bloc.add(const OnPhoneNumberChanged(phoneNumber: phoneNumber)),
         expect: () => [
           createCampaignBloc.state.copyWith(phoneNumberText: phoneNumber),
         ],
@@ -106,9 +112,11 @@ void main() {
       blocTest(
         'Insert beneficiary name',
         build: () => createCampaignBloc,
-        act: (bloc) => bloc.add(const OnBeneficiaryNameChanged(beneficiaryName: beneficiaryName)),
+        act: (bloc) => bloc.add(
+            const OnBeneficiaryNameChanged(beneficiaryName: beneficiaryName)),
         expect: () => [
-          createCampaignBloc.state.copyWith(beneficiaryNameText: beneficiaryName),
+          createCampaignBloc.state
+              .copyWith(beneficiaryNameText: beneficiaryName),
         ],
       );
     });

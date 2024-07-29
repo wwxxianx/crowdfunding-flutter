@@ -74,6 +74,14 @@ class ChallengeParticipant {
     this.challengeIsSuccess,
   });
 
+  ChallengeStatus get statusEnum {
+    try {
+      return ChallengeStatus.values.byName(status);
+    } catch (e) {
+      return ChallengeStatus.IN_PROGRESS;
+    }
+  }
+
   factory ChallengeParticipant.fromJson(Map<String, dynamic> json) =>
       _$ChallengeParticipantFromJson(json);
 

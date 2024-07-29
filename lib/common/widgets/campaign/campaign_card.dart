@@ -223,10 +223,10 @@ class CampaignCard extends StatelessWidget {
                                           isSmall: true,
                                           category: campaign.campaignCategory,
                                         ),
-                                        if (!isSmall)
-                                          CustomTag(
-                                            label: "65% Raised",
-                                          ),
+                                        // if (!isSmall)
+                                        //   CustomTag(
+                                        //     label: "65% Raised",
+                                        //   ),
                                         // if (isSmall) MatchOfferTag(),
                                       ],
                                     )
@@ -248,7 +248,7 @@ class CampaignCard extends StatelessWidget {
                             child: Text(
                               campaign.title,
                               style: isSmall ? null : CustomFonts.titleMedium,
-                              maxLines: 3,
+                              maxLines: isSmall ? 2 : 3,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),

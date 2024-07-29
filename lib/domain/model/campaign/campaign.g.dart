@@ -66,6 +66,10 @@ Campaign _$CampaignFromJson(Map<String, dynamic> json) => Campaign(
       status: json['status'] as String? ?? "PENDING",
       suspendReason: json['suspendReason'] as String?,
       expiredAt: json['expiredAt'] as String?,
+      collaboratedOrganization: json['collaboratedOrganization'] == null
+          ? null
+          : Organization.fromJson(
+              json['collaboratedOrganization'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$CampaignToJson(Campaign instance) => <String, dynamic>{
@@ -101,6 +105,7 @@ Map<String, dynamic> _$CampaignToJson(Campaign instance) => <String, dynamic>{
       'topThreeDonations': instance.topThreeDonations,
       'recentThreeDonations': instance.recentThreeDonations,
       'firstMatchedCommunityChallenge': instance.firstMatchedCommunityChallenge,
+      'collaboratedOrganization': instance.collaboratedOrganization,
     };
 
 const _$AgeGroupEnumMap = {

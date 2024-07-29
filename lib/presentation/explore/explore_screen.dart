@@ -119,7 +119,7 @@ class _ExploreScreenState extends State<ExploreScreen>
             child: GridView.count(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 physics: const NeverScrollableScrollPhysics(),
-                childAspectRatio: 0.65,
+                childAspectRatio: 0.62,
                 mainAxisSpacing: 12,
                 crossAxisSpacing: 12,
                 shrinkWrap: true,
@@ -132,8 +132,12 @@ class _ExploreScreenState extends State<ExploreScreen>
                     child: ScaleAnimation(
                       child: FadeInAnimation(
                         child: CampaignCard(
-                          campaign: Campaign.sample,
+                          campaign: campaign,
                           isSmall: true,
+                          onPressed: () {
+                            context.push(CampaignDetailsScreen.generateRoute(
+                                campaignId: campaignsResult.data[index].id));
+                          },
                         ),
                       ),
                     ),
@@ -228,157 +232,157 @@ class _ExploreScreenState extends State<ExploreScreen>
           builder: (context, state) {
             final isFilterEmpty = state.selectedCategoryIds.isEmpty ||
                 state.selectedCategoryIds.isEmpty;
-            return Scaffold(
-              bottomSheet: Container(
-                margin: const EdgeInsets.only(bottom: 8.0, right: 16.0),
-                color: Colors.transparent,
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Stack(
-                      alignment: Alignment.bottomRight,
-                      children: [
-                        // Filter button
-                        CustomBadge(
-                          badgeText:
-                              "${state.selectedCategoryIds.length + state.selectedStateIds.length}",
-                          showBadge: !isFilterEmpty,
-                          position: badges.BadgePosition.topEnd(
-                              end: isFilterEmpty ? 60 : 66),
-                          child: Container(
-                            margin:
-                                EdgeInsets.only(right: isFilterEmpty ? 68 : 74),
-                            child: CustomOutlinedIconButton(
-                              border: Border.all(
-                                color: CustomColors.containerBorderGreen,
-                                width: 1.5,
-                              ),
-                              onPressed: () {
-                                showModalBottomSheet<void>(
-                                  constraints: BoxConstraints(
-                                    maxHeight: MediaQuery.of(context)
-                                            .size
-                                            .height -
-                                        MediaQuery.of(context).viewPadding.top -
-                                        120,
-                                  ),
-                                  useSafeArea: true,
-                                  isScrollControlled: true,
-                                  context: context,
-                                  builder: (BuildContext ctx) {
-                                    return BlocProvider.value(
-                                      value:
-                                          BlocProvider.of<ExploreCampaignsBloc>(
-                                              context),
-                                      child: const CampaignsFilterBottomSheet(),
-                                    );
-                                  },
-                                );
-                              },
-                              icon: const HeroIcon(
-                                HeroIcons.adjustmentsHorizontal,
-                                size: 35.0,
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            if (isSearching)
-                              AnimatedSearchResultContainer(
-                                scaleAnimation: _searchResultContainerAnimation,
-                              ),
-                            12.kH,
-                            CustomBadge(
-                              showBadge: state.searchQuery != null &&
-                                  state.searchQuery!.isNotEmpty,
-                              badgeText: "1",
-                              child: AnimatedSearchBar(
-                                autoFocus: true,
-                                textInputAction: TextInputAction.search,
-                                textController: _searchTextController,
-                                width: MediaQuery.of(context).size.width -
-                                    Dimensions.screenHorizontalPadding,
-                                onSubmitted: (string) {
-                                  _handleHideMask();
-                                  _hideSearchResultContainer();
-                                  _handleSearch(context, string);
+            return RefreshIndicator(
+              onRefresh: () async {
+                context.read<ExploreCampaignsBloc>().add(OnRefreshCampaigns());
+              },
+              child: Scaffold(
+                bottomSheet: Container(
+                  margin: const EdgeInsets.only(bottom: 8.0, right: 16.0),
+                  color: Colors.transparent,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Stack(
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          // Filter button
+                          CustomBadge(
+                            badgeText:
+                                "${state.selectedCategoryIds.length + state.selectedStateIds.length}",
+                            showBadge: !isFilterEmpty,
+                            position: badges.BadgePosition.topEnd(
+                                end: isFilterEmpty ? 60 : 66),
+                            child: Container(
+                              margin: EdgeInsets.only(
+                                  right: isFilterEmpty ? 68 : 74),
+                              child: CustomOutlinedIconButton(
+                                border: Border.all(
+                                  color: CustomColors.containerBorderGreen,
+                                  width: 1.5,
+                                ),
+                                onPressed: () {
+                                  showModalBottomSheet(
+                                    isDismissible: true,
+                                    isScrollControlled: true,
+                                    elevation: 0,
+                                    context: context,
+                                    builder: (BuildContext ctx) {
+                                      return BlocProvider.value(
+                                        value: BlocProvider.of<
+                                            ExploreCampaignsBloc>(context),
+                                        child:
+                                            const CampaignsFilterBottomSheet(),
+                                      );
+                                    },
+                                  );
                                 },
-                                onSuffixTap: () {
-                                  _handleHideMask();
-                                  _hideSearchResultContainer();
-                                },
-                                searchBarOpen: (integer) {
-                                  _handleOpenSearchBar();
-                                  _showSearchResultContainer();
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              body: Stack(
-                children: [
-                  SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        //Header
-                        HomePageHeader(
-                          padding: const EdgeInsets.only(
-                            top: 20.0,
-                            left: 15,
-                            right: 10,
-                          ),
-                          title: "Let's help!",
-                          action: CustomTab(
-                            initialIndex: 1,
-                            onTabItemChange: (tabIndex) {
-                              switch (tabIndex) {
-                                case 0:
-                                  _handleViewChange(true);
-                                  break;
-                                case 1:
-                                  _handleViewChange(false);
-                                  break;
-                              }
-                            },
-                            tabs: const <Widget>[
-                              TabItem(
-                                title: 'Grid',
-                                prefixIcon: Icon(
-                                  Symbols.grid_view_rounded,
-                                  size: 16,
-                                  color: CustomColors.textBlack,
-                                  weight: 500,
+                                icon: const HeroIcon(
+                                  HeroIcons.adjustmentsHorizontal,
+                                  size: 35.0,
                                 ),
                               ),
-                              TabItem(
-                                title: 'List',
-                                prefixIcon: HeroIcon(
-                                  HeroIcons.listBullet,
-                                  size: 16,
-                                  color: CustomColors.textBlack,
+                            ),
+                          ),
+
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              if (isSearching)
+                                AnimatedSearchResultContainer(
+                                  scaleAnimation:
+                                      _searchResultContainerAnimation,
+                                ),
+                              12.kH,
+                              CustomBadge(
+                                showBadge: state.searchQuery != null &&
+                                    state.searchQuery!.isNotEmpty,
+                                badgeText: "1",
+                                child: AnimatedSearchBar(
+                                  autoFocus: true,
+                                  textInputAction: TextInputAction.search,
+                                  textController: _searchTextController,
+                                  width: MediaQuery.of(context).size.width -
+                                      Dimensions.screenHorizontalPadding,
+                                  onSubmitted: (string) {
+                                    _handleHideMask();
+                                    _hideSearchResultContainer();
+                                    _handleSearch(context, string);
+                                  },
+                                  onSuffixTap: () {
+                                    _handleHideMask();
+                                    _hideSearchResultContainer();
+                                  },
+                                  searchBarOpen: (integer) {
+                                    _handleOpenSearchBar();
+                                    _showSearchResultContainer();
+                                  },
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                        20.kH,
-                        _buildCampaignsContentLayout(state),
-                      ],
-                    ),
+                        ],
+                      ),
+                    ],
                   ),
-                  if (isSearching) const ScaffoldMask()
-                ],
+                ),
+                body: Stack(
+                  children: [
+                    SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          //Header
+                          HomePageHeader(
+                            padding: const EdgeInsets.only(
+                              top: 20.0,
+                              left: 15,
+                              right: 10,
+                            ),
+                            title: "Let's help!",
+                            action: CustomTab(
+                              initialIndex: 1,
+                              onTabItemChange: (tabIndex) {
+                                switch (tabIndex) {
+                                  case 0:
+                                    _handleViewChange(true);
+                                    break;
+                                  case 1:
+                                    _handleViewChange(false);
+                                    break;
+                                }
+                              },
+                              tabs: const <Widget>[
+                                TabItem(
+                                  title: 'Grid',
+                                  prefixIcon: Icon(
+                                    Symbols.grid_view_rounded,
+                                    size: 16,
+                                    color: CustomColors.textBlack,
+                                    weight: 500,
+                                  ),
+                                ),
+                                TabItem(
+                                  title: 'List',
+                                  prefixIcon: HeroIcon(
+                                    HeroIcons.listBullet,
+                                    size: 16,
+                                    color: CustomColors.textBlack,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          20.kH,
+                          _buildCampaignsContentLayout(state),
+                        ],
+                      ),
+                    ),
+                    if (isSearching) const ScaffoldMask()
+                  ],
+                ),
               ),
             );
           },

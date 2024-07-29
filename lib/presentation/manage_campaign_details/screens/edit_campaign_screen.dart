@@ -14,6 +14,8 @@ import 'package:crowdfunding_flutter/state_management/edit_campaign/edit_campaig
 import 'package:crowdfunding_flutter/state_management/edit_campaign/edit_campaign_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:toastification/toastification.dart';
 
 class EditCampaignScreen extends StatelessWidget {
   static const route = '/edit-campaign/:campaignId';
@@ -26,7 +28,9 @@ class EditCampaignScreen extends StatelessWidget {
   });
 
   void _handleUpdateCampaign(BuildContext context) {
-    context.read<EditCampaignBloc>().add(OnUpdateCampaign(onSuccess: () {}));
+    context.read<EditCampaignBloc>().add(OnUpdateCampaign(onSuccess: () {
+      context.pop();
+    }));
   }
 
   @override
@@ -40,8 +44,19 @@ class EditCampaignScreen extends StatelessWidget {
         listener: (context, state) {
           // Populate input with fetched data
           final campaignResult = state.campaignResult;
+          final updateCampaignResult = state.updateCampaignResult;
           if (campaignResult is ApiResultSuccess<Campaign>) {
             final bloc = context.read<EditCampaignBloc>();
+          }
+          if (updateCampaignResult is ApiResultFailure<Campaign>) {
+            toastification.show(
+              type: ToastificationType.error,
+              autoCloseDuration: const Duration(seconds: 5),
+              showProgressBar: true,
+              applyBlurEffect: true,
+              title: Text(
+                  updateCampaignResult.errorMessage ?? "Something went wrong"),
+            );
           }
         },
         builder: (context, state) {
@@ -65,8 +80,8 @@ class EditCampaignScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: CustomButton(
-                      isLoading: state is ApiResultLoading,
-                      enabled: state is! ApiResultLoading,
+                      isLoading: state.updateCampaignResult is ApiResultLoading,
+                      enabled: state.updateCampaignResult is! ApiResultLoading,
                       onPressed: () {
                         _handleUpdateCampaign(context);
                       },

@@ -12,11 +12,17 @@ final class OnFetchCommunityChallenge extends CommunityChallengeDetailsEvent {
 
 final class OnFetchChallengeProgress extends CommunityChallengeDetailsEvent {
   final String communityChallengeId;
-  final String userId;
 
   const OnFetchChallengeProgress({
     required this.communityChallengeId,
-    required this.userId,
+  });
+}
+
+final class OnRefreshChallengeProgress extends CommunityChallengeDetailsEvent {
+  final String communityChallengeId;
+
+  const OnRefreshChallengeProgress({
+    required this.communityChallengeId,
   });
 }
 

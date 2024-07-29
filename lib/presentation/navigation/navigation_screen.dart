@@ -28,39 +28,36 @@ class _NavigationScreenState extends State<NavigationScreen> {
   @override
   void initState() {
     super.initState();
+    final AppUserCubit appUserCubit = BlocProvider.of<AppUserCubit>(context);
+    appUserCubit.listenToRealtimeNotification();
+    BlocProvider.of<FavouriteCampaignBloc>(context)
+      .add(OnFetchFavouriteCampaigns());
   }
 
   @override
   void didChangeDependencies() {
-    final AppUserCubit appUserCubit = BlocProvider.of<AppUserCubit>(context);
-    appUserCubit.listenToRealtimeNotification();
+    // final AppUserCubit appUserCubit = BlocProvider.of<AppUserCubit>(context);
+    // appUserCubit.listenToRealtimeNotification();
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => FavouriteCampaignBloc(
-            createFavouriteCampaign: serviceLocator(),
-            getFavouriteCampaigns: serviceLocator(),
-            deleteFavouriteCampaign: serviceLocator(),
-          )..add(OnFetchFavouriteCampaigns()),
-        ),
-        // BlocProvider(create: (_) => NavigationCubit()),
-      ],
-      child: BlocListener<AppUserCubit, AppUserState>(
-        listenWhen: (previous, current) {
-          return (previous.realtimeNotification !=
-                  current.realtimeNotification) &&
-              current.realtimeNotification != null;
-        },
-        listener: (context, state) {
-          final realtimeNotification = state.realtimeNotification;
-          if (realtimeNotification == null) {
-            return;
-          }
+    return BlocListener<AppUserCubit, AppUserState>(
+      listenWhen: (previous, current) {
+        return ((previous.unreadCommunityChallengeRewardNotification !=
+                    current.unreadCommunityChallengeRewardNotification) &&
+                current.unreadCommunityChallengeRewardNotification != null) ||
+            (previous.unreadCampaignStatusChangedNotification !=
+                    current.unreadCampaignStatusChangedNotification &&
+                current.unreadCampaignStatusChangedNotification != null);
+      },
+      listener: (context, state) {
+        final realtimeNotification =
+            state.unreadCommunityChallengeRewardNotification;
+        final unreadCampaignStatusChangedNotification =
+            state.unreadCampaignStatusChangedNotification;
+        if (realtimeNotification != null) {
           toastification.show(
             title: Text(realtimeNotification.title),
             description: Text(realtimeNotification.description ??
@@ -71,29 +68,30 @@ class _NavigationScreenState extends State<NavigationScreen> {
               HeroIcons.bellAlert,
               color: CustomColors.accentGreen,
             ),
-            
+            autoCloseDuration: const Duration(seconds: 7),
+            showProgressBar: true,
           );
-        },
-        child: Scaffold(
-          bottomNavigationBar: const HomeBottomNavigationBar(),
-          body: SafeArea(child: widget.child),
-          // body: BlocBuilder<NavigationCubit, NavigationState>(
-          //   builder: (context, navigationState) {
-          //     switch (navigationState) {
-          //       case NavigationState.home:
-          //         return HomeScreen();
-          //       case NavigationState.explore:
-          //         return ExploreScreen();
-          //       case NavigationState.notification:
-          //         return NotificationScreen();
-          //       case NavigationState.manage:
-          //         return ManageCampaignScreen();
-          //       case NavigationState.account:
-          //         return AccountScreen();
-          //     }
-          //   },
-          // ),
-        ),
+        }
+        if (unreadCampaignStatusChangedNotification != null) {
+          toastification.show(
+            title: Text(unreadCampaignStatusChangedNotification.title),
+            description: Text(
+                unreadCampaignStatusChangedNotification.description ??
+                    'Check out your notification inbox'),
+            applyBlurEffect: true,
+            boxShadow: lowModeShadow,
+            icon: const HeroIcon(
+              HeroIcons.bellAlert,
+              color: CustomColors.accentGreen,
+            ),
+            autoCloseDuration: const Duration(seconds: 7),
+            showProgressBar: true,
+          );
+        }
+      },
+      child: Scaffold(
+        bottomNavigationBar: const HomeBottomNavigationBar(),
+        body: SafeArea(child: widget.child),
       ),
     );
   }

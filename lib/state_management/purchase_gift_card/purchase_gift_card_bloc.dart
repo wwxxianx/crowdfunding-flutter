@@ -1,3 +1,4 @@
+import 'package:crowdfunding_flutter/common/error/failure.dart';
 import 'package:crowdfunding_flutter/common/utils/input_validator.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/data/network/payload/user/get_users_payload.dart';
@@ -52,21 +53,40 @@ class PurchaseGiftCardBloc
     );
     final paymentIntentRes =
         await _paymentService.initGiftCardPaymentSheet(payload);
-    paymentIntentRes.fold(
-      (failure) {},
-      (unit) async {
-        final paymentRes = await _paymentService.presentPaymentSheet();
-        paymentRes.fold(
-          (l) => emit(state.copyWith(
-              createGiftCardResult: ApiResultFailure(l.errorMessage))),
-          (r) {
-            emit(state.copyWith(
-                createGiftCardResult: const ApiResultSuccess(Unit)));
-            event.onSuccess();
-          },
-        );
-      },
-    );
+    if (paymentIntentRes.isLeft()) {
+      // handle error;
+      return;
+    }
+    final paymentRes = await _paymentService.presentPaymentSheet();
+    if (paymentRes.isLeft()) {
+      final failureRes = paymentRes
+          .swap()
+          .getOrElse(
+            (l) => Failure("Something went wrong"),
+          )
+          .errorMessage;
+      emit(state.copyWith(createGiftCardResult: ApiResultFailure(failureRes)));
+      return;
+    }
+
+    emit(state.copyWith(createGiftCardResult: const ApiResultSuccess(Unit)));
+    event.onSuccess();
+
+    // paymentIntentRes.fold(
+    //   (failure) {},
+    //   (unit) async {
+    //     final paymentRes = await _paymentService.presentPaymentSheet();
+    //     paymentRes.fold(
+    //       (l) => emit(state.copyWith(
+    //           createGiftCardResult: ApiResultFailure(l.errorMessage))),
+    //       (r) {
+    //         emit(state.copyWith(
+    //             createGiftCardResult: const ApiResultSuccess(Unit)));
+    //         event.onSuccess();
+    //       },
+    //     );
+    //   },
+    // );
   }
 
   void _onValidateGiftCardData(

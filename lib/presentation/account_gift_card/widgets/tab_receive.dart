@@ -10,6 +10,7 @@ import 'package:crowdfunding_flutter/common/widgets/container/animated_bg_contai
 import 'package:crowdfunding_flutter/domain/model/gift_card/gift_card.dart';
 import 'package:crowdfunding_flutter/presentation/account_gift_card/screens/open_gift_card_screen.dart';
 import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_bloc.dart';
+import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_event.dart';
 import 'package:crowdfunding_flutter/state_management/gift_card/gift_card_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,10 +23,13 @@ class ReceivedTabContent extends StatelessWidget {
     final receivedGiftCards = state.receivedGiftCards;
     if (receivedGiftCards.isNotEmpty) {
       return ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemCount: receivedGiftCards.length,
         itemBuilder: (context, index) {
-          return ReceivedGiftCardItem(giftCard: receivedGiftCards[index]);
+          return Container(
+              margin: const EdgeInsets.only(bottom: 16),
+              child: ReceivedGiftCardItem(giftCard: receivedGiftCards[index]));
         },
       );
     }
@@ -37,13 +41,20 @@ class ReceivedTabContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<GiftCardBloc, GiftCardState>(
       builder: (context, state) {
-        return SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: Dimensions.screenHorizontalPadding,
-              vertical: 20,
+        return RefreshIndicator(
+          onRefresh: () async {
+            context
+                .read<GiftCardBloc>()
+                .add(OnFetchAllGiftCards(isRefresh: true));
+          },
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: Dimensions.screenHorizontalPadding,
+                vertical: 20,
+              ),
+              child: _buildContent(state),
             ),
-            child: _buildContent(state),
           ),
         );
       },
@@ -122,9 +133,10 @@ class ReceivedGiftCardItem extends StatelessWidget {
                             text: TextSpan(
                               text: giftCard.sender.fullName,
                               style: CustomFonts.labelMedium,
-                              children: const [
+                              children: [
                                 TextSpan(
-                                  text: " sent you a gift of RM500!",
+                                  text:
+                                      " sent you a gift of RM${giftCard.amount}!",
                                   style: CustomFonts.bodyMedium,
                                 ),
                               ],
@@ -181,7 +193,9 @@ class ReceivedGiftCardItem extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(4),
                       child: CachedNetworkImage(
-                        imageUrl: giftCard.campaignDonation!.campaign != null ? giftCard.campaignDonation!.campaign!.thumbnailUrl : "null",
+                        imageUrl: giftCard.campaignDonation!.campaign != null
+                            ? giftCard.campaignDonation!.campaign!.thumbnailUrl
+                            : "null",
                         errorWidget: (context, url, error) {
                           return const CircularProgressIndicator();
                         },
@@ -198,7 +212,9 @@ class ReceivedGiftCardItem extends StatelessWidget {
                         style: CustomFonts.labelExtraSmall,
                       ),
                       Text(
-                        giftCard.campaignDonation!.campaign != null ? giftCard.campaignDonation!.campaign!.title : "Unknown",
+                        giftCard.campaignDonation!.campaign != null
+                            ? giftCard.campaignDonation!.campaign!.title
+                            : "Unknown",
                         style: CustomFonts.labelSmall,
                       ),
                     ],

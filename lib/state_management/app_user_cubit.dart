@@ -1,5 +1,6 @@
 import 'package:crowdfunding_flutter/common/usecase/usecase.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
+import 'package:crowdfunding_flutter/data/network/payload/user/user_profile_payload.dart';
 import 'package:crowdfunding_flutter/domain/model/notification/notification.dart';
 import 'package:crowdfunding_flutter/domain/model/user/user.dart';
 import 'package:crowdfunding_flutter/domain/usecases/auth/get_current_user.dart';
@@ -8,6 +9,7 @@ import 'package:crowdfunding_flutter/domain/usecases/notification/fetch_notifica
 import 'package:crowdfunding_flutter/domain/usecases/notification/read_notification.dart';
 import 'package:crowdfunding_flutter/domain/usecases/stripe/connect_account.dart';
 import 'package:crowdfunding_flutter/domain/usecases/user/fetch_user_profile.dart';
+import 'package:crowdfunding_flutter/domain/usecases/user/update_user_profile.dart';
 import 'package:crowdfunding_flutter/state_management/app_user_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,6 +26,7 @@ class AppUserCubit extends Cubit<AppUserState> {
   final ToggleReadNotification _toggleReadNotification;
   final SupabaseClient _supabase;
   final FetchUserProfile _fetchUserProfile;
+  final UpdateUserProfile _updateUserProfile;
 
   AppUserCubit({
     required GetCurrentUser getCurrentUser,
@@ -33,6 +36,7 @@ class AppUserCubit extends Cubit<AppUserState> {
     required ToggleReadNotification toggleReadNotification,
     required SupabaseClient supabase,
     required FetchUserProfile fetchUserProfile,
+    required UpdateUserProfile updateUserProfile,
   })  : _getCurrentUser = getCurrentUser,
         _signOut = signOut,
         _connectAccount = connectAccount,
@@ -40,6 +44,7 @@ class AppUserCubit extends Cubit<AppUserState> {
         _toggleReadNotification = toggleReadNotification,
         _supabase = supabase,
         _fetchUserProfile = fetchUserProfile,
+        _updateUserProfile = updateUserProfile,
         super(const AppUserState.initial());
 
   Future<void> listenToRealtimeNotification() async {
@@ -59,6 +64,23 @@ class AppUserCubit extends Cubit<AppUserState> {
             final notifications = data.map((json) {
               return NotificationModel.fromJson(json);
             }).toList();
+            // Campaign status changed notification
+            final unreadCampaignStatusChangedNotification = notifications
+                .filter((element) =>
+                    element.type ==
+                        NotificationType.CAMPAIGN_STATUS_CHANGED.name &&
+                    !element.isRead)
+                .toList();
+            if (unreadCampaignStatusChangedNotification.isNotEmpty) {
+              emit(
+                state.copyWith(
+                  unreadCampaignStatusChangedNotification:
+                      unreadCampaignStatusChangedNotification.first,
+                ),
+              );
+              return;
+            }
+            // Community challenge notification
             final unreadChallengeRewardNotification = notifications
                 .filter((element) =>
                     element.type ==
@@ -66,12 +88,19 @@ class AppUserCubit extends Cubit<AppUserState> {
                     !element.isRead)
                 .toList();
             if (unreadChallengeRewardNotification.isNotEmpty) {
-              emit(state.copyWith(
-                  realtimeNotification:
-                      unreadChallengeRewardNotification.first));
+              emit(
+                state.copyWith(
+                  unreadCommunityChallengeRewardNotification:
+                      unreadChallengeRewardNotification.first,
+                ),
+              );
             }
           },
         );
+  }
+
+  Future<void> updateUserProfile(UserProfilePayload payload) async {
+    _updateUserProfile.call(payload);
   }
 
   Future<void> toggleReadNotification({required String notificationId}) async {
@@ -127,23 +156,30 @@ class AppUserCubit extends Cubit<AppUserState> {
     }
   }
 
-  Future<bool> checkUserLoggedIn() async {
+  Future<void> checkUserLoggedIn({
+    required void Function(UserModel user) onSuccess,
+    required void Function() onFailure,
+  }) async {
     bool userIsLoggedIn = false;
     final res = await _getCurrentUser(NoPayload());
     res.fold(
-      (failure) => emit(const AppUserState.initial()),
+      (failure) {
+        emit(const AppUserState.initial());
+        onFailure();
+      },
       (user) {
         emit(state.copyWith(currentUser: user));
         userIsLoggedIn = true;
+        onSuccess(user);
       },
     );
-    return userIsLoggedIn;
   }
 
   Future<void> fetchCurrentUserProfile() async {
     final res = await _fetchUserProfile.call(NoPayload());
     res.fold(
-      (failure) => emit(state.copyWith(userProfileResult: ApiResultFailure(failure.errorMessage))),
+      (failure) => emit(state.copyWith(
+          userProfileResult: ApiResultFailure(failure.errorMessage))),
       (user) => emit(state.copyWith(userProfileResult: ApiResultSuccess(user))),
     );
   }

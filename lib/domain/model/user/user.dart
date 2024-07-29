@@ -12,11 +12,13 @@ class UserModel {
   final String email;
   final String? profileImageUrl;
   final String? phoneNumber;
+  final String? address;
   final String refreshToken;
   final bool isOnboardingCompleted;
   final String? identityNumber;
   final String identificationStatus;
   final String? identificationRejectReason;
+  final String? onesignalId;
   final Organization? organization;
   final UserPreference? preference;
   // final String? stripeConnectId;
@@ -33,12 +35,14 @@ class UserModel {
     required this.id,
     required this.fullName,
     required this.email,
+    this.address,
     this.profileImageUrl = "",
     this.phoneNumber = "",
     this.refreshToken = "",
     this.isOnboardingCompleted = false,
     this.organization,
     this.preference,
+    this.onesignalId,
     // this.stripeConnectId,
     this.bankAccount,
     this.identityNumber,
@@ -52,12 +56,11 @@ class UserModel {
   Map<String, dynamic> toJson() => _$UserModelToJson(this);
 
   static final sample = UserModel(
-    id: 'sample-id',
-    fullName: 'John Doe',
-    email: 'john@gmail.com',
-    preference: UserPreference.samples.first,
-    identificationStatus: "PENDING"
-  );
+      id: 'sample-id',
+      fullName: 'John Doe',
+      email: 'john@gmail.com',
+      preference: UserPreference.samples.first,
+      identificationStatus: "PENDING");
 
   @override
   String toString() => """
@@ -81,6 +84,8 @@ class UserModelWithAccessToken extends UserModel {
     required String email,
     String? profileImageUrl,
     String? phoneNumber,
+    String? address,
+    String? onesignalId,
     String refreshToken = "",
     UserPreference? preference,
     required String identificationStatus,
@@ -95,11 +100,13 @@ class UserModelWithAccessToken extends UserModel {
           isOnboardingCompleted: isOnboardingCompleted,
           profileImageUrl: profileImageUrl,
           phoneNumber: phoneNumber,
+          address: address,
           refreshToken: refreshToken,
           preference: preference,
           // stripeConnectId: stripeConnectId,
           identificationStatus: identificationStatus,
           bankAccount: bankAccount,
+          onesignalId: onesignalId,
         );
 
   UserModel toUserModel() {
@@ -115,6 +122,8 @@ class UserModelWithAccessToken extends UserModel {
       // stripeConnectId: stripeConnectId,
       identificationStatus: identificationStatus,
       bankAccount: bankAccount,
+      address: address,
+      onesignalId: onesignalId,
     );
   }
 

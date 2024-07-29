@@ -35,7 +35,7 @@ class ParticipatedChallengeList extends StatelessWidget {
                   final communityChallenge =
                       participatedChallenges.data[index].communityChallenge;
                   if (communityChallenge == null) {
-                    return const SizedBox();
+                    return const SizedBox.shrink();
                   }
                   return Container(
                     margin: const EdgeInsets.only(bottom: 16),
@@ -45,8 +45,7 @@ class ParticipatedChallengeList extends StatelessWidget {
                         context.push(
                             '/community-challenges/${communityChallenge.id}');
                       },
-                      challengeStatus: ChallengeStatus.values
-                          .byName(participatedChallenges.data[index].status),
+                      challengeProgress: participatedChallenges.data[index],
                     ),
                   );
                 },

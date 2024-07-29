@@ -10,6 +10,7 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       id: json['id'] as String,
       fullName: json['fullName'] as String,
       email: json['email'] as String,
+      address: json['address'] as String?,
       profileImageUrl: json['profileImageUrl'] as String? ?? "",
       phoneNumber: json['phoneNumber'] as String? ?? "",
       refreshToken: json['refreshToken'] as String? ?? "",
@@ -20,6 +21,7 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       preference: json['preference'] == null
           ? null
           : UserPreference.fromJson(json['preference'] as Map<String, dynamic>),
+      onesignalId: json['onesignalId'] as String?,
       bankAccount: json['bankAccount'] == null
           ? null
           : UserBankAccount.fromJson(
@@ -35,11 +37,13 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'email': instance.email,
       'profileImageUrl': instance.profileImageUrl,
       'phoneNumber': instance.phoneNumber,
+      'address': instance.address,
       'refreshToken': instance.refreshToken,
       'isOnboardingCompleted': instance.isOnboardingCompleted,
       'identityNumber': instance.identityNumber,
       'identificationStatus': instance.identificationStatus,
       'identificationRejectReason': instance.identificationRejectReason,
+      'onesignalId': instance.onesignalId,
       'organization': instance.organization,
       'preference': instance.preference,
       'bankAccount': instance.bankAccount,
@@ -53,6 +57,8 @@ UserModelWithAccessToken _$UserModelWithAccessTokenFromJson(
       email: json['email'] as String,
       profileImageUrl: json['profileImageUrl'] as String?,
       phoneNumber: json['phoneNumber'] as String?,
+      address: json['address'] as String?,
+      onesignalId: json['onesignalId'] as String?,
       refreshToken: json['refreshToken'] as String? ?? "",
       preference: json['preference'] == null
           ? null
@@ -74,9 +80,11 @@ Map<String, dynamic> _$UserModelWithAccessTokenToJson(
       'email': instance.email,
       'profileImageUrl': instance.profileImageUrl,
       'phoneNumber': instance.phoneNumber,
+      'address': instance.address,
       'refreshToken': instance.refreshToken,
       'isOnboardingCompleted': instance.isOnboardingCompleted,
       'identificationStatus': instance.identificationStatus,
+      'onesignalId': instance.onesignalId,
       'preference': instance.preference,
       'bankAccount': instance.bankAccount,
       'accessToken': instance.accessToken,

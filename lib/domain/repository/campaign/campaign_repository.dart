@@ -1,4 +1,5 @@
 import 'package:crowdfunding_flutter/common/error/failure.dart';
+import 'package:crowdfunding_flutter/data/network/payload/campaign/campaign_update/campaign_update_recommendation_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/campaign_update/create_campaign_update_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_comment_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_payload.dart';
@@ -13,12 +14,15 @@ import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_fundraiser.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update_recommendation.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaigns.dart';
 import 'package:fpdart/fpdart.dart';
 
 abstract interface class CampaignRepository {
   Future<Either<Failure, List<Campaign>>> getCampaigns(
       FetchCampaignsPayload payload);
+  Future<Either<Failure, List<Campaign>>> getCloseToTargetCampaigns();
+  Future<Either<Failure, List<Campaign>>> getUserInterestedCampaigns();
   Future<Either<Failure, List<Campaign>>> getSuccessfulCampaigns();
   Future<Either<Failure, Campaign>> getCampaign(String campaignId);
   Future<Either<Failure, CampaignFundraiser>> getCampaignFundraiser(
@@ -49,6 +53,9 @@ abstract interface class CampaignRepository {
   // Campaign update
   Future<Either<Failure, CampaignUpdate>> createCampaignUpdatePost(
     CreateCampaignUpdatePayload payload,
+  );
+  Future<Either<Failure, CampaignUpdateRecommendation>> createCampaignUpdatePostRecommendation(
+    CampaignUpdateRecommendationPayload payload,
   );
 
   // Donation

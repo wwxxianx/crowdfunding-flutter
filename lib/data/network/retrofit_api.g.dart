@@ -13,8 +13,7 @@ class _RestClient implements RestClient {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??=
-        'https://5236-202-184-8-138.ngrok-free.app/';
+    baseUrl ??= 'https://cb59-2405-3800-88d-ab9d-8d4c-3ccb-457a-6b68.ngrok-free.app/';
   }
 
   final Dio _dio;
@@ -163,6 +162,64 @@ class _RestClient implements RestClient {
             .compose(
               _dio.options,
               'campaigns',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    var value = _result.data!
+        .map((dynamic i) => Campaign.fromJson(i as Map<String, dynamic>))
+        .toList();
+    return value;
+  }
+
+  @override
+  Future<List<Campaign>> getUserInterestedCampaigns() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result =
+        await _dio.fetch<List<dynamic>>(_setStreamType<List<Campaign>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'campaigns/interested',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    var value = _result.data!
+        .map((dynamic i) => Campaign.fromJson(i as Map<String, dynamic>))
+        .toList();
+    return value;
+  }
+
+  @override
+  Future<List<Campaign>> getCloseToTargetCampaigns() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result =
+        await _dio.fetch<List<dynamic>>(_setStreamType<List<Campaign>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'campaigns/close-to-target',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -651,12 +708,44 @@ class _RestClient implements RestClient {
   }
 
   @override
+  Future<CampaignUpdateRecommendation> createCampaignUpdateRecommendation(
+      {required CampaignUpdateRecommendationPayload payload}) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(payload.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<CampaignUpdateRecommendation>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'campaign-updates/recommendation',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = CampaignUpdateRecommendation.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
   Future<UserModel> updateUserProfile({
     String? fullName,
+    String? address,
+    String? identityNumber,
     File? profileImageFile,
     List<String>? favouriteCategoriesId,
-    String phoneNumber = "112901029",
+    String? phoneNumber,
     bool? isOnboardingCompleted,
+    String? onesignalId,
   }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -667,6 +756,18 @@ class _RestClient implements RestClient {
       _data.fields.add(MapEntry(
         'fullName',
         fullName,
+      ));
+    }
+    if (address != null) {
+      _data.fields.add(MapEntry(
+        'address',
+        address,
+      ));
+    }
+    if (identityNumber != null) {
+      _data.fields.add(MapEntry(
+        'identityNumber',
+        identityNumber,
       ));
     }
     if (profileImageFile != null) {
@@ -681,14 +782,22 @@ class _RestClient implements RestClient {
     favouriteCategoriesId?.forEach((i) {
       _data.fields.add(MapEntry('favouriteCategoriesId', i));
     });
-    _data.fields.add(MapEntry(
-      'phoneNumber',
-      phoneNumber,
-    ));
+    if (phoneNumber != null) {
+      _data.fields.add(MapEntry(
+        'phoneNumber',
+        phoneNumber,
+      ));
+    }
     if (isOnboardingCompleted != null) {
       _data.fields.add(MapEntry(
         'isOnboardingCompleted',
         isOnboardingCompleted.toString(),
+      ));
+    }
+    if (onesignalId != null) {
+      _data.fields.add(MapEntry(
+        'onesignalId',
+        onesignalId,
       ));
     }
     final _result = await _dio
@@ -974,6 +1083,35 @@ class _RestClient implements RestClient {
   }
 
   @override
+  Future<List<ScamReport>> getUserSubmittedScamReports() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<List<dynamic>>(_setStreamType<List<ScamReport>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'users/scam-reports',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    var value = _result.data!
+        .map((dynamic i) => ScamReport.fromJson(i as Map<String, dynamic>))
+        .toList();
+    return value;
+  }
+
+  @override
   Future<GiftCardDonationResponse> createGiftCardDonation(
       CreateGiftCardDonationPayload payload) async {
     const _extra = <String, dynamic>{};
@@ -1102,6 +1240,33 @@ class _RestClient implements RestClient {
             .compose(
               _dio.options,
               'payment/connect-account',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ConnectAccountResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<ConnectAccountResponse> connectOrganizationStripeAccount() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ConnectAccountResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'payment/connect-account/organization',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -1512,7 +1677,8 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<Collaboration?> getCollaboration({required String campaignId}) async {
+  Future<Collaboration?> getCollaboration(
+      {required String collaborationId}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -1525,7 +1691,7 @@ class _RestClient implements RestClient {
     )
             .compose(
               _dio.options,
-              'collaborations/${campaignId}',
+              'collaborations/${collaborationId}',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -1540,9 +1706,17 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<List<Collaboration>> getCollaborations({bool? isPending}) async {
+  Future<List<Collaboration>> getCollaborations({
+    bool? isPending,
+    String? organizationId,
+    String? campaignId,
+  }) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'isPending': isPending};
+    final queryParameters = <String, dynamic>{
+      r'isPending': isPending,
+      r'organizationId': organizationId,
+      r'campaignId': campaignId,
+    };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     final Map<String, dynamic>? _data = null;
@@ -1745,14 +1919,18 @@ class _RestClient implements RestClient {
 
   @override
   Future<ChallengeParticipant> updateChallengeParticipant({
-    File? imageFile,
     required String communityChallengeId,
+    File? imageFile,
   }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     final _data = FormData();
+    _data.fields.add(MapEntry(
+      'communityChallengeId',
+      communityChallengeId,
+    ));
     if (imageFile != null) {
       _data.files.add(MapEntry(
         'imageFile',
@@ -1762,10 +1940,6 @@ class _RestClient implements RestClient {
         ),
       ));
     }
-    _data.fields.add(MapEntry(
-      'communityChallengeId',
-      communityChallengeId,
-    ));
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<ChallengeParticipant>(Options(
       method: 'PATCH',

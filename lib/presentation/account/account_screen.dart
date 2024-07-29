@@ -7,6 +7,7 @@ import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_list_tile.dart';
 import 'package:crowdfunding_flutter/common/widgets/container/custom_card.dart';
 import 'package:crowdfunding_flutter/common/widgets/text/text_bg_gradient_shape.dart';
+import 'package:crowdfunding_flutter/presentation/account/widgets/edit_account_bottom_sheet.dart';
 import 'package:crowdfunding_flutter/presentation/account_gift_card/charity_gift_card_screen.dart';
 import 'package:crowdfunding_flutter/presentation/account_preferences/account_preferences_screen.dart';
 import 'package:crowdfunding_flutter/presentation/account_saved_campaigns/saved_campaigns_screen.dart';
@@ -77,7 +78,17 @@ class AccountScreen extends StatelessWidget {
                         ],
                       ),
                       InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          showModalBottomSheet(
+                            isDismissible: true,
+                            isScrollControlled: true,
+                            elevation: 0,
+                            context: context,
+                            builder: (context) {
+                              return EditAccountBottomSheet();
+                            },
+                          );
+                        },
                         child: const Text(
                           "Edit my account",
                           style: TextStyle(
@@ -206,19 +217,19 @@ class AccountScreen extends StatelessWidget {
                       width: 56,
                     ),
                     4.kH,
-                    CustomListTile(
-                      onTap: () {},
-                      leading: SvgPicture.asset("assets/icons/bag-coin.svg"),
-                      title: Text(
-                        "Rewards",
-                        style: CustomFonts.labelSmall,
-                      ),
-                      trailing: HeroIcon(
-                        HeroIcons.chevronRight,
-                        size: 16.0,
-                      ),
-                    ),
-                    4.kH,
+                    // CustomListTile(
+                    //   onTap: () {},
+                    //   leading: SvgPicture.asset("assets/icons/bag-coin.svg"),
+                    //   title: Text(
+                    //     "Rewards",
+                    //     style: CustomFonts.labelSmall,
+                    //   ),
+                    //   trailing: HeroIcon(
+                    //     HeroIcons.chevronRight,
+                    //     size: 16.0,
+                    //   ),
+                    // ),
+                    // 4.kH,
                     CustomListTile(
                       onTap: () {
                         context.push(AccountTaxScreen.route);
@@ -279,6 +290,36 @@ class AccountScreen extends StatelessWidget {
                         style: CustomFonts.labelSmall,
                       ),
                       trailing: HeroIcon(
+                        HeroIcons.chevronRight,
+                        size: 16.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              20.kH,
+              CustomCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const TextWithGradientBGShape(
+                      text: Text(
+                        "Others",
+                        style: CustomFonts.titleMedium,
+                      ),
+                      width: 50,
+                    ),
+                    4.kH,
+                    CustomListTile(
+                      onTap: () {
+                        context.push('/account/legality');
+                      },
+                      leading: SvgPicture.asset("assets/icons/scale.svg"),
+                      title: const Text(
+                        "Legality",
+                        style: CustomFonts.labelSmall,
+                      ),
+                      trailing: const HeroIcon(
                         HeroIcons.chevronRight,
                         size: 16.0,
                       ),

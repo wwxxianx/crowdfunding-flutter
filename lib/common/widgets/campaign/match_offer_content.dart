@@ -10,9 +10,9 @@ class MatchOfferContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedBGContainer(
-      startColor: Color(0xFFF1FAEA),
-      endColor: Color(0xFFB7FF87),
-      borderRadius: BorderRadius.only(
+      startColor: const Color(0xFFF1FAEA),
+      endColor: const Color(0xFFB7FF87),
+      borderRadius: const BorderRadius.only(
         bottomLeft: Radius.circular(6),
         bottomRight: Radius.circular(6),
       ),
@@ -27,18 +27,18 @@ class MatchOfferContent extends StatelessWidget {
               ),
               4.kW,
               Text(
-                "Match Offer!",
+                "Match Challenge!",
                 style: CustomFonts.titleSmall.copyWith(
-                  color: Color(0xFF335B17),
+                  color: const Color(0xFF335B17),
                 ),
               )
             ],
           ),
           4.kH,
           Text(
-            "Your donation to this campaign, our community will donate RM1 more!",
+            "Check out our community challenge to help better",
             style: CustomFonts.labelExtraSmall.copyWith(
-              color: Color(0xFF1A3E01),
+              color: const Color(0xFF1A3E01),
             ),
           )
         ],

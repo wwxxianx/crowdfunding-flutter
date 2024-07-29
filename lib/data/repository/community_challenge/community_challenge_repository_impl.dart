@@ -8,6 +8,7 @@ import 'package:crowdfunding_flutter/domain/model/community_challenge/community_
 import 'package:crowdfunding_flutter/domain/repository/community_challenge/community_challenge_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:fpdart/src/either.dart';
+import 'package:logger/logger.dart';
 
 class CommunityChallengeRepositoryImpl implements CommunityChallengeRepository {
   final RestClient api;
@@ -47,14 +48,31 @@ class CommunityChallengeRepositoryImpl implements CommunityChallengeRepository {
   @override
   Future<Either<Failure, ChallengeParticipant>> updateChallengeParticipant(
       UpdateChallengeParticipantPayload payload) async {
+    var logger = Logger();
     try {
+      logger.e("Start sending");
+      logger.e("communityChallengeId: ${payload.communityChallengeId}");
+      logger.e("imageFile: ${payload.imageFile}");
       final res = await api.updateChallengeParticipant(
         communityChallengeId: payload.communityChallengeId,
         imageFile: payload.imageFile,
       );
+      logger.e("Res: $res");
       return right(res);
     } on Exception catch (e) {
+      logger.e("Exception: ${e}");
       if (e is DioException) {
+        logger.e(e.message);
+        logger.e(e.error);
+        logger.e(e.type);
+        logger.e(e.requestOptions.data);
+        final formData = e.requestOptions.data as FormData;
+        logger.e(formData.files);
+        logger.e(formData.fields);
+        logger.e(formData.boundary);
+        // logger.e(e.requestOptions.headers);
+        // logger.e(e.requestOptions.extra);
+        // logger.e(e.response);
         final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
         return left(Failure(errorMessage));
       }

@@ -9,6 +9,7 @@ import 'package:crowdfunding_flutter/common/widgets/skeleton.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/di/init_dependencies.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/enum/campaign_enum.dart';
 import 'package:crowdfunding_flutter/presentation/campaign_details/tabs/tab_view.dart';
 import 'package:crowdfunding_flutter/presentation/campaign_details/widgets/protect_info_banner.dart';
@@ -46,7 +47,11 @@ class _ManageCampaignDetailsScreenState
   bool isShowingReplyBottomSheet = false;
   final replyFieldFocusNode = FocusNode();
 
-  void _handleOpenReplyBottomSheet() {
+  void _handleOpenReplyBottomSheet(
+      BuildContext context, CampaignComment campaignComment) {
+    context
+        .read<CampaignDetailsBloc>()
+        .add(OnSelectCommentToReply(campaignComment));
     setState(() {
       isShowingReplyBottomSheet = true;
     });
@@ -230,124 +235,137 @@ class _ManageCampaignDetailsScreenState
       child: BlocBuilder<CampaignDetailsBloc, CampaignDetailsState>(
         builder: (context, state) {
           final campaignResult = state.campaignResult;
-          return Scaffold(
-            extendBodyBehindAppBar: true,
-            bottomNavigationBar: _buildBottomNavigationBar(context),
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              leading: IconButton.filledTonal(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
-                    Colors.white.withOpacity(0.87),
+          return RefreshIndicator(
+            onRefresh: () async {
+              context
+                  .read<CampaignDetailsBloc>()
+                  .add(OnRefreshCampaign(widget.campaignId));
+              return;
+            },
+            child: Scaffold(
+              extendBodyBehindAppBar: true,
+              bottomNavigationBar: _buildBottomNavigationBar(context),
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+                leading: IconButton.filledTonal(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                      Colors.white.withOpacity(0.87),
+                    ),
                   ),
-                ),
-                onPressed: () {
-                  context.pop();
-                },
-                icon: const HeroIcon(
-                  HeroIcons.chevronLeft,
-                  color: Colors.black,
-                  size: 18.0,
+                  onPressed: () {
+                    context.go("/manage-campaigns");
+                  },
+                  icon: const HeroIcon(
+                    HeroIcons.chevronLeft,
+                    color: Colors.black,
+                    size: 18.0,
+                  ),
                 ),
               ),
-            ),
-            body: Stack(
-              children: [
-                SingleChildScrollView(
-                  padding: const EdgeInsets.only(
-                    bottom: Dimensions.bottomActionBarHeight,
+              body: Stack(
+                children: [
+                  SingleChildScrollView(
+                    padding: const EdgeInsets.only(
+                      bottom: Dimensions.bottomActionBarHeight,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (campaignResult is ApiResultLoading)
+                          Skeleton(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height / 2.75,
+                          ),
+                        if (campaignResult is ApiResultSuccess<Campaign>)
+                          MediaCarousel(
+                            images: campaignResult.data.images,
+                          ),
+                        24.kH,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: Dimensions.screenHorizontalPadding,
+                          ),
+                          child: Column(
+                            // mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (campaignResult is ApiResultSuccess<Campaign>)
+                                _buildPublishStatusContent(campaignResult.data),
+                              if (campaignResult is ApiResultLoading)
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Skeleton(
+                                      height: Dimensions.loadingTitleHeight,
+                                      width: double.maxFinite,
+                                    ),
+                                    4.kH,
+                                    const Skeleton(
+                                      height: Dimensions.loadingTitleHeight,
+                                      width: 200,
+                                    ),
+                                  ],
+                                ),
+                              if (campaignResult is ApiResultSuccess<Campaign>)
+                                Text(
+                                  campaignResult.data.title,
+                                  style: CustomFonts.titleExtraLarge,
+                                ),
+                              16.kH,
+                              if (campaignResult is ApiResultSuccess<Campaign>)
+                                DonationProgressBar(
+                                  current: campaignResult.data.raisedAmount
+                                      .toDouble(),
+                                  total: campaignResult.data.targetAmount
+                                      .toDouble(),
+                                  height: 12.0,
+                                ),
+                              16.kH,
+                              if (campaignResult is ApiResultSuccess<Campaign>)
+                                CampaignCategoryTag(
+                                  category:
+                                      campaignResult.data.campaignCategory,
+                                ),
+                              12.kH,
+                              const ProtectInfoBanner(),
+                            ],
+                          ),
+                        ),
+                        12.kH,
+                        const Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: Dimensions.screenHorizontalPadding),
+                          child: Text(
+                            "Before starting your campaign",
+                            style: CustomFonts.labelMedium,
+                          ),
+                        ),
+                        8.kH,
+                        if (campaignResult is ApiResultSuccess<Campaign>)
+                          PrerequisiteContent(
+                            campaignId: widget.campaignId,
+                          ),
+                        20.kH,
+                        CampaignDetailsTabView(
+                          onReplyButtonPreesed: (campaignComment) {
+                            _handleOpenReplyBottomSheet(
+                                context, campaignComment,
+                                
+                                );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (campaignResult is ApiResultLoading)
-                        Skeleton(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height / 2.75,
-                        ),
-                      if (campaignResult is ApiResultSuccess<Campaign>)
-                        MediaCarousel(
-                          images: campaignResult.data.images,
-                        ),
-                      24.kH,
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: Dimensions.screenHorizontalPadding,
-                        ),
-                        child: Column(
-                          // mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (campaignResult is ApiResultSuccess<Campaign>)
-                              _buildPublishStatusContent(campaignResult.data),
-                            if (campaignResult is ApiResultLoading)
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Skeleton(
-                                    height: Dimensions.loadingTitleHeight,
-                                    width: double.maxFinite,
-                                  ),
-                                  4.kH,
-                                  const Skeleton(
-                                    height: Dimensions.loadingTitleHeight,
-                                    width: 200,
-                                  ),
-                                ],
-                              ),
-                            if (campaignResult is ApiResultSuccess<Campaign>)
-                              Text(
-                                campaignResult.data.title,
-                                style: CustomFonts.titleExtraLarge,
-                              ),
-                            16.kH,
-                            if (campaignResult is ApiResultSuccess<Campaign>)
-                              DonationProgressBar(
-                                current:
-                                    campaignResult.data.raisedAmount.toDouble(),
-                                total:
-                                    campaignResult.data.targetAmount.toDouble(),
-                                height: 12.0,
-                              ),
-                            16.kH,
-                            if (campaignResult is ApiResultSuccess<Campaign>)
-                              CampaignCategoryTag(
-                                category: campaignResult.data.campaignCategory,
-                              ),
-                            12.kH,
-                            const ProtectInfoBanner(),
-                          ],
-                        ),
-                      ),
-                      12.kH,
-                      const Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: Dimensions.screenHorizontalPadding),
-                        child: Text(
-                          "Before starting your campaign",
-                          style: CustomFonts.labelMedium,
-                        ),
-                      ),
-                      8.kH,
-                      if (campaignResult is ApiResultSuccess<Campaign>)
-                        PrerequisiteContent(
-                          campaignId: widget.campaignId,
-                        ),
-                      20.kH,
-                      CampaignDetailsTabView(
-                        onReplyButtonPreesed: (commentID) {
-                          _handleOpenReplyBottomSheet();
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                if (isShowingReplyBottomSheet)
-                  ReplyBottomSheet(
-                    focusNode: replyFieldFocusNode,
-                    onClose: _handleCloseReplyBottomSheet,
-                  ),
-              ],
+                  if (isShowingReplyBottomSheet)
+                    ReplyBottomSheet(
+                      focusNode: replyFieldFocusNode,
+                      onClose: _handleCloseReplyBottomSheet,
+                      campaignId: widget.campaignId,
+                    ),
+                ],
+              ),
             ),
           );
         },

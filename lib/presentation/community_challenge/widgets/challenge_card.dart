@@ -12,20 +12,20 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class CommunityChallengeCard extends StatelessWidget {
   final CommunityChallenge communityChallenge;
+  final ChallengeParticipant? challengeProgress;
   final VoidCallback? onPressed;
-  final ChallengeStatus? challengeStatus;
   const CommunityChallengeCard({
     super.key,
     required this.communityChallenge,
     this.onPressed,
-    this.challengeStatus,
+    this.challengeProgress,
   });
 
   Widget _buildStatusChip() {
-    if (challengeStatus != null) {
-      return challengeStatus!.buildChip();
+    if (challengeProgress?.statusEnum != null) {
+      return challengeProgress!.statusEnum.buildChip();
     }
-    return SizedBox();
+    return const SizedBox.shrink();
   }
 
   Widget _buildParticipantsList() {
@@ -165,8 +165,8 @@ class CommunityChallengeCard extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                if (challengeStatus != null) _buildStatusChip(),
-                                if (challengeStatus != null) 4.kH,
+                                if (challengeProgress?.statusEnum != null) _buildStatusChip(),
+                                if (challengeProgress?.statusEnum != null) 4.kH,
                                 Text(
                                   communityChallenge.title,
                                   style: CustomFonts.titleMedium,

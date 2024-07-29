@@ -16,9 +16,9 @@ class CollaborationRepositoryImpl implements CollaborationRepository {
 
   @override
   Future<Either<Failure, Collaboration?>> getCollaboration(
-      {required String campaignId}) async {
+      {required String collaborationId}) async {
     try {
-      final res = await api.getCollaboration(campaignId: campaignId);
+      final res = await api.getCollaboration(collaborationId: collaborationId);
       return right(res);
     } on Exception catch (e) {
       if (e is DioException) {
@@ -30,9 +30,14 @@ class CollaborationRepositoryImpl implements CollaborationRepository {
   }
 
   @override
-  Future<Either<Failure, List<Collaboration>>> getCollaborations(FetchCollaborationFilter filter) async {
+  Future<Either<Failure, List<Collaboration>>> getCollaborations(
+      FetchCollaborationFilter filter) async {
     try {
-      final res = await api.getCollaborations(isPending: filter.isPending);
+      final res = await api.getCollaborations(
+        isPending: filter.isPending,
+        organizationId: filter.organizationId,
+        campaignId: filter.campaignId,
+      );
       return right(res);
     } on Exception catch (e) {
       if (e is DioException) {
@@ -73,9 +78,10 @@ class CollaborationRepositoryImpl implements CollaborationRepository {
       return left(Failure(ErrorHandler.otherException().errorMessage));
     }
   }
-  
+
   @override
-  Future<Either<Failure, Collaboration>> organizationAcceptCollaboration({required String collaborationId}) async {
+  Future<Either<Failure, Collaboration>> organizationAcceptCollaboration(
+      {required String collaborationId}) async {
     try {
       final res = await api.organizationAcceptCollaboration(
           collaborationId: collaborationId);

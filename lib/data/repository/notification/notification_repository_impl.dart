@@ -14,6 +14,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
   @override
   Future<Either<Failure, List<NotificationModel>>> getNotifications() async {
     try {
+      // return right(NotificationModel.samples);
       final res = await api.getNotifications();
       return right(res);
     } on Exception catch (e) {
@@ -24,9 +25,10 @@ class NotificationRepositoryImpl implements NotificationRepository {
       return left(Failure(ErrorHandler.otherException().errorMessage));
     }
   }
-  
+
   @override
-  Future<Either<Failure, NotificationModel>> readNotification({required String notificationId}) async {
+  Future<Either<Failure, NotificationModel>> readNotification(
+      {required String notificationId}) async {
     try {
       final res = await api.readNotification(notificationId: notificationId);
       return right(res);

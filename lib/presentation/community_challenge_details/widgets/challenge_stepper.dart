@@ -36,9 +36,9 @@ class ChallengeStepper extends StatelessWidget {
       }
       if (challengeProgress.metadata?['imageUrl'] != null) {
         // Reward pending OR verifying
-        return 2;
+        return 3;
       }
-      return 1;
+      return 2;
     }
 
     return CustomStepper(

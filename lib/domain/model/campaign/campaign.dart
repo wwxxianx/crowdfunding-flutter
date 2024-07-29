@@ -52,6 +52,8 @@ class Campaign {
   final List<CampaignDonation> topThreeDonations;
   final List<CampaignDonation> recentThreeDonations;
   final CommunityChallenge? firstMatchedCommunityChallenge;
+  //Collaboration
+  final Organization? collaboratedOrganization;
 
   const Campaign({
     required this.id,
@@ -86,6 +88,7 @@ class Campaign {
     this.status = "PENDING",
     this.suspendReason,
     this.expiredAt,
+    this.collaboratedOrganization,
   });
 
   CampaignPublishStatusEnum get statusEnum {
@@ -135,6 +138,7 @@ class Campaign {
     String? status,
     String? suspendReason,
     String? expiredAt,
+    Organization? collaboratedOrganization,
   }) {
     return Campaign(
       id: id ?? this.id,
@@ -171,6 +175,7 @@ class Campaign {
       status: status ?? this.status,
       suspendReason: suspendReason ?? this.suspendReason,
       expiredAt: expiredAt ?? this.expiredAt,
+      collaboratedOrganization: collaboratedOrganization ?? this.collaboratedOrganization,
     );
   }
 

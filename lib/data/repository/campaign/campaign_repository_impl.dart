@@ -4,6 +4,7 @@ import 'package:crowdfunding_flutter/common/constants/constants.dart';
 import 'package:crowdfunding_flutter/common/error/failure.dart';
 import 'package:crowdfunding_flutter/data/local/shared_preference.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
+import 'package:crowdfunding_flutter/data/network/payload/campaign/campaign_update/campaign_update_recommendation_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/campaign_update/create_campaign_update_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_comment_payload.dart';
 import 'package:crowdfunding_flutter/data/network/payload/campaign/create_campaign_payload.dart';
@@ -19,6 +20,7 @@ import 'package:crowdfunding_flutter/domain/model/campaign/campaign_comment.dart
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_donation.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_fundraiser.dart';
 import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update.dart';
+import 'package:crowdfunding_flutter/domain/model/campaign/campaign_update_recommendation.dart';
 import 'package:crowdfunding_flutter/domain/repository/campaign/campaign_repository.dart';
 import 'package:crowdfunding_flutter/domain/usecases/campaign/fetch_campaigns.dart';
 import 'package:dio/dio.dart';
@@ -38,6 +40,7 @@ class CampaignRepositoryImpl implements CampaignRepository {
   Future<Either<Failure, List<Campaign>>> getCampaigns(
       FetchCampaignsPayload payload) async {
     try {
+      // return right(Campaign.samples);
       final campaignsRes = await api.getCampaigns(
         userId: payload.userId,
         categoryIds: payload.categoryIds,
@@ -60,6 +63,7 @@ class CampaignRepositoryImpl implements CampaignRepository {
   Future<Either<Failure, List<CampaignCategory>>>
       getCampaignCategories() async {
     try {
+      // return right(CampaignCategory.samples);
       final localData = await sp.getDataIfNotExpired(
         Constants.sharedPreferencesKey.campaignCategories,
         Constants.sharedPreferencesKey.campaignCategoriesExpiration,
@@ -123,6 +127,7 @@ class CampaignRepositoryImpl implements CampaignRepository {
   @override
   Future<Either<Failure, Campaign>> getCampaign(String campaignId) async {
     try {
+      // return right(Campaign.sample);
       final res = await api.getCampaign(campaignId);
       return right(res);
     } on Exception catch (e) {
@@ -263,7 +268,55 @@ class CampaignRepositoryImpl implements CampaignRepository {
   @override
   Future<Either<Failure, List<Campaign>>> getSuccessfulCampaigns() async {
     try {
+      // return right(Campaign.samples);
       final res = await api.getSuccessfulCampaigns();
+      return right(res);
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException().errorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Campaign>>> getCloseToTargetCampaigns() async {
+    try {
+      // return right(Campaign.samples);
+      final res = await api.getCloseToTargetCampaigns();
+      return right(res);
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException().errorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Campaign>>> getUserInterestedCampaigns() async {
+    try {
+      // return right(Campaign.samples);
+      final res = await api.getUserInterestedCampaigns();
+      return right(res);
+    } on Exception catch (e) {
+      if (e is DioException) {
+        final errorMessage = ErrorHandler.dioException(error: e).errorMessage;
+        return left(Failure(errorMessage));
+      }
+      return left(Failure(ErrorHandler.otherException().errorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, CampaignUpdateRecommendation>>
+      createCampaignUpdatePostRecommendation(
+          CampaignUpdateRecommendationPayload payload) async {
+    try {
+      final res =
+          await api.createCampaignUpdateRecommendation(payload: payload);
       return right(res);
     } on Exception catch (e) {
       if (e is DioException) {

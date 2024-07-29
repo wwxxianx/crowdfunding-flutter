@@ -1,12 +1,9 @@
-import 'package:crowdfunding_flutter/common/theme/app_theme.dart';
 import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
 import 'package:crowdfunding_flutter/common/utils/extensions/sized_box_extension.dart';
 import 'package:crowdfunding_flutter/common/widgets/avatar/avatar.dart';
 import 'package:crowdfunding_flutter/common/widgets/button/custom_button.dart';
-import 'package:crowdfunding_flutter/common/widgets/container/custom_bottom_sheet.dart';
-import 'package:crowdfunding_flutter/common/widgets/container/selectable_container.dart';
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/di/init_dependencies.dart';
 import 'package:crowdfunding_flutter/domain/model/collaboration/collaboration.dart';
@@ -18,9 +15,9 @@ import 'package:crowdfunding_flutter/state_management/campaign_collaboration/cam
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fpdart/fpdart.dart' as fp;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:toastification/toastification.dart';
 
 class CollaborateWithNPOScreen extends StatelessWidget {
   final String campaignId;
@@ -302,38 +299,35 @@ class CollaborateWithNPOScreen extends StatelessWidget {
 
   Widget buildBottomAction(BuildContext context) {
     final campaignCollaborationState =
-        context.read<CampaignCollaborationBloc>().state;
+        context.watch<CampaignCollaborationBloc>().state;
     final campaignCollaborationResult =
         campaignCollaborationState.campaignCollaborationResult;
-    if (campaignCollaborationResult is ApiResultSuccess<Collaboration>) {
-      if (campaignCollaborationResult.data.organization != null) {
-        return SizedBox();
-      }
-      if (campaignCollaborationState.isCollarationNull) {
-        return Row(
-          children: [
-            Expanded(
-              child: CustomButton(
-                onPressed: () {
-                  showModalBottomSheet<void>(
-                    context: context,
-                    builder: (BuildContext modalContext) {
-                      return BlocProvider.value(
-                        value:
-                            BlocProvider.of<CampaignCollaborationBloc>(context),
-                        child: RewardBottomSheet(
-                          campaignId: campaignId,
-                        ),
-                      );
-                    },
-                  );
-                },
-                child: const Text("Send my help request"),
-              ),
+    if (campaignCollaborationState.isCollarationNull) {
+      return Row(
+        children: [
+          Expanded(
+            child: CustomButton(
+              onPressed: () {
+                showModalBottomSheet<void>(
+                  context: context,
+                  builder: (BuildContext modalContext) {
+                    return BlocProvider.value(
+                      value:
+                          BlocProvider.of<CampaignCollaborationBloc>(context),
+                      child: RewardBottomSheet(
+                        campaignId: campaignId,
+                      ),
+                    );
+                  },
+                );
+              },
+              child: const Text("Send my help request"),
             ),
-          ],
-        );
-      }
+          ),
+        ],
+      );
+    }
+    if (campaignCollaborationResult is ApiResultSuccess<Collaboration>) {
       return Row(
         children: [
           Expanded(
@@ -359,7 +353,11 @@ class CollaborateWithNPOScreen extends StatelessWidget {
         ],
       );
     }
-    return SizedBox();
+    if (campaignCollaborationResult is ApiResultFailure<Collaboration>) {
+      return Text(
+          campaignCollaborationResult.errorMessage ?? "Something went wrong");
+    }
+    return Text("Nothing");
   }
 
   @override
@@ -367,7 +365,7 @@ class CollaborateWithNPOScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) {
         return CampaignCollaborationBloc(
-          fetchCampaignCollaboration: serviceLocator(),
+          fetchCollaborations: serviceLocator(),
           createCampaignCollaboration: serviceLocator(),
           updateCampaignCollaboration: serviceLocator(),
         )..add(OnFetchCampaignCollaboration(
@@ -388,8 +386,22 @@ class CollaborateWithNPOScreen extends StatelessWidget {
               right: Dimensions.screenHorizontalPadding,
               bottom: Dimensions.screenHorizontalPadding,
             ),
-            child: BlocBuilder<CampaignCollaborationBloc,
+            child: BlocConsumer<CampaignCollaborationBloc,
                 CampaignCollaborationState>(
+              listener: (context, state) {
+                final campaignCollaborationResult =
+                    state.campaignCollaborationResult;
+                if (campaignCollaborationResult
+                    is ApiResultFailure<Collaboration>) {
+                  toastification.show(
+                    type: ToastificationType.error,
+                    autoCloseDuration: const Duration(seconds: 7),
+                    title: Text(campaignCollaborationResult.errorMessage ??
+                        "Something went wrong"),
+                    showProgressBar: true,
+                  );
+                }
+              },
               builder: (context, state) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

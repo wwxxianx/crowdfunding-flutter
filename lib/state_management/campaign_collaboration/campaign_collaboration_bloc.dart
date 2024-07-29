@@ -1,9 +1,10 @@
 import 'package:crowdfunding_flutter/data/network/api_result.dart';
 import 'package:crowdfunding_flutter/data/network/payload/collaboration/create_collaboration_payload.dart';
+import 'package:crowdfunding_flutter/data/network/payload/collaboration/fetch_collaboration_filter.dart';
 import 'package:crowdfunding_flutter/data/network/payload/collaboration/update_collaboration_payload.dart';
 import 'package:crowdfunding_flutter/domain/model/collaboration/collaboration.dart';
 import 'package:crowdfunding_flutter/domain/usecases/collaboration/create_campaign_collaboration.dart';
-import 'package:crowdfunding_flutter/domain/usecases/collaboration/fetch_campaign_collaboration.dart';
+import 'package:crowdfunding_flutter/domain/usecases/collaboration/fetch_collaborations.dart';
 import 'package:crowdfunding_flutter/domain/usecases/collaboration/update_campaign_collaboration.dart';
 import 'package:crowdfunding_flutter/state_management/campaign_collaboration/campaign_collaboration_event.dart';
 import 'package:crowdfunding_flutter/state_management/campaign_collaboration/campaign_collaboration_state.dart';
@@ -11,15 +12,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CampaignCollaborationBloc
     extends Bloc<CampaignCollaborationEvent, CampaignCollaborationState> {
-  final FetchCampaignCollaboration _fetchCampaignCollaboration;
   final CreateCampaignCollaboration _createCampaignCollaboration;
   final UpdateCampaignCollaboration _updateCampaignCollaboration;
+  final FetchCollaborations _fetchCollaborations;
 
   CampaignCollaborationBloc({
-    required FetchCampaignCollaboration fetchCampaignCollaboration,
     required CreateCampaignCollaboration createCampaignCollaboration,
     required UpdateCampaignCollaboration updateCampaignCollaboration,
-  })  : _fetchCampaignCollaboration = fetchCampaignCollaboration,
+    required FetchCollaborations fetchCollaborations,
+  })  : _fetchCollaborations = fetchCollaborations,
         _createCampaignCollaboration = createCampaignCollaboration,
         _updateCampaignCollaboration = updateCampaignCollaboration,
         super(const CampaignCollaborationState.initial()) {
@@ -93,11 +94,14 @@ class CampaignCollaborationBloc
     //   campaignCollaborationResult:
     //       ApiResultSuccess(Collaboration.samples.first),
     // ));
-    final res = await _fetchCampaignCollaboration.call(event.campaignId);
+    final filter = FetchCollaborationFilter(
+      campaignId: event.campaignId,
+    );
+    final res = await _fetchCollaborations.call(filter);
     res.fold(
-      (l) => null,
+      (failure) => emit(state.copyWith(campaignCollaborationResult: ApiResultFailure(failure.errorMessage))),
       (campaignCollaboration) {
-        if (campaignCollaboration == null) {
+        if (campaignCollaboration.isEmpty) {
           emit(
             state.copyWith(
               campaignCollaborationResult: const ApiResultInitial(),
@@ -109,7 +113,7 @@ class CampaignCollaborationBloc
         emit(
           state.copyWith(
             campaignCollaborationResult:
-                ApiResultSuccess(campaignCollaboration),
+                ApiResultSuccess(campaignCollaboration.first),
             isCollarationNull: false,
           ),
         );

@@ -12,6 +12,9 @@ enum NotificationType {
   CAMPAIGN_COMMENT,
   COIN,
   COMMUNITY_CHALLENGE_REWARD,
+  SCAM,
+  CAMPAIGN_STATUS_CHANGED,
+  NEW_MATCHED_CAMPAIGN,
 }
 
 @JsonSerializable()
@@ -26,6 +29,14 @@ class NotificationModel {
   final String entityId;
   final String createdAt;
   final CampaignSummary? campaign;
+
+  NotificationType get typeEnum {
+    try {
+      return NotificationType.values.byName(type);
+    } catch (e) {
+      return NotificationType.CAMPAIGN_UPDATE;
+    }
+  }
 
   const NotificationModel({
     required this.id,

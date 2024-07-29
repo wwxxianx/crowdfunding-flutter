@@ -59,12 +59,10 @@ class GiftCardBloc extends Bloc<GiftCardEvent, GiftCardState> {
     res.fold(
       (failure) => null,
       (giftCardsRes) {
-        if (giftCardsRes.sent.isNotEmpty) {
-          emit(state.copyWith(sentGiftCards: giftCardsRes.sent));
-        }
-        if (giftCardsRes.received.isNotEmpty) {
-          emit(state.copyWith(receivedGiftCards: giftCardsRes.received));
-        }
+        emit(state.copyWith(
+          sentGiftCards: giftCardsRes.sent,
+          receivedGiftCards: giftCardsRes.received,
+        ));
       },
     );
   }

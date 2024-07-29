@@ -26,3 +26,4 @@ class PhoneInputFormatter extends TextInputFormatter {
     );
   }
 }
+

@@ -50,7 +50,19 @@ class CampaignDetailsBloc
         _onScamReportDocumentFilesChanged(e, emit),
       final OnScamReportDescriptionChanged e =>
         _onScamReportDescriptionChanged(e, emit),
+      final OnRefreshCampaign e => _onRefreshCampaign(e, emit),
     };
+  }
+
+  Future<void> _onRefreshCampaign(
+    OnRefreshCampaign event,
+    Emitter emit,
+  ) async {
+    final res = await _fetchCampaign(event.campaignId);
+    res.fold(
+      (l) => emit(CampaignDetailsState.fetchCampaignFailed(l.errorMessage)),
+      (r) => emit(CampaignDetailsState.fetchCampaignSuccess(r)),
+    );
   }
 
   Future<void> _onCreateScamReport(
@@ -141,6 +153,7 @@ class CampaignDetailsBloc
             ),
           ),
         );
+        event.onSuccess?.call();
       },
     );
   }

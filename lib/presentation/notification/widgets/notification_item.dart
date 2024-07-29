@@ -1,5 +1,3 @@
-import 'dart:isolate';
-
 import 'package:crowdfunding_flutter/common/theme/color.dart';
 import 'package:crowdfunding_flutter/common/theme/dimension.dart';
 import 'package:crowdfunding_flutter/common/theme/typography.dart';
@@ -23,19 +21,21 @@ class NotificationItem extends StatelessWidget {
     this.border,
   });
 
-  get notificationType => NotificationType.values.byName(notification.type);
-
   void _handlePressed(BuildContext context) {
     context
         .read<AppUserCubit>()
         .toggleReadNotification(notificationId: notification.id);
-    switch (notificationType) {
-      case NotificationType.CAMPAIGN_UPDATE:
-        context.push(CampaignDetailsScreen.generateRoute(
-            campaignId: notification.campaign?.id ?? ''));
-        break;
+    switch (notification.typeEnum) {
       case NotificationType.COMMUNITY_CHALLENGE_REWARD:
         context.push('/community-challenges/${notification.entityId}');
+        break;
+      case NotificationType.CAMPAIGN_STATUS_CHANGED:
+      case NotificationType.CAMPAIGN_DONATION:
+      case NotificationType.CAMPAIGN_UPDATE:
+      case NotificationType.NEW_MATCHED_CAMPAIGN:
+        context.push(CampaignDetailsScreen.generateRoute(
+            campaignId: notification.entityId));
+        break;
       default:
         return;
     }
@@ -43,11 +43,12 @@ class NotificationItem extends StatelessWidget {
 
   Widget _buildFooter() {
     // final notificationType = NotificationType.values.byName(notification.type);
-    switch (notificationType) {
+    switch (notification.typeEnum) {
       case NotificationType.COIN:
       case NotificationType.CAMPAIGN_COMMENT:
       case NotificationType.CAMPAIGN_DONATION:
       case NotificationType.COMMUNITY_CHALLENGE_REWARD:
+      case NotificationType.CAMPAIGN_STATUS_CHANGED:
         return Text(
           notification.createdAt.toTimeAgo(),
           style: CustomFonts.labelExtraSmall.copyWith(
@@ -105,7 +106,9 @@ class NotificationItem extends StatelessWidget {
   }
 
   Widget _buildHeader() {
-    switch (notificationType) {
+    switch (notification.typeEnum) {
+      case NotificationType.CAMPAIGN_STATUS_CHANGED:
+        return const SizedBox.shrink();
       case NotificationType.COIN:
         return Row(
           children: [
@@ -193,8 +196,8 @@ class NotificationItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(),
-            if (notificationType == NotificationType.COIN &&
-                notificationType == NotificationType.CAMPAIGN_COMMENT)
+            if (notification.typeEnum == NotificationType.COIN &&
+                notification.typeEnum == NotificationType.CAMPAIGN_COMMENT)
               8.kH,
             Row(
               children: [
