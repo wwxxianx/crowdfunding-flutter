@@ -44,29 +44,36 @@ This is a full-stack crowdfunding application built with Flutter and NestJS. It 
 
 - **You can also take a look on my portfolio** ![My Portfolio Site]()
 
-- **Home**
+- **Explore**
 
-  ![Product](https://github.com/user-attachments/assets/17970e00-cfc7-4aa5-a4f2-c3527b50365e)
-  <img width="3241" alt="explore" src="https://github.com/user-attachments/assets/17970e00-cfc7-4aa5-a4f2-c3527b50365e">
+  ![Explore](https://github.com/user-attachments/assets/17970e00-cfc7-4aa5-a4f2-c3527b50365e)
 
-- **Product**
+- **Campaign Details**
 
-  ![Product]()
+  ![Campaign Details](https://github.com/user-attachments/assets/9ff54e4d-9ed3-4281-8c35-a6f1506b5285)
 
-- **Order**
+- **Reply Comment & Share**
 
-  ![Order]()
+  ![Reply Comment & Share](https://github.com/user-attachments/assets/e9b68196-b8c8-4113-9cc1-c765c08cb15e)
 
-- **Cart**
+- **Donate**
+  
+  ![Donate](https://github.com/user-attachments/assets/412d9467-9c9f-45a7-9d56-b7c3ac218cb1)
 
-  ![Cart]()
+- **Create Campaign**
 
-- **Admin**
+  ![Create Campaign](https://github.com/user-attachments/assets/ae192761-d88e-423e-832c-549386046889)
 
-  ![Admin]()
-
-  ![Admin](https://res.cloudinary.com/dthljz11q/image/upload/v1701778276/app%20screenshots/unkzi75wyhw7dq96nuis.png)
-
+- **Update Posts w/ AI**
+- **Gift Card (Receive & Donate)**
+- **Account**
+- **Saved**
+- **Tax Receipt**
+- **Notification**
+- **Own Campaign**
+- **Collaboration**
+- **Community Challenge**
+- **Donation Challenge**
 
 
 ## Features
