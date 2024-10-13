@@ -1,4 +1,4 @@
-<img width="3008" alt="onboarding-new-organization" src="https://github.com/user-attachments/assets/8e2de17f-182a-452f-9557-80046b1012d4"># Flutter Crowdfunding w/ NestJS
+# Flutter Crowdfunding w/ NestJS
 
 ![App Showcase](https://github.com/user-attachments/assets/edc85777-1509-4002-bad2-910a31b79d12)
 
@@ -67,10 +67,6 @@ This is a full-stack crowdfunding application built with Flutter and NestJS. It 
 - **Update Posts w/ AI**
 
   ![post update](https://github.com/user-attachments/assets/4cf7f2a9-1715-486c-93f2-ff02862c0dd0)
-<img width="2264" alt="onboarding-personal" src="https://github.com/user-attachments/assets/02f423f4-38d0-4c2c-b2f5-4271c61e1cfe">
-<img width="3008" alt="onboarding-new-organization" src="https://github.com/user-attachments/assets/9c8a42f0-3619-4087-8209-f5b0ff34fc2c">
-<img width="2998" alt="onboarding-join-organization" src="https://github.com/user-attachments/assets/de852a81-9ae5-467e-bf2e-ab05fa484e8f">
-
 
 - **Gift Card (Receive & Donate)**
 
