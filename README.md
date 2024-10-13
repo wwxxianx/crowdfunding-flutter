@@ -10,6 +10,8 @@ This is a full-stack crowdfunding application built with Flutter and NestJS. It 
 
   ![flutter-chip](https://github.com/user-attachments/assets/c3de3cf6-eed1-4827-a655-d21a7de34f21)
   ![flutter-chip](https://github.com/user-attachments/assets/74922b3d-69a4-42d7-9da8-03e1f4299ff0)
+  ![flutter](https://github.com/user-attachments/assets/b2e4c5ef-cf92-454f-8ef0-2e56ee75a479)
+  ![bloc](https://github.com/user-attachments/assets/4e27035e-5ac2-4910-8f6b-7da773c7f345)
 
 
 - **Server Side**
