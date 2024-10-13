@@ -8,7 +8,7 @@ This is a full-stack crowdfunding application built with Flutter and NestJS. It 
 
 - **Client Side (Mobile)**
 
-  ![Flutter](https://github.com/user-attachments/assets/6b1b899c-e32e-441f-a74d-17025d23f884)
+  ![flutter-chip](https://github.com/user-attachments/assets/c3de3cf6-eed1-4827-a655-d21a7de34f21)
 
 
 - **Server Side**
