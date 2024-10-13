@@ -40,25 +40,30 @@ This is a full-stack crowdfunding application built with Flutter and NestJS. It 
 
 ## Screenshots & Video
 
+- **Video Link**
+
+- **You can also take a look on my portfolio** ![My Portfolio Site]()
+
 - **Home**
 
-  ![Product](https://res.cloudinary.com/dthljz11q/image/upload/v1701778309/app%20screenshots/siolcwzafbcuqch3j1sm.png)
+  ![Product](https://github.com/user-attachments/assets/17970e00-cfc7-4aa5-a4f2-c3527b50365e)
+  <img width="3241" alt="explore" src="https://github.com/user-attachments/assets/17970e00-cfc7-4aa5-a4f2-c3527b50365e">
 
 - **Product**
 
-  ![Product](https://res.cloudinary.com/dthljz11q/image/upload/v1701778280/app%20screenshots/us7ly8uw44psccxhydix.png)
+  ![Product]()
 
 - **Order**
 
-  ![Order](https://res.cloudinary.com/dthljz11q/image/upload/v1701778275/app%20screenshots/scw9sbczjhwudvqv0qu4.png)
+  ![Order]()
 
 - **Cart**
 
-  ![Cart](https://res.cloudinary.com/dthljz11q/image/upload/v1701778276/app%20screenshots/kxjwd0psvd6jmmhxcfdu.png)
+  ![Cart]()
 
 - **Admin**
 
-  ![Admin](https://res.cloudinary.com/dthljz11q/image/upload/v1701778280/app%20screenshots/hnz3sythaq4kd1jw2yjl.png)
+  ![Admin]()
 
   ![Admin](https://res.cloudinary.com/dthljz11q/image/upload/v1701778276/app%20screenshots/unkzi75wyhw7dq96nuis.png)
 
