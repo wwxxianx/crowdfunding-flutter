@@ -8,17 +8,61 @@ This is a full-stack crowdfunding application built with Flutter and NestJS. It 
 
 - **Client Side (Mobile)**
 
-  ![flutter-chip](https://github.com/user-attachments/assets/c3de3cf6-eed1-4827-a655-d21a7de34f21)
-  ![flutter-chip](https://github.com/user-attachments/assets/74922b3d-69a4-42d7-9da8-03e1f4299ff0)
   ![flutter](https://github.com/user-attachments/assets/b2e4c5ef-cf92-454f-8ef0-2e56ee75a479)
   ![bloc](https://github.com/user-attachments/assets/4e27035e-5ac2-4910-8f6b-7da773c7f345)
 
 
 - **Server Side**
 
-  ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
-  ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB) ![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
-  ![MongoDB](https://img.shields.io/badge/Cloudinary-3448C5.svg?style=for-the-badge&logo=Cloudinary&logoColor=white)
+  ![nestjs](https://github.com/user-attachments/assets/86a425d7-0195-4228-9912-8ef425e17f37)
+  ![postgres](https://github.com/user-attachments/assets/af186b37-10a1-4796-a930-bbe7dc0e128a)
+  ![redis](https://github.com/user-attachments/assets/0b73ef5a-052c-4252-aeae-88348eb90293)
+  ![prisma](https://github.com/user-attachments/assets/234d64a0-e316-4446-882b-b154bb598866)
+  ![bullmq](https://github.com/user-attachments/assets/87514453-4bed-4189-b5a4-266faa4516e3)
+  ![typescript](https://github.com/user-attachments/assets/b8dc7cca-e85e-478f-a6ef-00b3e682b199)
+
+
+- **Other Services**
+
+  ![onesignal](https://github.com/user-attachments/assets/e7c29649-3be7-4f37-8898-3dc7e6000153)
+  ![stripe](https://github.com/user-attachments/assets/870743c5-93c5-431c-bd8b-0cec648f03b5)
+  ![supabase](https://github.com/user-attachments/assets/8953926f-7bc0-4607-a8bc-9095f3d54090)
+  ![aiml](https://github.com/user-attachments/assets/045fb232-1101-4851-a061-67ac441c56ee)
+
+
+- **Admin (Web)**
+
+  ![nextjs](https://github.com/user-attachments/assets/38a50e85-b2eb-48d2-991a-832ccb1452da)
+  ![tailwind](https://github.com/user-attachments/assets/dbbd313f-007d-4db4-bdbe-d1379744bafa)
+  ![tanstack](https://github.com/user-attachments/assets/b6906925-1c2e-4044-9a5a-76542026b8cd)
+  ![zustand](https://github.com/user-attachments/assets/ed64deef-ef27-440e-9feb-b8b91037c099)
+
+
+## Screenshots & Video
+
+- **Home**
+
+  ![Product](https://res.cloudinary.com/dthljz11q/image/upload/v1701778309/app%20screenshots/siolcwzafbcuqch3j1sm.png)
+
+- **Product**
+
+  ![Product](https://res.cloudinary.com/dthljz11q/image/upload/v1701778280/app%20screenshots/us7ly8uw44psccxhydix.png)
+
+- **Order**
+
+  ![Order](https://res.cloudinary.com/dthljz11q/image/upload/v1701778275/app%20screenshots/scw9sbczjhwudvqv0qu4.png)
+
+- **Cart**
+
+  ![Cart](https://res.cloudinary.com/dthljz11q/image/upload/v1701778276/app%20screenshots/kxjwd0psvd6jmmhxcfdu.png)
+
+- **Admin**
+
+  ![Admin](https://res.cloudinary.com/dthljz11q/image/upload/v1701778280/app%20screenshots/hnz3sythaq4kd1jw2yjl.png)
+
+  ![Admin](https://res.cloudinary.com/dthljz11q/image/upload/v1701778276/app%20screenshots/unkzi75wyhw7dq96nuis.png)
+
+
 
 ## Features
 
@@ -109,32 +153,6 @@ This is a full-stack crowdfunding application built with Flutter and NestJS. It 
   - **syncfusion_flutter_charts package:** Utilizes the syncfusion_flutter_charts package to display category-wise earnings in a comprehensive graph format.
 
   - **go_router:** Employs go_router for efficient page navigation throughout the application.
-
-## Screenshots
-
-- **Home**
-
-  ![Product](https://res.cloudinary.com/dthljz11q/image/upload/v1701778309/app%20screenshots/siolcwzafbcuqch3j1sm.png)
-
-- **Product**
-
-  ![Product](https://res.cloudinary.com/dthljz11q/image/upload/v1701778280/app%20screenshots/us7ly8uw44psccxhydix.png)
-
-- **Order**
-
-  ![Order](https://res.cloudinary.com/dthljz11q/image/upload/v1701778275/app%20screenshots/scw9sbczjhwudvqv0qu4.png)
-
-- **Cart**
-
-  ![Cart](https://res.cloudinary.com/dthljz11q/image/upload/v1701778276/app%20screenshots/kxjwd0psvd6jmmhxcfdu.png)
-
-- **Admin**
-
-  ![Admin](https://res.cloudinary.com/dthljz11q/image/upload/v1701778280/app%20screenshots/hnz3sythaq4kd1jw2yjl.png)
-
-  ![Admin](https://res.cloudinary.com/dthljz11q/image/upload/v1701778276/app%20screenshots/unkzi75wyhw7dq96nuis.png)
-
-- **Video Link** - [https://drive.google.com/uc?id=1XwgXe3bwy-LK_AiMJoD60q6w9Lf8A_oj](https://drive.google.com/uc?id=1XwgXe3bwy-LK_AiMJoD60q6w9Lf8A_oj)
 
 ## Run Locally
 
