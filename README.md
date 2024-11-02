@@ -40,9 +40,9 @@ This is a full-stack crowdfunding application built with Flutter and NestJS. It 
 
 ## Screenshots & Video
 
-- **Video Link**
+- **Take a look from My Portfolio**
 
-- **You can also take a look on my portfolio** ![My Portfolio Site]()
+  [My Portfolio Site](https://portfolio-xian-v2.vercel.app/work/fyp)
 
 - **Explore**
 
